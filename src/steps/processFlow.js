@@ -1,3 +1,5 @@
+import { gsap } from 'gsap'
+
 export function renderProcessFlow() {
   const processData = [
     {
@@ -146,9 +148,9 @@ export function renderProcessFlow() {
       if (stepData.title === '源头赋码') {
         // 模拟扫码按钮
         const simulateBtn = document.createElement('button')
-        simulateBtn.textContent = '扫码'
+        simulateBtn.textContent = '扫码录入'
         simulateBtn.className =
-          'px-4 py-2 mt-4 text-white bg-blue-500 rounded transition hover:bg-blue-600'
+          'px-4 py-2 mt-4 text-white bg-blue-500 rounded transition w-[128px] hover:bg-blue-600'
 
         // detail容器左右两端：二维码框和数据库图标
         const qrDbRow = document.createElement('div')
@@ -287,13 +289,16 @@ export function renderProcessFlow() {
           scanFlash.className =
             'absolute inset-0 bg-blue-300 rounded opacity-20 animate-ping'
           customQrContainer.appendChild(scanFlash)
-          setTimeout(() => scanFlash.remove(), 600)
+          gsap.to(scanFlash, {
+            opacity: 0,
+            duration: 0.6,
+            onComplete: () => scanFlash.remove(),
+          })
 
-          // 信息块飞入动画（初始在detail正中，定格0.6s后依次飞入二维码框正中，scale动画与平移动画同时进行）
+          // 信息块飞入动画
           const flyBlocks = []
           const detailRect = detailWrapper.getBoundingClientRect()
           const qrRect = customQrContainer.getBoundingClientRect()
-          // 终点为二维码框中心相对detailWrapper中心的偏移
           const offsetLeft =
             qrRect.left +
             qrRect.width / 2 -
@@ -303,13 +308,15 @@ export function renderProcessFlow() {
             qrRect.height / 2 -
             (detailRect.top + detailRect.height / 2)
 
+          // 环形分布参数
+          const radius = 48
+          const baseAngle = -Math.PI / 2
           dataBlocks.forEach((block, i) => {
             const blockDiv = document.createElement('div')
             blockDiv.textContent = block.label
             blockDiv.style.position = 'absolute'
             blockDiv.style.left = '50%'
             blockDiv.style.top = '50%'
-            blockDiv.style.transform = 'translate(-50%, -50%) scale(1.2)'
             blockDiv.style.width = '128px'
             blockDiv.style.height = '48px'
             blockDiv.style.lineHeight = '48px'
@@ -323,33 +330,53 @@ export function renderProcessFlow() {
             blockDiv.style.boxShadow = block.shadow
             blockDiv.style.opacity = '0'
             blockDiv.style.zIndex = 30 + i
-            blockDiv.style.transition = 'all 0.6s cubic-bezier(0.4,0,0.2,1)'
             detailWrapper.appendChild(blockDiv)
             flyBlocks.push(blockDiv)
-            // 生成后定格0.6s，opacity变为1，scale保持1.2
-            setTimeout(() => {
-              blockDiv.style.opacity = '1'
-              blockDiv.style.transform = 'translate(-50%, -50%) scale(1.2)'
-              // 0.6s后飞入二维码框正中，scale变为0.95
-              setTimeout(() => {
-                blockDiv.style.transition = 'all 1.2s cubic-bezier(0.4,0,0.2,1)'
-                blockDiv.style.transform = `translate(calc(-50% + ${offsetLeft}px), calc(-50% + ${offsetTop}px)) scale(0.95)`
-              }, 600)
-            }, i * 700 + 400)
+            // 环形初始偏移
+            const angle = baseAngle + (i * 2 * Math.PI) / dataBlocks.length
+            const x0 = Math.cos(angle) * radius
+            const y0 = Math.sin(angle) * radius
+            gsap.set(blockDiv, {
+              opacity: 0,
+              scale: 1.2,
+              xPercent: -50,
+              yPercent: -50,
+              x: x0,
+              y: y0,
+            })
+            // 依次飞入
+            gsap.to(blockDiv, {
+              opacity: 1,
+              scale: 1.2,
+              delay: i * 0.7 + 0.4,
+              duration: 0.6,
+              onComplete: () => {
+                gsap.to(blockDiv, {
+                  x: offsetLeft,
+                  y: offsetTop,
+                  scale: 0.95,
+                  duration: 1.2,
+                  delay: 0.6,
+                  ease: 'power2.inOut',
+                })
+              },
+            })
           })
 
           // 所有块飞入后定格1s再渐隐
-          setTimeout(() => {
+          gsap.delayedCall(dataBlocks.length * 0.7 + 1.8, () => {
             flyBlocks.forEach((blockDiv, i) => {
-              setTimeout(() => {
-                blockDiv.style.opacity = '0'
-                blockDiv.style.transform = `translate(calc(-50% + ${offsetLeft}px), calc(-50% + ${offsetTop}px)) scale(0.8)`
-              }, i * 120)
+              gsap.to(blockDiv, {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.5,
+                delay: i * 0.12,
+                onComplete: () => blockDiv.remove(),
+              })
             })
-          }, dataBlocks.length * 700 + 1800)
+          })
 
-          // --- 新增：管件元素 ---
-          // 管件元素插入到customQrContainer和dbIconContainer之间
+          // --- 管件元素 ---
           const pipeContainer = document.createElement('div')
           pipeContainer.style.width = '128px'
           pipeContainer.style.height = '128px'
@@ -369,29 +396,38 @@ export function renderProcessFlow() {
               <div class="mt-2 text-lg font-bold text-sky-700">管件</div>
             </div>
           `
-          // 插入到customQrContainer和dbIconContainer之间
           qrDbRow.insertBefore(pipeContainer, dbIconContainer)
 
           // --- 动画：二维码副本分别飞向数据库和管件 ---
-          setTimeout(() => {
-            // 让管件元素渐现
-            pipeContainer.style.opacity = '1'
-            pipeContainer.style.transform = 'scale(1)'
+          gsap.delayedCall(dataBlocks.length * 0.7 + 2.2, () => {
+            gsap.to(pipeContainer, {
+              opacity: 1,
+              scale: 1,
+              duration: 0.7,
+              ease: 'power2.out',
+            })
 
-            // 复制二维码副本1：飞向数据库
-            const qrCloneDb = customQrContainer.cloneNode(true)
-            qrCloneDb.style.position = 'absolute'
-            qrCloneDb.style.left = '0'
-            qrCloneDb.style.top = '0'
-            qrCloneDb.style.transition = 'all 1.1s cubic-bezier(0.4,0,0.2,1)'
-            qrCloneDb.style.zIndex = '50'
-            const cloneCanvasDb = qrCloneDb.querySelector('canvas')
-            if (cloneCanvasDb) {
-              const cloneCtxDb = cloneCanvasDb.getContext('2d')
-              cloneCtxDb.putImageData(qrImageData, 0, 0)
-            }
-            qrDbRow.appendChild(qrCloneDb)
-            // 计算数据库目标位置
+            // 资料/文稿元素：飞向数据库
+            const docCloneDb = document.createElement('div')
+            docCloneDb.style.position = 'absolute'
+            docCloneDb.style.left = '0'
+            docCloneDb.style.top = '0'
+            docCloneDb.style.zIndex = '50'
+            docCloneDb.style.width = '112px'
+            docCloneDb.style.height = '112px'
+            docCloneDb.style.display = 'flex'
+            docCloneDb.style.flexDirection = 'column'
+            docCloneDb.style.alignItems = 'center'
+            docCloneDb.style.justifyContent = 'center'
+            docCloneDb.style.background = '#fff'
+            docCloneDb.style.borderRadius = '0.75rem'
+            docCloneDb.style.boxShadow = '0 4px 16px 0 rgba(37,99,235,0.10)'
+            docCloneDb.style.border = '2.5px solid #2563eb'
+            docCloneDb.innerHTML = `
+              <iconify-icon icon="mdi:file-document-outline" style="font-size:3.5rem;color:#2563eb;"></iconify-icon>
+              <div style="margin-top:8px;font-weight:bold;font-size:1.1rem;color:#2563eb;">资料</div>
+            `
+            qrDbRow.appendChild(docCloneDb)
             const dbRect = dbIconContainer.getBoundingClientRect()
             const qrRectDb = customQrContainer.getBoundingClientRect()
             const offsetDbLeft =
@@ -402,20 +438,19 @@ export function renderProcessFlow() {
               dbRect.top +
               dbRect.height / 2 -
               (qrRectDb.top + qrRectDb.height / 2)
-            setTimeout(() => {
-              qrCloneDb.style.left = `calc(${offsetDbLeft}px)`
-              qrCloneDb.style.top = `calc(${offsetDbTop}px)`
-            }, 50)
-            setTimeout(() => {
-              qrCloneDb.remove()
-            }, 1200)
+            gsap.to(docCloneDb, {
+              x: offsetDbLeft,
+              y: offsetDbTop,
+              duration: 1.1,
+              ease: 'power2.inOut',
+              onComplete: () => docCloneDb.remove(),
+            })
 
             // 复制二维码副本2：飞向管件
             const qrClonePipe = customQrContainer.cloneNode(true)
             qrClonePipe.style.position = 'absolute'
             qrClonePipe.style.left = '0'
             qrClonePipe.style.top = '0'
-            qrClonePipe.style.transition = 'all 1.8s cubic-bezier(0.4,0,0.2,1)'
             qrClonePipe.style.zIndex = '51'
             const cloneCanvasPipe = qrClonePipe.querySelector('canvas')
             if (cloneCanvasPipe) {
@@ -423,7 +458,6 @@ export function renderProcessFlow() {
               cloneCtxPipe.putImageData(qrImageData, 0, 0)
             }
             qrDbRow.appendChild(qrClonePipe)
-            // 计算管件目标位置
             const pipeRect = pipeContainer.getBoundingClientRect()
             const qrRectPipe = customQrContainer.getBoundingClientRect()
             const offsetPipeLeft =
@@ -434,29 +468,28 @@ export function renderProcessFlow() {
               pipeRect.top +
               pipeRect.height / 2 -
               (qrRectPipe.top + qrRectPipe.height / 2)
-            setTimeout(() => {
-              qrClonePipe.style.left = `calc(${offsetPipeLeft}px)`
-              qrClonePipe.style.top = `calc(${offsetPipeTop}px)`
-              qrClonePipe.style.transform = 'scale(0.7)'
-            }, 50)
-            setTimeout(() => {
-              qrClonePipe.remove()
-              // 对勾
-              const checkIcon = document.createElement('span')
-              checkIcon.innerHTML =
-                '<iconify-icon icon="mdi:check-circle" style="color:#22c55e;font-size:2.5rem;"></iconify-icon>'
-              checkIcon.style.position = 'absolute'
-              checkIcon.style.right = '-18px'
-              checkIcon.style.bottom = '8px'
-              checkIcon.style.zIndex = '60'
-              checkIcon.style.transition = 'opacity 0.5s'
-              checkIcon.style.opacity = '0'
-              pipeContainer.appendChild(checkIcon)
-              setTimeout(() => {
-                checkIcon.style.opacity = '1'
-              }, 50)
-            }, 1850)
-          }, dataBlocks.length * 700 + 2200)
+            gsap.to(qrClonePipe, {
+              x: offsetPipeLeft,
+              y: offsetPipeTop,
+              scale: 0.7,
+              duration: 1.8,
+              ease: 'power2.inOut',
+              onComplete: () => {
+                qrClonePipe.remove()
+                // 对勾
+                const checkIcon = document.createElement('span')
+                checkIcon.innerHTML =
+                  '<iconify-icon icon="mdi:check-circle" style="color:#22c55e;font-size:2.5rem;"></iconify-icon>'
+                checkIcon.style.position = 'absolute'
+                checkIcon.style.right = '-18px'
+                checkIcon.style.bottom = '8px'
+                checkIcon.style.zIndex = '60'
+                checkIcon.style.opacity = '0'
+                pipeContainer.appendChild(checkIcon)
+                gsap.to(checkIcon, { opacity: 1, duration: 0.5 })
+              },
+            })
+          })
         })
       }
     }
