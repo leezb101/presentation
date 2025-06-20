@@ -1,13 +1,12 @@
 import './style.css'
 import { defineCustomElements } from 'ionicons/dist/loader/index.es2017'
+defineCustomElements(window)
 
 // Import all components
 import './components/base-component.js'
 import './components/app-header.js'
 import './components/app-main.js'
 import './components/content-section.js'
-import './components/solution-showcase.js'
-import './components/cloud-architecture.js'
 import './components/process-flow-component.js'
 import './components/value-chart-component.js'
 import './components/roadmap-component.js'

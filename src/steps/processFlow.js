@@ -141,24 +141,31 @@ export function renderProcessFlow() {
       textDiv.className = 'text-gray-700'
       textDiv.innerHTML = stepData.details
 
-      detailWrapper.appendChild(iconDiv)
-      detailWrapper.appendChild(textDiv)
+      const description = document.createElement('div')
+      description.className =
+        'flex flex-row justify-start items-center text-gray-700'
+
+      description.appendChild(iconDiv)
+      description.appendChild(textDiv)
+
+      detailWrapper.appendChild(description)
 
       // 源头赋码模拟扫码交互
       if (stepData.title === '源头赋码') {
-        // 模拟扫码按钮
-        const simulateBtn = document.createElement('button')
-        simulateBtn.textContent = '扫码录入'
-        simulateBtn.className =
-          'px-4 py-2 mt-4 text-white bg-blue-500 rounded transition w-[128px] hover:bg-blue-600'
+        // 重新组织布局：detail整体flex column，上面是描述，下面是qrDbRow
+        detailWrapper.className = 'flex flex-col space-y-6 w-full'
 
-        // detail容器左右两端：二维码框和数据库图标
+        // qrDbRow三等分容器
         const qrDbRow = document.createElement('div')
         qrDbRow.className =
-          'flex relative justify-between items-center mt-6 w-full'
-        qrDbRow.style.minHeight = '128px'
+          'flex relative gap-6 justify-between items-start w-full'
+        qrDbRow.style.minHeight = '180px'
 
-        // 左侧二维码框
+        // 左侧section：二维码框 + 扫码录入按钮
+        const leftSection = document.createElement('div')
+        leftSection.className = 'flex flex-col flex-1 items-center space-y-4'
+
+        // 二维码框
         const customQrContainer = document.createElement('div')
         customQrContainer.style.position = 'relative'
         customQrContainer.style.width = '128px'
@@ -226,7 +233,53 @@ export function renderProcessFlow() {
         }
         animateScanbar()
 
-        // 右侧数据库大图标（尺寸与二维码框一致，水平对齐）
+        // 扫码录入按钮
+        const simulateBtn = document.createElement('button')
+        simulateBtn.textContent = '扫码录入'
+        simulateBtn.className =
+          'px-4 py-2 text-white bg-blue-500 rounded transition w-[128px] hover:bg-blue-600'
+
+        leftSection.appendChild(customQrContainer)
+        leftSection.appendChild(simulateBtn)
+
+        // 中间section：管件元素 + 贴码出厂标识
+        const middleSection = document.createElement('div')
+        middleSection.className = 'flex flex-col flex-1 items-center space-y-4'
+
+        // 管件容器（初始隐藏）
+        const pipeContainer = document.createElement('div')
+        pipeContainer.style.width = '128px'
+        pipeContainer.style.height = '128px'
+        pipeContainer.style.borderRadius = '0.75rem'
+        pipeContainer.style.background = '#f0f9ff'
+        pipeContainer.style.border = '2.5px solid #38bdf8'
+        pipeContainer.className =
+          'flex relative flex-shrink-0 justify-center items-center shadow-lg'
+        pipeContainer.style.opacity = '0'
+        pipeContainer.style.transform = 'scale(0.7)'
+        pipeContainer.style.transition = 'all 0.7s cubic-bezier(0.4,0,0.2,1)'
+        pipeContainer.innerHTML = `
+          <div class="flex flex-col justify-center items-center w-full h-full">
+            <iconify-icon icon="mdi:pipe" class="text-sky-500" style="font-size:96px;"></iconify-icon>
+            <div class="mt-2 text-lg font-bold text-sky-700">管件</div>
+          </div>
+        `
+
+        // 贴码出厂标识
+        const pipeLabel = document.createElement('div')
+        pipeLabel.className =
+          'px-3 py-1 text-sm font-semibold text-sky-700 bg-sky-100 rounded-full border border-sky-300'
+        pipeLabel.textContent = '贴码出厂'
+        pipeLabel.style.opacity = '0' // 初始隐藏
+
+        middleSection.appendChild(pipeContainer)
+        middleSection.appendChild(pipeLabel)
+
+        // 右侧section：数据库元素 + 数据入库标识
+        const rightSection = document.createElement('div')
+        rightSection.className = 'flex flex-col flex-1 items-center space-y-4'
+
+        // 数据库图标
         const dbIconContainer = document.createElement('div')
         dbIconContainer.style.width = '128px'
         dbIconContainer.style.height = '128px'
@@ -242,10 +295,21 @@ export function renderProcessFlow() {
           </div>
         `
 
-        qrDbRow.appendChild(customQrContainer)
-        qrDbRow.appendChild(dbIconContainer)
-        textDiv.appendChild(qrDbRow)
-        textDiv.appendChild(simulateBtn)
+        // 数据入库标识
+        const dbLabel = document.createElement('div')
+        dbLabel.className =
+          'px-3 py-1 text-sm font-semibold text-green-700 bg-green-100 rounded-full border border-green-300'
+        dbLabel.textContent = '数据入库'
+        dbLabel.style.opacity = '0' // 初始隐藏
+
+        rightSection.appendChild(dbIconContainer)
+        rightSection.appendChild(dbLabel)
+
+        // 组装qrDbRow
+        qrDbRow.appendChild(leftSection)
+        qrDbRow.appendChild(middleSection)
+        qrDbRow.appendChild(rightSection)
+        detailWrapper.appendChild(qrDbRow)
 
         // 四个信息块的配色和装饰
         const blockColors = [
@@ -376,30 +440,9 @@ export function renderProcessFlow() {
             })
           })
 
-          // --- 管件元素 ---
-          const pipeContainer = document.createElement('div')
-          pipeContainer.style.width = '128px'
-          pipeContainer.style.height = '128px'
-          pipeContainer.style.borderRadius = '0.75rem'
-          pipeContainer.style.background = '#f0f9ff'
-          pipeContainer.style.border = '2.5px solid #38bdf8'
-          pipeContainer.className =
-            'flex relative flex-shrink-0 justify-center items-center shadow-lg'
-          pipeContainer.style.position = 'relative'
-          pipeContainer.style.margin = '0 24px'
-          pipeContainer.style.opacity = '0'
-          pipeContainer.style.transform = 'scale(0.7)'
-          pipeContainer.style.transition = 'all 0.7s cubic-bezier(0.4,0,0.2,1)'
-          pipeContainer.innerHTML = `
-            <div class="flex flex-col justify-center items-center w-full h-full">
-              <iconify-icon icon="mdi:pipe" class="text-sky-500" style="font-size:96px;"></iconify-icon>
-              <div class="mt-2 text-lg font-bold text-sky-700">管件</div>
-            </div>
-          `
-          qrDbRow.insertBefore(pipeContainer, dbIconContainer)
-
           // --- 动画：二维码副本分别飞向数据库和管件 ---
           gsap.delayedCall(dataBlocks.length * 0.7 + 2.2, () => {
+            // 显示管件元素
             gsap.to(pipeContainer, {
               opacity: 1,
               scale: 1,
@@ -428,22 +471,33 @@ export function renderProcessFlow() {
               <div style="margin-top:8px;font-weight:bold;font-size:1.1rem;color:#2563eb;">资料</div>
             `
             qrDbRow.appendChild(docCloneDb)
+
+            // 获取更精确的元素中心位置
             const dbRect = dbIconContainer.getBoundingClientRect()
             const qrRectDb = customQrContainer.getBoundingClientRect()
-            const offsetDbLeft =
-              dbRect.left +
-              dbRect.width / 2 -
-              (qrRectDb.left + qrRectDb.width / 2)
+
+            // 计算精确的中心点偏移
+            const offsetDbLeft = dbRect.left + dbRect.width / 2 - qrRectDb.left
             const offsetDbTop =
               dbRect.top +
               dbRect.height / 2 -
-              (qrRectDb.top + qrRectDb.height / 2)
+              qrRectDb.top -
+              docCloneDb.clientHeight / 2
+
             gsap.to(docCloneDb, {
               x: offsetDbLeft,
               y: offsetDbTop,
               duration: 1.1,
               ease: 'power2.inOut',
-              onComplete: () => docCloneDb.remove(),
+              onComplete: () => {
+                docCloneDb.remove()
+                // 显示数据入库标签
+                gsap.to(dbLabel, {
+                  opacity: 1,
+                  duration: 0.5,
+                  ease: 'power1.out',
+                })
+              },
             })
 
             // 复制二维码副本2：飞向管件
@@ -458,16 +512,23 @@ export function renderProcessFlow() {
               cloneCtxPipe.putImageData(qrImageData, 0, 0)
             }
             qrDbRow.appendChild(qrClonePipe)
+
+            // 获取更精确的元素中心位置
             const pipeRect = pipeContainer.getBoundingClientRect()
             const qrRectPipe = customQrContainer.getBoundingClientRect()
+
+            // 计算精确的中心点偏移
             const offsetPipeLeft =
               pipeRect.left +
               pipeRect.width / 2 -
-              (qrRectPipe.left + qrRectPipe.width / 2)
+              qrRectPipe.left -
+              qrClonePipe.clientWidth / 2
             const offsetPipeTop =
               pipeRect.top +
               pipeRect.height / 2 -
-              (qrRectPipe.top + qrRectPipe.height / 2)
+              qrRectPipe.top -
+              qrClonePipe.clientHeight / 2
+
             gsap.to(qrClonePipe, {
               x: offsetPipeLeft,
               y: offsetPipeTop,
@@ -487,6 +548,13 @@ export function renderProcessFlow() {
                 checkIcon.style.opacity = '0'
                 pipeContainer.appendChild(checkIcon)
                 gsap.to(checkIcon, { opacity: 1, duration: 0.5 })
+
+                // 显示贴码出厂标签
+                gsap.to(pipeLabel, {
+                  opacity: 1,
+                  duration: 0.5,
+                  ease: 'power1.out',
+                })
               },
             })
           })
