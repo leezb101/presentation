@@ -1,0 +1,4 @@
+# 常见的webignore
+node_modules
+dist
+build
