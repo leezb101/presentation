@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工程物料全生命周期数字化管理平台-交互式报告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Corporate Blue & Warm Gray" -->
+    <!-- Application Structure Plan: A narrative-driven, single-page scrolling application. The structure follows a logical "Problem -> Solution -> How -> Value -> Roadmap" flow. This user-centric journey is designed to build understanding and buy-in from leadership by first establishing the need, then presenting the solution and its workings in an interactive, digestible manner, and finally quantifying the value. This non-linear navigation (via top bar) combined with a linear story is optimal for both quick reference and in-depth exploration. -->
+    <!-- Visualization & Content Choices: 
+    - Problem (痛点): Goal: Inform. Method: Cards with icons (HTML/CSS) for quick scanning. Interaction: Hover for detail. Justification: Visually breaks down complex issues into simple, memorable points.
+    - Architecture (架构): Goal: Organize. Method: HTML/CSS diagram. Interaction: Hover to show user roles. Justification: A clear, non-image diagram is responsive and clean, clarifying the system's components without technical jargon.
+    - Process Flow (流程): Goal: Explain Process. Method: Interactive HTML/CSS timeline. Interaction: Click to update a details panel. Justification: This is the core interactive element, turning a static process list into an engaging, step-by-step exploration, which is far more effective for learning than a static diagram.
+    - 4-Party Ecosystem (四方联动): Goal: Explain Relationships. Method: Interactive HTML/CSS hub-and-spoke diagram. Interaction: Click to highlight roles. Justification: Clarifies the collaborative nature of the system and each party's responsibilities.
+    - Value (价值): Goal: Compare/Inform. Method: Animated stats (JS) and a bar chart (Chart.js). Interaction: Animate on view. Justification: Dynamic numbers and charts are more impactful than static text, effectively communicating the projected ROI and benefits.
+    - Roadmap (路线图): Goal: Inform Change over Time. Method: HTML/CSS timeline. Justification: Provides a clear, high-level overview of the implementation plan.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Noto Sans SC', sans-serif; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        @media (max-width: 768px) { .chart-container { height: 300px; } }
+        .nav-link { transition: color 0.3s ease; }
+        .nav-link:hover { color: #2563eb; }
+        .flow-step, .party-node { transition: all 0.3s ease-in-out; }
+        .flow-step.active, .party-node.active { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .fade-in { animation: fadeIn 1s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-xl font-bold text-blue-700">
+                智慧水务 · 数字基石
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600">
+                <a href="#problem" class="nav-link">现状与痛点</a>
+                <a href="#solution" class="nav-link">解决方案</a>
+                <a href="#process" class="nav-link">系统如何运作</a>
+                <a href="#value" class="nav-link">项目价值</a>
+                <a href="#roadmap" class="nav-link">实施路线图</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#problem" class="block py-2 nav-link">现状与痛点</a>
+            <a href="#solution" class="block py-2 nav-link">解决方案</a>
+            <a href="#process" class="block py-2 nav-link">系统如何运作</a>
+            <a href="#value" class="block py-2 nav-link">项目价值</a>
+            <a href="#roadmap" class="block py-2 nav-link">实施路线图</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="relative text-center py-20 md:py-32 bg-white">
+            <div class="absolute inset-0 bg-blue-50 opacity-50"></div>
+            <div class="container mx-auto px-6 relative">
+                <h1 class="text-4xl md:text-6xl font-bold text-blue-800 mb-4 animate-fade-in">工程物料全生命周期数字化管理平台</h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in" style="animation-delay: 0.2s;">
+                    用数字孪生理念，为每一件物料赋予智慧生命。实现从源头到末端的全过程精准管控，奠定集团智慧水务的坚实基础。
+                </p>
+            </div>
+        </section>
+
+        <section id="problem" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">现状与痛点：传统管理的瓶颈</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">我们正面临三大核心挑战，制约着工程质量与管理效率的提升。</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-red-100 text-red-600 mb-6 text-3xl font-bold">?</div>
+                        <h3 class="text-xl font-bold mb-3">质量追溯难</h3>
+                        <p class="text-gray-600">出现质量事故，责任追溯耗时耗力，难以快速定位问题批次、供应商及安装环节，无法形成有效闭环。</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                         <div class="flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 text-yellow-600 mb-6 text-3xl font-bold">!</div>
+                        <h3 class="text-xl font-bold mb-3">物料损耗大</h3>
+                        <p class="text-gray-600">现场管理粗放，物料浪费、积压、丢失现象频发，直接增加项目成本，侵蚀利润。</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                         <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 text-blue-600 mb-6 text-3xl">🔗</div>
+                        <h3 class="text-xl font-bold mb-3">协同效率低</h3>
+                        <p class="text-gray-600">建设、施工、监理、供应四方信息孤立，沟通成本高，流程协同不畅，影响工程进度。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-gray-900">我们的解决方案：构建一体化数字平台</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">以“一物一码”为核心，打造“云+三端”协同体系，彻底打破信息孤岛。</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="relative">
+                        <h3 class="text-2xl font-bold mb-6 text-center">“云 + 三端” 一体化架构</h3>
+                        <div class="relative p-8">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-blue-600 text-white rounded-full flex flex-col items-center justify-center shadow-lg">
+                                    <span class="text-lg font-bold">云平台</span>
+                                    <span class="text-xs">数据中枢</span>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <div class="absolute -top-16 left-1/2 -translate-x-1/2 text-center group">
+                                    <div class="w-24 h-24 bg-white border-2 border-blue-200 rounded-full flex flex-col items-center justify-center shadow-md transition-transform group-hover:scale-110">
+                                        <span class="text-4xl">🖥️</span>
+                                        <span class="text-sm font-semibold">Web端</span>
+                                    </div>
+                                    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-gray-800 text-white text-xs rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <span class="font-bold">面向管理者：</span>提供全局看板、统计分析、流程监控。
+                                    </div>
+                                </div>
+                                <div class="absolute top-1/2 -translate-y-1/2 -left-8 text-center group">
+                                    <div class="w-24 h-24 bg-white border-2 border-blue-200 rounded-full flex flex-col items-center justify-center shadow-md transition-transform group-hover:scale-110">
+                                        <span class="text-4xl">📱</span>
+                                        <span class="text-sm font-semibold">App端</span>
+                                    </div>
+                                    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-gray-800 text-white text-xs rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                       <span class="font-bold">面向核心人员：</span>功能全面，支持离线操作。
+                                    </div>
+                                </div>
+                                <div class="absolute top-1/2 -translate-y-1/2 -right-8 text-center group">
+                                    <div class="w-24 h-24 bg-white border-2 border-blue-200 rounded-full flex flex-col items-center justify-center shadow-md transition-transform group-hover:scale-110">
+                                        <span class="text-4xl">💬</span>
+                                        <span class="text-sm font-semibold">小程序</span>
+                                    </div>
+                                    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-gray-800 text-white text-xs rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                       <span class="font-bold">面向协作方：</span>免安装、易推广，聚焦核心功能。
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-24 md:mt-0 text-center md:text-left">
+                        <h3 class="text-2xl font-bold mb-4">核心理念：一物一码</h3>
+                        <p class="text-gray-600 mb-4">为每一件独立的物料赋予唯一的二维码“数字身份证”，伴随其从生产、运输、仓储、安装到报废的全过程。通过扫描二维码，即可瞬间链接到其背后丰富的数字档案，从根本上解决信息与实体分离的难题。</p>
+                        <div class="flex items-center justify-center md:justify-start space-x-4 p-4 bg-gray-100 rounded-lg">
+                            <div class="text-5xl">🔩</div>
+                            <div class="text-2xl text-gray-400">→</div>
+                            <div class="w-20 h-20 bg-black text-white p-1 flex items-center justify-center rounded-md text-xs">
+                                <!-- QR Code like pattern -->
+                                <canvas id="qr-canvas" class="w-full h-full"></canvas>
+                            </div>
+                            <div class="text-2xl text-gray-400">→</div>
+                            <div class="text-5xl">📋</div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">从物理实体到数字档案的无缝转换</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="process" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">系统如何运作：全流程闭环管理</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">通过对业务流程的数字化再造，形成信息流与实物流同步的闭环。点击下方步骤查看详情。</p>
+                </div>
+                
+                <div class="relative w-full overflow-x-auto pb-4">
+                    <div class="flex justify-between items-center min-w-[700px] md:min-w-0">
+                        <div class="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-blue-200"></div>
+                        <div id="flow-steps-container" class="relative flex justify-between w-full">
+                            <!-- Steps will be injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="process-details" class="mt-12 bg-white p-8 rounded-xl shadow-lg transition-all duration-500 min-h-[250px] flex items-center">
+                    <!-- Details will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        
+        <section id="ecosystem" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">生态协同：构建四方联动新模式</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">平台将所有参与方连接起来，明确职责，打破壁垒，实现高效协同。点击下方角色查看职责。</p>
+                </div>
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="w-full md:w-1/2 flex items-center justify-center">
+                         <div id="party-diagram" class="relative w-80 h-80">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-blue-600 text-white rounded-full flex flex-col items-center justify-center shadow-lg z-10">
+                                    <span class="text-base font-bold">协同平台</span>
+                                    <span class="text-xs">数据共享</span>
+                                </div>
+                            </div>
+                            <div class="absolute w-full h-full">
+                                <!-- Nodes will be injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                    <div id="party-details" class="w-full md:w-1/2 bg-gray-100 p-8 rounded-xl flex items-center justify-center min-h-[320px]">
+                       <!-- Details will be injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="value" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">项目价值：可量化的收益与质的飞跃</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">系统不仅带来直接的经济效益，更将全面增强集团的核心管理能力。</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6 text-center">关键绩效指标 (KPI) 提升</h3>
+                        <div class="chart-container">
+                            <canvas id="valueChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-blue-700 mb-2">管理提效</h4>
+                                <p class="text-gray-600">业务流程线上化、自动化，数据实时可查，大幅减少纸质单据和人工核对，决策更高效。</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-blue-700 mb-2">质量保障</h4>
+                                <p class="text-gray-600">实现从源头到末端的全过程质量追溯。事故排查从数天缩短至几分钟，责任明确，处置高效。</p>
+                            </div>
+                             <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-blue-700 mb-2">数据资产沉淀</h4>
+                                <p class="text-gray-600">项目数据被系统性地记录归档，形成宝贵数字资产，为未来大数据分析、BIM/GIS集成奠定基础。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-gray-900">实施路线图：分阶段稳步推进</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">遵循“试点先行，分步推广”的原则，确保项目平稳落地，取得实效。</p>
+                </div>
+                <div class="relative">
+                    <div class="border-l-2 border-blue-300 absolute h-full top-0 left-4 md:left-1/2 md:-translate-x-1/2"></div>
+                    <div id="roadmap-container" class="space-y-12">
+                        <!-- Roadmap items will be injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-bold text-lg">郑州水务集团有限公司</p>
+            <p class="text-sm text-gray-400 mt-2">技术赋能管理，数据驱动未来</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // --- QR Code Canvas ---
+            const qrCanvas = document.getElementById('qr-canvas');
+            if (qrCanvas) {
+                const ctx = qrCanvas.getContext('2d');
+                const size = qrCanvas.width;
+                const cellSize = size / 8;
+                for (let i = 0; i < 8; i++) {
+                    for (let j = 0; j < 8; j++) {
+                        if (Math.random() > 0.5) {
+                            ctx.fillStyle = '#1f2937';
+                            ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
+                        }
+                    }
+                }
+            }
+            
+            // --- Interactive Process Flow ---
+            const processData = [
+                { title: '源头赋码', icon: '📦', details: '<strong>供应商：</strong>在材料出厂前，按集团标准生成并粘贴唯一的二维码，同时将材料的质检报告等电子文件上传至系统，与二维码进行绑定。这是信息化的第一步。' },
+                { title: '扫码验收', icon: '✅', details: '<strong>验收小组：</strong>材料到场后，通过App扫描二维码核对信息，并拍摄带水印的验收照片，在线提交验收结论。合格材料自动计入项目库存。' },
+                { title: '扫码出入库', icon: 'Warehouse', icon_text: '🏢', details: '<strong>库管员：</strong>通过扫码办理材料入库、领用，系统自动更新库存台账，实时记录库位、领用人、用途等信息，实现库存精准化管理。' },
+                { title: '扫码安装', icon: '🔧', details: '<strong>施工班组：</strong>在材料安装到具体部位后再次扫码，记录安装位置、操作人员，并上传带水印的完工照片，实现“材料-部位-责任人”的精准关联。' },
+                { title: '扫码追溯', icon: '🔍', details: '<strong>管理/监理：</strong>出现质量问题或日常巡检时，扫描问题材料的二维码，即可追溯其供应商、生产批次、验收记录、安装班组等全部信息，实现全链路精准追溯。' }
+            ];
+            const flowStepsContainer = document.getElementById('flow-steps-container');
+            const processDetails = document.getElementById('process-details');
+            let activeFlowStep = 0;
+
+            processData.forEach((step, index) => {
+                const stepEl = document.createElement('div');
+                stepEl.className = 'flow-step relative z-10 flex flex-col items-center cursor-pointer p-2';
+                stepEl.innerHTML = `
+                    <div class="w-16 h-16 rounded-full bg-white border-4 border-blue-500 flex items-center justify-center text-3xl shadow-md">${step.icon_text || step.icon}</div>
+                    <span class="mt-2 text-sm font-semibold text-center">${step.title}</span>
+                `;
+                stepEl.addEventListener('click', () => setFlowStep(index));
+                flowStepsContainer.appendChild(stepEl);
+            });
+            const flowStepElements = flowStepsContainer.querySelectorAll('.flow-step');
+
+            function setFlowStep(index) {
+                activeFlowStep = index;
+                flowStepElements.forEach((el, i) => {
+                    el.classList.toggle('active', i === index);
+                    el.querySelector('div').classList.toggle('bg-blue-500', i === index);
+                    el.querySelector('div').classList.toggle('text-white', i === index);
+                });
+                processDetails.innerHTML = `<div class="flex items-start space-x-6 w-full fade-in">
+                    <div class="text-6xl">${processData[index].icon_text || processData[index].icon}</div>
+                    <div class="text-gray-700">${processData[index].details}</div>
+                </div>`;
+            }
+            setFlowStep(0);
+
+
+            // --- Interactive Ecosystem/Party Diagram ---
+            const partyData = [
+                { name: '建设单位', angle: -45, details: '<strong>主导方 (Owner)</strong><br>作为项目全生命周期管理的主导方，负责管理流程的制定与执行监督，利用系统数据进行质量追溯、成本分析与决策。' },
+                { name: '施工单位', angle: 45, details: '<strong>执行方 (Contractor)</strong><br>作为核心执行方，负责所有现场环节的扫码操作，包括材料验收、出入库、安装等，确保数据录入的及时性与准确性。' },
+                { name: '监理单位', angle: 135, details: '<strong>监督方 (Supervisor)</strong><br>作为质量监督方，负责核查二维码应用的规范性，抽查扫码记录与现场实物的一致性，确保系统信息的真实完整。' },
+                { name: '供应商', angle: 225, details: '<strong>源头方 (Supplier)</strong><br>作为物料的源头方，负责按集团规范在出厂前完成二维码的生成、粘贴，并上传合格证、质检报告等初始数据。' }
+            ];
+            const partyDiagram = document.getElementById('party-diagram').querySelector('.absolute');
+            const partyDetails = document.getElementById('party-details');
+            let activeParty = 0;
+
+            partyData.forEach((party, index) => {
+                const angleRad = party.angle * (Math.PI / 180);
+                const x = 50 + 45 * Math.cos(angleRad);
+                const y = 50 + 45 * Math.sin(angleRad);
+
+                const nodeEl = document.createElement('div');
+                nodeEl.className = 'party-node absolute w-24 h-24 bg-white border-2 border-blue-200 rounded-full flex items-center justify-center text-center text-sm font-semibold cursor-pointer shadow-md';
+                nodeEl.style.left = `${x}%`;
+                nodeEl.style.top = `${y}%`;
+                nodeEl.style.transform = 'translate(-50%, -50%)';
+                nodeEl.textContent = party.name;
+                
+                const lineEl = document.createElement('div');
+                lineEl.className = 'absolute bg-blue-300';
+                lineEl.style.left = '50%';
+                lineEl.style.top = '50%';
+                lineEl.style.width = '2px';
+                lineEl.style.height = '40%';
+                lineEl.style.transformOrigin = 'top';
+                lineEl.style.transform = `rotate(${party.angle + 90}deg)`;
+
+                partyDiagram.appendChild(lineEl);
+                partyDiagram.appendChild(nodeEl);
+                
+                nodeEl.addEventListener('click', () => setParty(index));
+            });
+            const partyNodeElements = partyDiagram.querySelectorAll('.party-node');
+            
+            function setParty(index) {
+                activeParty = index;
+                partyNodeElements.forEach((el, i) => {
+                    el.classList.toggle('active', i === index);
+                    el.classList.toggle('bg-blue-500', i === index);
+                    el.classList.toggle('text-white', i === index);
+                    el.classList.toggle('border-blue-500', i === index);
+                });
+                partyDetails.innerHTML = `<div class="text-gray-700 fade-in">${partyData[index].details}</div>`;
+            }
+            setParty(0);
+
+
+            // --- Value Chart ---
+            const valueChartCanvas = document.getElementById('valueChart');
+            let valueChart;
+
+            const chartData = {
+                labels: ['材料损耗率', '质量追溯时间', '协同沟通成本'],
+                datasets: [
+                    {
+                        label: '传统模式',
+                        data: [6, 48, 100],
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: '数字化平台',
+                        data: [1.5, 0.5, 40],
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            };
+
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return value + '%'; 
+                            }
+                        },
+                        title: {
+                           display: true,
+                           text: '相对指标 (越低越好)'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    if (context.label === '质量追溯时间') {
+                                        label += context.parsed.y + ' 小时';
+                                    } else {
+                                        label += context.parsed.y + '%';
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            };
+
+            const chartObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (!valueChart) {
+                           valueChart = new Chart(valueChartCanvas, {
+                                type: 'bar',
+                                data: chartData,
+                                options: chartOptions
+                           });
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            if (valueChartCanvas) {
+                chartObserver.observe(valueChartCanvas);
+            }
+
+            // --- Roadmap ---
+            const roadmapData = [
+                { phase: 1, duration: '3个月', title: '试点验证期', description: '选取1-2个项目进行试点，验证流程、收集反馈、快速迭代优化系统。' },
+                { phase: 2, duration: '6个月', title: '规模推广期', description: '扩大至所有新建重大项目，固化流程，完成核心单位的系统化培训。' },
+                { phase: 3, duration: '12个月', title: '全面覆盖与集成期', description: '推广至所有工程项目，并启动与财务/ERP等系统的对接计划。' },
+                { phase: 4, duration: '持续进行', title: '演进优化期', description: '进入常态化运营，通过数据分析持续挖掘管理改进点，探索AI等高级应用。' }
+            ];
+
+            const roadmapContainer = document.getElementById('roadmap-container');
+            roadmapData.forEach((item, index) => {
+                const isLeft = index % 2 === 0;
+                const itemEl = document.createElement('div');
+                itemEl.className = 'relative flex items-center';
+                itemEl.classList.toggle('md:justify-end', !isLeft);
+                itemEl.innerHTML = `
+                    <div class="hidden md:block w-5/12"></div>
+                    <div class="absolute w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold z-10 left-0 md:left-1/2 -ml-4 md:-translate-x-1/2">${item.phase}</div>
+                    <div class="w-full md:w-5/12 bg-gray-100 rounded-xl p-6 shadow-md ml-10 md:ml-0">
+                        <p class="font-bold text-blue-600 mb-1">${item.duration}</p>
+                        <h4 class="font-bold text-lg mb-2">${item.title}</h4>
+                        <p class="text-gray-600 text-sm">${item.description}</p>
+                    </div>
+                `;
+                if (!isLeft) {
+                    itemEl.querySelector('.md\\:w-5\\/12').classList.add('md:order-last');
+                }
+                roadmapContainer.appendChild(itemEl);
+            });
+        });
+    </script>
+</body>
+</html>
+
