@@ -12,11 +12,8 @@ export class ProcessFlowComponent extends BaseComponent {
     :host {
       width: 1280px !important;
     }
+    @unocss-placeholder
   `
-
-  createRenderRoot() {
-    return this.shadowRoot
-  }
 
   constructor() {
     super()
@@ -588,8 +585,8 @@ export class ProcessFlowComponent extends BaseComponent {
   }
 
   initScanAcceptanceCanvas() {
-    const canvas = this.querySelector('#scan-qr-canvas')
-    const scanCanvas = this.querySelector('#scan-line-canvas')
+    const canvas = this.shadowRoot.querySelector('#scan-qr-canvas')
+    const scanCanvas = this.shadowRoot.querySelector('#scan-line-canvas')
     if (!canvas || !scanCanvas) return
 
     const ctx = canvas.getContext('2d')
@@ -601,8 +598,8 @@ export class ProcessFlowComponent extends BaseComponent {
   }
 
   initSourceQRCanvas() {
-    const canvas = this.querySelector('#qr-canvas-source')
-    const scanbarCanvas = this.querySelector('#scanbar-canvas')
+    const canvas = this.shadowRoot.querySelector('#qr-canvas-source')
+    const scanbarCanvas = this.shadowRoot.querySelector('#scanbar-canvas')
     if (!canvas || !scanbarCanvas) return
 
     const ctx = canvas.getContext('2d')
@@ -667,11 +664,11 @@ export class ProcessFlowComponent extends BaseComponent {
     const btn = e.target
     btn.disabled = true
 
-    const container = this.querySelector('#scan-qr-container')
-    const photoContainer = this.querySelector('#photo-container')
-    const photoLabel = this.querySelector('#photo-label')
-    const scanDbLabel = this.querySelector('#scan-db-label')
-    const scanAcceptanceRow = this.querySelector('#scan-acceptance-row')
+    const container = this.shadowRoot.querySelector('#scan-qr-container')
+    const photoContainer = this.shadowRoot.querySelector('#photo-container')
+    const photoLabel = this.shadowRoot.querySelector('#photo-label')
+    const scanDbLabel = this.shadowRoot.querySelector('#scan-db-label')
+    const scanAcceptanceRow = this.shadowRoot.querySelector('#scan-acceptance-row')
 
     const scanFlash = document.createElement('div')
     scanFlash.className =
@@ -766,10 +763,10 @@ export class ProcessFlowComponent extends BaseComponent {
     scanDbLabel,
     scanAcceptanceRow
   ) {
-    const gpsContainer = this.querySelector('#gps-container')
-    const gpsLabel = this.querySelector('#gps-label')
-    const watermarkContainer = this.querySelector('#watermark-container')
-    const watermarkLabel = this.querySelector('#watermark-label')
+    const gpsContainer = this.shadowRoot.querySelector('#gps-container')
+    const gpsLabel = this.shadowRoot.querySelector('#gps-label')
+    const watermarkContainer = this.shadowRoot.querySelector('#watermark-container')
+    const watermarkLabel = this.shadowRoot.querySelector('#watermark-label')
 
     // 显示GPS元素
     gsap.delayedCall(0.5, () => {
@@ -840,7 +837,7 @@ export class ProcessFlowComponent extends BaseComponent {
       }
       scanAcceptanceRow.appendChild(qrClone)
 
-      const dbContainer = this.querySelector('#scan-db-container')
+      const dbContainer = this.shadowRoot.querySelector('#scan-db-container')
       const dbRect = dbContainer.getBoundingClientRect()
       const containerRect = container.getBoundingClientRect()
       const photoRect = photoContainer.getBoundingClientRect()
@@ -990,11 +987,11 @@ export class ProcessFlowComponent extends BaseComponent {
     const btn = e.target
     btn.disabled = true
 
-    const container = this.querySelector('#custom-qr-container')
-    const pipeContainer = this.querySelector('#pipe-container')
-    const pipeLabel = this.querySelector('#pipe-label')
-    const dbLabel = this.querySelector('#db-label')
-    const qrDbRow = this.querySelector('#qr-db-row')
+    const container = this.shadowRoot.querySelector('#custom-qr-container')
+    const pipeContainer = this.shadowRoot.querySelector('#pipe-container')
+    const pipeLabel = this.shadowRoot.querySelector('#pipe-label')
+    const dbLabel = this.shadowRoot.querySelector('#db-label')
+    const qrDbRow = this.shadowRoot.querySelector('#qr-db-row')
 
     const scanFlash = document.createElement('div')
     scanFlash.className =
@@ -1156,7 +1153,7 @@ export class ProcessFlowComponent extends BaseComponent {
       `
       qrDbRow.appendChild(docCloneDb)
 
-      const dbContainer = this.querySelector('#db-icon-container')
+      const dbContainer = this.shadowRoot.querySelector('#db-icon-container')
       const dbRect = dbContainer.getBoundingClientRect()
       const qrRectDb = container.getBoundingClientRect()
       const offsetDbLeft = dbRect.left + dbRect.width / 2 - qrRectDb.left
@@ -1276,8 +1273,8 @@ export class ProcessFlowComponent extends BaseComponent {
 
   showSplitAnimation() {
     // 获取原扫码出入库节点的位置
-    const originalNode = this.querySelector('[data-step-index="2"]')
-    const stepsContainer = this.querySelector('#flow-steps-container')
+    const originalNode = this.shadowRoot.querySelector('[data-step-index="2"]')
+    const stepsContainer = this.shadowRoot.querySelector('#flow-steps-container')
 
     if (!originalNode || !stepsContainer) return
 
@@ -1320,9 +1317,9 @@ export class ProcessFlowComponent extends BaseComponent {
 
   animateSplitNodes() {
     // 获取原始出入库节点和分裂节点
-    const originalNode = this.querySelector('[data-step-index="2"]')
-    const inboundNode = this.querySelector('[data-split-id="inbound"]')
-    const outboundNode = this.querySelector('[data-split-id="outbound"]')
+    const originalNode = this.shadowRoot.querySelector('[data-step-index="2"]')
+    const inboundNode = this.shadowRoot.querySelector('[data-split-id="inbound"]')
+    const outboundNode = this.shadowRoot.querySelector('[data-split-id="outbound"]')
 
     // 隐藏原节点
     gsap.to(originalNode, {
@@ -1346,11 +1343,11 @@ export class ProcessFlowComponent extends BaseComponent {
 
   startMergeAnimation() {
     // 获取目标位置
-    const scanNode = this.querySelector('[data-step-index="1"]')
-    const installNode = this.querySelector('[data-step-index="3"]')
-    const inboundNode = this.querySelector('[data-split-id="inbound"]')
-    const outboundNode = this.querySelector('[data-split-id="outbound"]')
-    const stepsContainer = this.querySelector('#flow-steps-container')
+    const scanNode = this.shadowRoot.querySelector('[data-step-index="1"]')
+    const installNode = this.shadowRoot.querySelector('[data-step-index="3"]')
+    const inboundNode = this.shadowRoot.querySelector('[data-split-id="inbound"]')
+    const outboundNode = this.shadowRoot.querySelector('[data-split-id="outbound"]')
+    const stepsContainer = this.shadowRoot.querySelector('#flow-steps-container')
 
     const scanRect = scanNode.getBoundingClientRect()
     const installRect = installNode.getBoundingClientRect()
@@ -1387,8 +1384,8 @@ export class ProcessFlowComponent extends BaseComponent {
   }
 
   completeMergeToScan() {
-    const scanNode = this.querySelector('[data-step-index="1"]')
-    const inboundNode = this.querySelector('[data-split-id="inbound"]')
+    const scanNode = this.shadowRoot.querySelector('[data-step-index="1"]')
+    const inboundNode = this.shadowRoot.querySelector('[data-split-id="inbound"]')
 
     // 入库节点淡出
     gsap.to(inboundNode, {
@@ -1410,8 +1407,8 @@ export class ProcessFlowComponent extends BaseComponent {
   }
 
   completeMergeToInstall() {
-    const installNode = this.querySelector('[data-step-index="3"]')
-    const outboundNode = this.querySelector('[data-split-id="outbound"]')
+    const installNode = this.shadowRoot.querySelector('[data-step-index="3"]')
+    const outboundNode = this.shadowRoot.querySelector('[data-split-id="outbound"]')
 
     // 出库节点淡出
     gsap.to(outboundNode, {

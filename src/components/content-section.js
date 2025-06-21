@@ -24,6 +24,7 @@ export class ContentSection extends BaseComponent {
     :host(.exiting) {
       opacity: 0;
     }
+    @unocss-placeholder
   `
 
   render() {

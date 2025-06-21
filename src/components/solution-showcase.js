@@ -1,4 +1,4 @@
-import { html } from 'lit'
+import { html, css } from 'lit'
 import { BaseComponent } from './base-component.js'
 import { gsap } from 'gsap'
 
@@ -6,6 +6,10 @@ export class SolutionShowcaseComponent extends BaseComponent {
   static properties = {
     currentView: { type: String },
   }
+
+  static styles = css`
+    @unocss-placeholder
+  `
 
   constructor() {
     super()
@@ -26,7 +30,7 @@ export class SolutionShowcaseComponent extends BaseComponent {
 
   initializeConceptAnimations() {
     // 初始化卡片入场动画
-    const cards = this.querySelectorAll('.concept-card')
+    const cards = this.shadowRoot.querySelectorAll('.concept-card')
     if (cards.length > 0) {
       gsap.from(cards, {
         y: 50,
@@ -297,7 +301,7 @@ export class SolutionShowcaseComponent extends BaseComponent {
 
   handleCardHover(idx) {
     // 添加卡片悬停时的额外动画效果
-    const cards = this.querySelectorAll('.concept-card')
+    const cards = this.shadowRoot.querySelectorAll('.concept-card')
     if (cards[idx]) {
       // 可以添加额外的GSAP动画
       gsap.to(cards[idx].querySelector('iconify-icon'), {
@@ -309,12 +313,8 @@ export class SolutionShowcaseComponent extends BaseComponent {
   }
 
   initializeConceptQRCode() {
-    const qrCanvas =
-      this.shadowRoot?.querySelector('#concept-qr-canvas') ||
-      this.querySelector('#concept-qr-canvas')
-    const scanLine =
-      this.shadowRoot?.querySelector('#concept-scan-line') ||
-      this.querySelector('#concept-scan-line')
+    const qrCanvas = this.shadowRoot.querySelector('#concept-qr-canvas')
+    const scanLine = this.shadowRoot.querySelector('#concept-scan-line')
 
     if (qrCanvas && qrCanvas.getContext) {
       const ctx = qrCanvas.getContext('2d')

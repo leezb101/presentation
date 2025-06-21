@@ -9,6 +9,10 @@ export class ValueChartComponent extends BaseComponent {
     chartInitialized: { type: Boolean }
   }
 
+  static styles = css`
+    @unocss-placeholder
+  `
+
   constructor() {
     super()
     this.chartInitialized = false
@@ -66,7 +70,7 @@ export class ValueChartComponent extends BaseComponent {
   initializeChart() {
     if (this.chartInitialized) return
 
-    const canvas = this.querySelector('#valueChart')
+    const canvas = this.shadowRoot.querySelector('#valueChart')
     if (!canvas) return
 
     const chartData = {

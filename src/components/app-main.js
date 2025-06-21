@@ -18,10 +18,11 @@ export class AppMain extends BaseComponent {
     :host {
       display: block;
     }
+    @unocss-placeholder
   `
 
   firstUpdated() {
-    this.sections = this.querySelectorAll('.report-section')
+    this.sections = this.shadowRoot.querySelectorAll('.report-section')
     this.showSection(0)
   }
 

@@ -2,6 +2,10 @@ import { html, css } from 'lit'
 import { BaseComponent } from './base-component.js'
 
 export class RoadmapComponent extends BaseComponent {
+  static styles = css`
+    @unocss-placeholder
+  `
+
   constructor() {
     super()
     this.roadmapData = [

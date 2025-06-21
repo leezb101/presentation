@@ -1,4 +1,4 @@
-import { html } from 'lit'
+import { html, css } from 'lit'
 import { BaseComponent } from './base-component.js'
 import { gsap } from 'gsap'
 
@@ -33,12 +33,13 @@ export class CloudArchitectureComponent extends BaseComponent {
     }
   }
 
-  static styles = `
+  static styles = css`
     :host {
       display: block;
       width: 100%;
       height: 100%;
     }
+    @unocss-placeholder
   `
 
   firstUpdated() {
@@ -47,7 +48,7 @@ export class CloudArchitectureComponent extends BaseComponent {
 
   initAnimations() {
     // 云服务器脉搏动画
-    const cloudContainer = this.querySelector('.cloud-container')
+    const cloudContainer = this.shadowRoot.querySelector('.cloud-container')
     if (cloudContainer) {
       gsap.to(cloudContainer, {
         scale: 1.05,
@@ -59,7 +60,7 @@ export class CloudArchitectureComponent extends BaseComponent {
     }
 
     // 客户端卡片渐入动画
-    const clientItems = this.querySelectorAll('.client-card')
+    const clientItems = this.shadowRoot.querySelectorAll('.client-card')
     clientItems.forEach((item, index) => {
       gsap.fromTo(
         item,
@@ -79,7 +80,7 @@ export class CloudArchitectureComponent extends BaseComponent {
   }
 
   animateConnectionLines() {
-    const lines = this.querySelectorAll('.connection-path')
+    const lines = this.shadowRoot.querySelectorAll('.connection-path')
     lines.forEach((line) => {
       gsap.to(line, {
         strokeDashoffset: -24,
@@ -92,7 +93,7 @@ export class CloudArchitectureComponent extends BaseComponent {
 
   animateActiveConnection(clientType) {
     // 停止所有现有动画
-    const allLines = this.querySelectorAll('.connection-path')
+    const allLines = this.shadowRoot.querySelectorAll('.connection-path')
     allLines.forEach((line) => {
       gsap.killTweensOf(line)
       line.style.strokeWidth = '2'
@@ -106,7 +107,7 @@ export class CloudArchitectureComponent extends BaseComponent {
     })
 
     // 激活特定连接线
-    const activeLine = this.querySelector(`.connection-${clientType}`)
+    const activeLine = this.shadowRoot.querySelector(`.connection-${clientType}`)
     if (activeLine) {
       activeLine.style.strokeWidth = '3'
       activeLine.style.opacity = '1'
@@ -123,7 +124,7 @@ export class CloudArchitectureComponent extends BaseComponent {
   }
 
   animateDataParticles(clientType) {
-    const particles = this.querySelectorAll('.data-particle')
+    const particles = this.shadowRoot.querySelectorAll('.data-particle')
     particles.forEach((particle) => {
       gsap.set(particle, { opacity: 1 })
       gsap.to(particle, {
@@ -145,7 +146,7 @@ export class CloudArchitectureComponent extends BaseComponent {
       this.showPopover(clientType)
     } else {
       this.animateConnectionLines()
-      const particles = this.querySelectorAll('.data-particle')
+      const particles = this.shadowRoot.querySelectorAll('.data-particle')
       particles.forEach((particle) => {
         gsap.to(particle, { opacity: 0, duration: 0.3 })
       })
@@ -158,7 +159,7 @@ export class CloudArchitectureComponent extends BaseComponent {
     this.hidePopover()
 
     setTimeout(() => {
-      const popover = this.querySelector(`#popover-${clientType}`)
+      const popover = this.shadowRoot.querySelector(`#popover-${clientType}`)
       if (popover) {
         gsap.fromTo(
           popover,
@@ -170,7 +171,7 @@ export class CloudArchitectureComponent extends BaseComponent {
   }
 
   hidePopover() {
-    const popovers = this.querySelectorAll('.feature-popover')
+    const popovers = this.shadowRoot.querySelectorAll('.feature-popover')
     popovers.forEach((popover) => {
       gsap.to(popover, { opacity: 0, scale: 0.8, duration: 0.3 })
     })
@@ -179,7 +180,7 @@ export class CloudArchitectureComponent extends BaseComponent {
   handleClosePopover() {
     this.activeClient = null
     this.animateConnectionLines()
-    const particles = this.querySelectorAll('.data-particle')
+    const particles = this.shadowRoot.querySelectorAll('.data-particle')
     particles.forEach((particle) => {
       gsap.to(particle, { opacity: 0, duration: 0.3 })
     })

@@ -5,6 +5,7 @@ export class BaseComponent extends LitElement {
     :host {
       display: block;
     }
+    @unocss-placeholder
   `
 
   constructor() {
@@ -12,9 +13,6 @@ export class BaseComponent extends LitElement {
     this.isAnimating = false
   }
 
-  createRenderRoot() {
-    return this
-  }
 
   safeSetTimeout(callback, delay) {
     return setTimeout(() => {

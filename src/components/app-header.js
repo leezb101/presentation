@@ -15,6 +15,7 @@ export class AppHeader extends BaseComponent {
     :host {
       display: block;
     }
+    @unocss-placeholder
   `
 
   render() {
@@ -123,12 +124,12 @@ export class AppHeader extends BaseComponent {
   }
 
   toggleMobileMenu() {
-    const mobileMenu = this.querySelector('#mobile-menu')
+    const mobileMenu = this.shadowRoot.querySelector('#mobile-menu')
     mobileMenu.classList.toggle('hidden')
   }
 
   closeMobileMenu() {
-    const mobileMenu = this.querySelector('#mobile-menu')
+    const mobileMenu = this.shadowRoot.querySelector('#mobile-menu')
     mobileMenu.classList.add('hidden')
   }
 

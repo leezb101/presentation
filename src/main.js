@@ -1,3 +1,11 @@
+/*
+ * @Author: LeeZB
+ * @Date: 2025-06-21 11:00:56
+ * @LastEditors: Leezb101 leezb101@126.com
+ * @LastEditTime: 2025-06-21 11:25:17
+ * @copyright: Copyright © 2025 高新供水.
+ */
+import 'unocss'
 import './style.css'
 import { defineCustomElements } from 'ionicons/dist/loader/index.es2017'
 
