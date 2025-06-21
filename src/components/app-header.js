@@ -3,7 +3,7 @@ import { BaseComponent } from './base-component.js'
 
 export class AppHeader extends BaseComponent {
   static properties = {
-    currentSection: { type: String }
+    currentSection: { type: String },
   }
 
   constructor() {
@@ -15,13 +15,16 @@ export class AppHeader extends BaseComponent {
     :host {
       display: block;
     }
-    @unocss-placeholder
+
+    @unocss-placeholder;
   `
 
   render() {
     return html`
       <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+        <nav
+          class="container mx-auto px-6 py-3 flex justify-between items-center"
+        >
           <div class="text-xl font-bold text-blue-700">智慧水务 · 数字基石</div>
           <div
             id="desktop-nav"
@@ -66,18 +69,23 @@ export class AppHeader extends BaseComponent {
       { href: '#solution', text: '解决方案' },
       { href: '#process', text: '系统如何运作' },
       { href: '#value', text: '项目价值' },
-      { href: '#roadmap', text: '实施路线图' }
+      { href: '#roadmap', text: '实施路线图' },
     ]
 
-    return navItems.map(item => html`
-      <a 
-        href="${item.href}" 
-        class="nav-link ${this.currentSection === item.href.substring(1) ? 'active' : ''}"
-        @click=${this.handleNavClick}
-      >
-        ${item.text}
-      </a>
-    `)
+    return navItems.map(
+      (item) => html`
+        <a
+          href="${item.href}"
+          class="nav-link text-[#6b7280] no-underline transition-colors duration-200 ease-in-out hover:text-[#2563eb] ${this
+            .currentSection === item.href.substring(1)
+            ? 'active !font-bold !text-[#2563eb]'
+            : ''}"
+          @click=${this.handleNavClick}
+        >
+          ${item.text}
+        </a>
+      `
+    )
   }
 
   renderMobileNavLinks() {
@@ -88,39 +96,48 @@ export class AppHeader extends BaseComponent {
       { href: '#solution', text: '解决方案' },
       { href: '#process', text: '系统如何运作' },
       { href: '#value', text: '项目价值' },
-      { href: '#roadmap', text: '实施路线图' }
+      { href: '#roadmap', text: '实施路线图' },
     ]
 
-    return navItems.map(item => html`
-      <a 
-        href="${item.href}" 
-        class="block py-2 nav-link ${this.currentSection === item.href.substring(1) ? 'active' : ''}"
-        @click=${this.handleMobileNavClick}
-      >
-        ${item.text}
-      </a>
-    `)
+    return navItems.map(
+      (item) => html`
+        <a
+          href="${item.href}"
+          class="block py-2 nav-link text-[#6b7280] no-underline transition-colors duration-200 ease-in-out hover:text-[#2563eb] ${this
+            .currentSection === item.href.substring(1)
+            ? 'active font-bold text-[#2563eb]'
+            : ''} "
+          @click=${this.handleMobileNavClick}
+        >
+          ${item.text}
+        </a>
+      `
+    )
   }
 
   handleNavClick(e) {
     e.preventDefault()
     const targetId = e.target.getAttribute('href').substring(1)
-    this.dispatchEvent(new CustomEvent('section-change', {
-      detail: { sectionId: targetId },
-      bubbles: true,
-      composed: true
-    }))
+    this.dispatchEvent(
+      new CustomEvent('section-change', {
+        detail: { sectionId: targetId },
+        bubbles: true,
+        composed: true,
+      })
+    )
   }
 
   handleMobileNavClick(e) {
     e.preventDefault()
     const targetId = e.target.getAttribute('href').substring(1)
     this.closeMobileMenu()
-    this.dispatchEvent(new CustomEvent('section-change', {
-      detail: { sectionId: targetId },
-      bubbles: true,
-      composed: true
-    }))
+    this.dispatchEvent(
+      new CustomEvent('section-change', {
+        detail: { sectionId: targetId },
+        bubbles: true,
+        composed: true,
+      })
+    )
   }
 
   toggleMobileMenu() {

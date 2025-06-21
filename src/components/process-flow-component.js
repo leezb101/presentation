@@ -12,7 +12,7 @@ export class ProcessFlowComponent extends BaseComponent {
     :host {
       width: 1280px !important;
     }
-    @unocss-placeholder
+    @unocss-placeholder;
   `
 
   constructor() {
@@ -141,7 +141,7 @@ export class ProcessFlowComponent extends BaseComponent {
         <div class="mt-6 flex justify-center space-x-4">
           <button
             id="prev-step-btn"
-            class="bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
+            class="bg-gray-200 cursor-pointer text-gray-700 font-bold py-2 px-6 rounded-lg hover:bg-gray-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
             ?disabled=${this.currentStepIndex === 0}
             @click=${this.prevStep}
           >
@@ -149,7 +149,7 @@ export class ProcessFlowComponent extends BaseComponent {
           </button>
           <button
             id="next-step-btn"
-            class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+            class="bg-blue-600 cursor-pointer text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             ?disabled=${this.currentStepIndex ===
             (this.isMerged
               ? this.mergedProcessData.length
@@ -169,15 +169,17 @@ export class ProcessFlowComponent extends BaseComponent {
     const steps = dataToUse.map(
       (step, index) => html`
         <div
-          class="flex relative z-10 flex-col items-center p-2 flow-step ${index <
-          this.currentStepIndex
-            ? 'visited'
-            : ''} ${index === this.currentStepIndex ? 'active' : ''}"
+          class="flex relative z-10 flex-col items-center p-2 flow-step"
           data-step-index="${index}"
           style="${index === 2 && this.showSplitNodes ? 'opacity: 0;' : ''}"
         >
           <div
-            class="flex justify-center items-center w-16 h-16 text-3xl bg-white rounded-full border-4 border-gray-300 shadow-md transition-all duration-300 flow-step-icon"
+            class="flex justify-center items-center w-16 h-16 text-3xl rounded-full border-4 shadow-md transition-all duration-300 ${index <
+            this.currentStepIndex
+              ? 'bg-blue-100 border-blue-600 text-blue-600'
+              : index === this.currentStepIndex
+              ? 'bg-blue-600 border-blue-600 text-white transform -translate-y-1 scale-110 shadow-blue-500/30 shadow-xl'
+              : 'bg-white border-gray-300 text-gray-600'}"
           >
             <iconify-icon icon="${step.icon}" class="text-4xl"></iconify-icon>
           </div>
@@ -303,6 +305,90 @@ export class ProcessFlowComponent extends BaseComponent {
             style="min-height: 240px;"
           >
             ${this.renderSourceCodingSection()}
+          </div>
+        </div>
+      `
+    } else if (stepData.title === '扫码出库+安装') {
+      return html`
+        <div
+          class="flex flex-col space-y-6 w-full h-full"
+          style="position: relative;"
+        >
+          <button
+            title="重播本步骤"
+            class="flex justify-center items-center w-10 h-10 bg-white rounded-full border border-gray-200 shadow transition hover:bg-blue-50"
+            style="position: absolute; left: 10px; bottom: 10px; z-index: 100;"
+            @click=${this.replayStep}
+          >
+            <iconify-icon
+              icon="mdi:refresh"
+              style="font-size:1.5rem;"
+            ></iconify-icon>
+          </button>
+
+          <div
+            class="flex flex-row justify-start items-center text-gray-700"
+            style="height: 80px; flex-shrink: 0;"
+          >
+            <div
+              class="text-6xl text-blue-500"
+              style="width: 80px; flex-shrink: 0;"
+            >
+              <iconify-icon icon="${stepData.icon}"></iconify-icon>
+            </div>
+            <div class="text-gray-700 ml-4">
+              ${unsafeHTML(stepData.details)}
+            </div>
+          </div>
+
+          <div
+            id="outbound-install-row"
+            class="flex relative gap-6 justify-between items-start w-full flex-1"
+            style="min-height: 240px;"
+          >
+            ${this.renderOutboundInstallSection()}
+          </div>
+        </div>
+      `
+    } else if (stepData.title === '扫码追溯') {
+      return html`
+        <div
+          class="flex flex-col space-y-6 w-full h-full"
+          style="position: relative;"
+        >
+          <button
+            title="重播本步骤"
+            class="flex justify-center items-center w-10 h-10 bg-white rounded-full border border-gray-200 shadow transition hover:bg-blue-50"
+            style="position: absolute; left: 10px; bottom: 10px; z-index: 100;"
+            @click=${this.replayStep}
+          >
+            <iconify-icon
+              icon="mdi:refresh"
+              style="font-size:1.5rem;"
+            ></iconify-icon>
+          </button>
+
+          <div
+            class="flex flex-row justify-start items-center text-gray-700"
+            style="height: 80px; flex-shrink: 0;"
+          >
+            <div
+              class="text-6xl text-blue-500"
+              style="width: 80px; flex-shrink: 0;"
+            >
+              <iconify-icon icon="${stepData.icon}"></iconify-icon>
+            </div>
+            <div class="text-gray-700 ml-4">
+              ${unsafeHTML(stepData.details)}
+            </div>
+          </div>
+
+          <div
+            id="trace-query-row"
+            class="flex relative gap-6 justify-between items-start w-full flex-1"
+            style="min-height: 240px;"
+          >
+            ${this.renderTraceQuerySection()}
           </div>
         </div>
       `
@@ -563,6 +649,261 @@ export class ProcessFlowComponent extends BaseComponent {
     `
   }
 
+  renderOutboundInstallSection() {
+    return html`
+      <!-- 左侧二维码+扫描动效 -->
+      <div class="flex flex-col flex-1 items-center space-y-4">
+        <div
+          id="outbound-qr-container"
+          class="flex flex-shrink-0 justify-center items-center bg-black shadow-lg"
+          style="position: relative; width: 128px; height: 128px; border-radius: 0.75rem; overflow: hidden; border: 2.5px solid #2563eb;"
+        >
+          <canvas
+            id="outbound-qr-canvas"
+            width="112"
+            height="112"
+            style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1;"
+          ></canvas>
+          <canvas
+            id="outbound-scan-line-canvas"
+            width="112"
+            height="112"
+            style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; pointer-events: none;"
+          ></canvas>
+        </div>
+        <button
+          id="outbound-simulate-btn"
+          class="px-4 py-2 text-white bg-blue-500 rounded transition w-[128px] hover:bg-blue-600"
+          @click=${this.handleOutboundSimulateClick}
+        >
+          扫码出库
+        </button>
+      </div>
+
+      <!-- 中间数据库元素 -->
+      <div class="flex flex-col flex-1 items-center space-y-4">
+        <div
+          id="outbound-db-container"
+          class="flex relative flex-shrink-0 justify-center items-center shadow-lg"
+          style="width: 128px; height: 128px; border-radius: 0.75rem; background: #f0fdf4; border: 2.5px solid #4ade80;"
+        >
+          <div class="flex flex-col justify-center items-center w-full h-full">
+            <iconify-icon
+              icon="mdi:database"
+              class="text-green-500"
+              style="font-size:96px;"
+            ></iconify-icon>
+            <div class="mt-2 text-lg font-bold text-green-700">数据库</div>
+          </div>
+        </div>
+        <div
+          id="outbound-db-label"
+          class="px-3 py-1 text-sm font-semibold text-green-700 bg-green-100 rounded-full border border-green-300"
+          style="opacity: 0;"
+        >
+          库存管理
+        </div>
+      </div>
+
+      <!-- 右侧管件元素 -->
+      <div class="flex flex-col flex-1 items-center space-y-4">
+        <div
+          id="install-pipe-container"
+          class="flex relative flex-shrink-0 justify-center items-center shadow-lg"
+          style="width: 128px; height: 128px; border-radius: 0.75rem; background: #f0f9ff; border: 2.5px solid #38bdf8; opacity: 0; transform: scale(0.7); transition: all 0.7s cubic-bezier(0.4,0,0.2,1);"
+        >
+          <div class="flex flex-col justify-center items-center w-full h-full">
+            <iconify-icon
+              icon="mdi:pipe"
+              class="text-sky-500"
+              style="font-size:96px;"
+            ></iconify-icon>
+            <div class="mt-2 text-lg font-bold text-sky-700">管件</div>
+          </div>
+        </div>
+        <div
+          id="install-pipe-label"
+          class="px-3 py-1 text-sm font-semibold text-sky-700 bg-sky-100 rounded-full border border-sky-300"
+          style="opacity: 0;"
+        >
+          待安装
+        </div>
+      </div>
+
+      <!-- 三个子元素容器 -->
+      <div
+        id="install-elements-container"
+        class="absolute"
+        style="top: 200px; right: 50px; width: 300px; height: 100px; pointer-events: none;"
+      >
+        <!-- 安装信息元素 -->
+        <div
+          id="install-info-container"
+          class="absolute flex flex-col items-center space-y-2"
+          style="left: 0; top: 0; opacity: 0; transform: scale(0.7); transition: all 0.7s cubic-bezier(0.4,0,0.2,1);"
+        >
+          <div
+            class="flex relative flex-shrink-0 justify-center items-center shadow-lg"
+            style="width: 80px; height: 80px; border-radius: 0.75rem; background: #fef3c7; border: 2.5px solid #f59e0b;"
+          >
+            <div
+              class="flex flex-col justify-center items-center w-full h-full"
+            >
+              <iconify-icon
+                icon="mdi:information"
+                class="text-amber-500"
+                style="font-size:48px;"
+              ></iconify-icon>
+            </div>
+          </div>
+          <div
+            class="px-2 py-1 text-xs font-semibold text-amber-700 bg-amber-100 rounded-full border border-amber-300"
+          >
+            安装信息
+          </div>
+        </div>
+
+        <!-- 水印元素 -->
+        <div
+          id="install-watermark-container"
+          class="absolute flex flex-col items-center space-y-2"
+          style="left: 100px; top: 0; opacity: 0; transform: scale(0.7); transition: all 0.7s cubic-bezier(0.4,0,0.2,1);"
+        >
+          <div
+            class="flex relative flex-shrink-0 justify-center items-center shadow-lg"
+            style="width: 80px; height: 80px; border-radius: 0.75rem; background: #fefce8; border: 2.5px solid #eab308;"
+          >
+            <div
+              class="flex flex-col justify-center items-center w-full h-full"
+            >
+              <iconify-icon
+                icon="mdi:watermark"
+                class="text-yellow-600"
+                style="font-size:48px;"
+              ></iconify-icon>
+            </div>
+          </div>
+          <div
+            class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full border border-yellow-300"
+          >
+            水印
+          </div>
+        </div>
+
+        <!-- 照片元素 -->
+        <div
+          id="install-photo-container"
+          class="absolute flex flex-col items-center space-y-2"
+          style="left: 200px; top: 0; opacity: 0; transform: scale(0.7); transition: all 0.7s cubic-bezier(0.4,0,0.2,1);"
+        >
+          <div
+            class="flex relative flex-shrink-0 justify-center items-center shadow-lg"
+            style="width: 80px; height: 80px; border-radius: 0.75rem; background: #fff7ed; border: 2.5px solid #ea580c;"
+          >
+            <div
+              class="flex flex-col justify-center items-center w-full h-full"
+            >
+              <iconify-icon
+                icon="mdi:camera"
+                class="text-orange-600"
+                style="font-size:48px;"
+              ></iconify-icon>
+            </div>
+          </div>
+          <div
+            class="px-2 py-1 text-xs font-semibold text-orange-700 bg-orange-100 rounded-full border border-orange-300"
+          >
+            照片
+          </div>
+        </div>
+      </div>
+    `
+  }
+
+  renderTraceQuerySection() {
+    return html`
+      <!-- 左侧二维码+扫码查询按钮 -->
+      <div class="flex flex-col flex-1 items-center space-y-4">
+        <div
+          id="trace-qr-container"
+          class="flex flex-shrink-0 justify-center items-center bg-black shadow-lg"
+          style="position: relative; width: 128px; height: 128px; border-radius: 0.75rem; overflow: hidden; border: 2.5px solid #2563eb;"
+        >
+          <canvas
+            id="trace-qr-canvas"
+            width="112"
+            height="112"
+            style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1;"
+          ></canvas>
+          <canvas
+            id="trace-scan-line-canvas"
+            width="112"
+            height="112"
+            style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; pointer-events: none;"
+          ></canvas>
+        </div>
+        <button
+          id="trace-query-btn"
+          class="px-4 py-2 text-white bg-blue-500 rounded transition w-[128px] hover:bg-blue-600"
+          @click=${this.handleTraceQueryClick}
+        >
+          扫码查询
+        </button>
+      </div>
+
+      <!-- 中间数据库元素 -->
+      <div class="flex flex-col flex-1 items-center space-y-4">
+        <div
+          id="trace-db-container"
+          class="flex relative flex-shrink-0 justify-center items-center shadow-lg"
+          style="width: 128px; height: 128px; border-radius: 0.75rem; background: #f0fdf4; border: 2.5px solid #4ade80;"
+        >
+          <div class="flex flex-col justify-center items-center w-full h-full">
+            <iconify-icon
+              icon="mdi:database"
+              class="text-green-500"
+              style="font-size:96px;"
+            ></iconify-icon>
+            <div class="mt-2 text-lg font-bold text-green-700">数据库</div>
+          </div>
+          <!-- Loading图标容器 -->
+          <div
+            id="trace-db-loading"
+            class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-3"
+            style="opacity: 0;"
+          >
+            <iconify-icon
+              icon="mdi:loading"
+              class="text-blue-500 animate-spin"
+              style="font-size:48px"
+            ></iconify-icon>
+          </div>
+        </div>
+        <div
+          id="trace-db-label"
+          class="px-3 py-1 text-sm font-semibold text-green-700 bg-green-100 rounded-full border border-green-300"
+          style="opacity: 0;"
+        >
+          信息检索
+        </div>
+      </div>
+
+      <!-- 右侧信息元素排列区域 -->
+      <div
+        class="flex flex-col flex-1 items-center space-y-4"
+        id="trace-info-display"
+      >
+        <div class="text-sm font-semibold text-gray-600">追溯信息</div>
+        <div
+          id="trace-info-container"
+          class="grid grid-cols-2 gap-3 w-full max-w-xs"
+        >
+          <!-- 信息元素将动态添加到这里 -->
+        </div>
+      </div>
+    `
+  }
+
   firstUpdated() {
     this.initializeCanvases()
   }
@@ -575,11 +916,21 @@ export class ProcessFlowComponent extends BaseComponent {
 
   initializeCanvases() {
     this.safeRequestAnimationFrame(() => {
-      if (this.processData[this.currentStepIndex]?.type === 'scan') {
+      const currentStep = this.isMerged
+        ? this.mergedProcessData[this.currentStepIndex]
+        : this.processData[this.currentStepIndex]
+
+      if (currentStep?.type === 'scan') {
         this.initScanAcceptanceCanvas()
       }
-      if (this.processData[this.currentStepIndex]?.title === '源头赋码') {
+      if (currentStep?.title === '源头赋码') {
         this.initSourceQRCanvas()
+      }
+      if (currentStep?.title === '扫码出库+安装') {
+        this.initOutboundInstallCanvas()
+      }
+      if (currentStep?.title === '扫码追溯') {
+        this.initTraceQueryCanvas()
       }
     })
   }
@@ -608,6 +959,77 @@ export class ProcessFlowComponent extends BaseComponent {
     this.drawQRCode(ctx, canvas.width, canvas.height)
     this.qrImageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     this.animateScanbar(scanbarCtx, scanbarCanvas.width, scanbarCanvas.height)
+  }
+
+  initOutboundInstallCanvas() {
+    const canvas = this.shadowRoot.querySelector('#outbound-qr-canvas')
+    const scanCanvas = this.shadowRoot.querySelector(
+      '#outbound-scan-line-canvas'
+    )
+    if (!canvas || !scanCanvas) return
+
+    const ctx = canvas.getContext('2d')
+    const scanCtx = scanCanvas.getContext('2d')
+
+    this.drawQRCode(ctx, canvas.width, canvas.height)
+    this.outboundQrImageData = ctx.getImageData(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    )
+    this.animateOutboundScanLine(scanCtx, scanCanvas.width, scanCanvas.height)
+  }
+
+  initTraceQueryCanvas() {
+    const canvas = this.shadowRoot.querySelector('#trace-qr-canvas')
+    const scanCanvas = this.shadowRoot.querySelector('#trace-scan-line-canvas')
+    if (!canvas || !scanCanvas) return
+
+    const ctx = canvas.getContext('2d')
+    const scanCtx = scanCanvas.getContext('2d')
+
+    this.drawQRCode(ctx, canvas.width, canvas.height)
+    this.traceQrImageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    this.animateTraceScanLine(scanCtx, scanCanvas.width, scanCanvas.height)
+  }
+
+  animateOutboundScanLine(ctx, width, height) {
+    let scanY = 0
+    const animate = () => {
+      if (!this.isConnected) return
+
+      ctx.clearRect(0, 0, width, height)
+      const grad = ctx.createLinearGradient(0, scanY, 0, scanY + 12)
+      grad.addColorStop(0, 'transparent')
+      grad.addColorStop(0.5, '#3b82f6')
+      grad.addColorStop(1, 'transparent')
+      ctx.fillStyle = grad
+      ctx.fillRect(0, scanY, width, 12)
+      scanY += 2
+      if (scanY > height) scanY = 0
+      this.safeRequestAnimationFrame(animate)
+    }
+    animate()
+  }
+
+  animateTraceScanLine(ctx, width, height) {
+    let scanY = 0
+    const animate = () => {
+      if (!this.isConnected) return
+
+      ctx.clearRect(0, 0, width, height)
+      const grad = ctx.createLinearGradient(0, scanY, 0, scanY + 12)
+      grad.addColorStop(0, 'transparent')
+      grad.addColorStop(0.5, '#3b82f6')
+      grad.addColorStop(1, 'transparent')
+      ctx.fillStyle = grad
+      ctx.fillRect(0, scanY, width, 12)
+      scanY += 2
+      if (scanY > height) scanY = 0
+      this.safeRequestAnimationFrame(animate)
+    }
+    animate()
   }
 
   drawQRCode(ctx, width, height) {
@@ -668,7 +1090,9 @@ export class ProcessFlowComponent extends BaseComponent {
     const photoContainer = this.shadowRoot.querySelector('#photo-container')
     const photoLabel = this.shadowRoot.querySelector('#photo-label')
     const scanDbLabel = this.shadowRoot.querySelector('#scan-db-label')
-    const scanAcceptanceRow = this.shadowRoot.querySelector('#scan-acceptance-row')
+    const scanAcceptanceRow = this.shadowRoot.querySelector(
+      '#scan-acceptance-row'
+    )
 
     const scanFlash = document.createElement('div')
     scanFlash.className =
@@ -714,7 +1138,7 @@ export class ProcessFlowComponent extends BaseComponent {
           // 强烈的闪光效果
           gsap.to(photoFlash, {
             opacity: 0.95,
-            duration: 0.15,
+            duration: 0.85,
             ease: 'power2.out',
             onComplete: () => {
               gsap.to(photoFlash, {
@@ -765,7 +1189,9 @@ export class ProcessFlowComponent extends BaseComponent {
   ) {
     const gpsContainer = this.shadowRoot.querySelector('#gps-container')
     const gpsLabel = this.shadowRoot.querySelector('#gps-label')
-    const watermarkContainer = this.shadowRoot.querySelector('#watermark-container')
+    const watermarkContainer = this.shadowRoot.querySelector(
+      '#watermark-container'
+    )
     const watermarkLabel = this.shadowRoot.querySelector('#watermark-label')
 
     // 显示GPS元素
@@ -965,7 +1391,7 @@ export class ProcessFlowComponent extends BaseComponent {
       .to(
         plusOneElement,
         {
-          y: -20,
+          y: -30,
           duration: 0.4,
           ease: 'power1.out',
         },
@@ -973,11 +1399,11 @@ export class ProcessFlowComponent extends BaseComponent {
       )
       .to(plusOneElement, {
         // 停留0.6秒
-        duration: 0.6,
+        duration: 1,
       })
       .to(plusOneElement, {
         opacity: 0,
-        duration: 0.4,
+        duration: 0.6,
         ease: 'power1.in',
         onComplete: () => plusOneElement.remove(),
       })
@@ -1236,6 +1662,595 @@ export class ProcessFlowComponent extends BaseComponent {
     })
   }
 
+  handleOutboundSimulateClick(e) {
+    const btn = e.target
+    btn.disabled = true
+
+    const container = this.shadowRoot.querySelector('#outbound-qr-container')
+    const pipeContainer = this.shadowRoot.querySelector(
+      '#install-pipe-container'
+    )
+    const pipeLabel = this.shadowRoot.querySelector('#install-pipe-label')
+    const outboundInstallRow = this.shadowRoot.querySelector(
+      '#outbound-install-row'
+    )
+
+    // 扫码闪光效果
+    const scanFlash = document.createElement('div')
+    scanFlash.className =
+      'absolute inset-0 bg-blue-300 rounded opacity-20 animate-ping'
+    container.appendChild(scanFlash)
+
+    gsap.to(scanFlash, {
+      opacity: 0,
+      duration: 0.6,
+      onComplete: () => scanFlash.remove(),
+    })
+
+    // 启动出库安装动画序列
+    this.createOutboundInstallEffect(
+      container,
+      pipeContainer,
+      pipeLabel,
+      outboundInstallRow
+    )
+  }
+
+  createOutboundInstallEffect(
+    container,
+    pipeContainer,
+    pipeLabel,
+    outboundInstallRow
+  ) {
+    // 步骤1: 显示管件元素
+    gsap.delayedCall(0.8, () => {
+      gsap.to(pipeContainer, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.7,
+        ease: 'power2.out',
+        onComplete: () => {
+          gsap.to(pipeLabel, {
+            opacity: 1,
+            duration: 0.5,
+            ease: 'power1.out',
+          })
+
+          // 步骤2: 从管件位置生成三个元素
+          this.generateInstallElements()
+        },
+      })
+    })
+  }
+
+  generateInstallElements() {
+    const installInfoContainer = this.shadowRoot.querySelector(
+      '#install-info-container'
+    )
+    const installWatermarkContainer = this.shadowRoot.querySelector(
+      '#install-watermark-container'
+    )
+    const installPhotoContainer = this.shadowRoot.querySelector(
+      '#install-photo-container'
+    )
+
+    // 依次显示三个元素
+    gsap.delayedCall(0.5, () => {
+      gsap.to(installInfoContainer, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        ease: 'back.out(1.7)',
+      })
+    })
+
+    gsap.delayedCall(0.8, () => {
+      gsap.to(installWatermarkContainer, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        ease: 'back.out(1.7)',
+      })
+    })
+
+    gsap.delayedCall(1.1, () => {
+      gsap.to(installPhotoContainer, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        ease: 'back.out(1.7)',
+        onComplete: () => {
+          // 步骤3: 启动飞入数据库动画
+          this.createOutboundFlyToDatabase()
+        },
+      })
+    })
+  }
+
+  createOutboundFlyToDatabase() {
+    const container = this.shadowRoot.querySelector('#outbound-qr-container')
+    const dbContainer = this.shadowRoot.querySelector('#outbound-db-container')
+    const dbLabel = this.shadowRoot.querySelector('#outbound-db-label')
+    const installInfoContainer = this.shadowRoot.querySelector(
+      '#install-info-container'
+    )
+    const installWatermarkContainer = this.shadowRoot.querySelector(
+      '#install-watermark-container'
+    )
+    const installPhotoContainer = this.shadowRoot.querySelector(
+      '#install-photo-container'
+    )
+    const outboundInstallRow = this.shadowRoot.querySelector(
+      '#outbound-install-row'
+    )
+    const pipeContainer = this.shadowRoot.querySelector(
+      '#install-pipe-container'
+    )
+
+    gsap.delayedCall(1.0, () => {
+      // 创建二维码副本
+      const qrClone = container.cloneNode(true)
+      Object.assign(qrClone.style, {
+        position: 'absolute',
+        left: '0',
+        top: '0',
+        zIndex: '50',
+      })
+      const cloneCanvas = qrClone.querySelector('canvas')
+      if (cloneCanvas && this.outboundQrImageData) {
+        const cloneCtx = cloneCanvas.getContext('2d')
+        cloneCtx.putImageData(this.outboundQrImageData, 0, 0)
+      }
+      outboundInstallRow.appendChild(qrClone)
+
+      // 计算目标位置
+      const dbRect = dbContainer.getBoundingClientRect()
+      const containerRect = container.getBoundingClientRect()
+      const infoRect = installInfoContainer.getBoundingClientRect()
+      const watermarkRect = installWatermarkContainer.getBoundingClientRect()
+      const photoRect = installPhotoContainer.getBoundingClientRect()
+
+      const dbCenterX = dbRect.left + dbRect.width / 2
+      const dbCenterY = dbRect.top + dbRect.height / 2
+
+      // 二维码目标位置
+      const qrToDbLeft =
+        dbCenterX - containerRect.left - qrClone.clientWidth / 2
+      const qrToDbTop =
+        dbCenterY - containerRect.top - qrClone.clientHeight / 2 - 25
+
+      // 三个元素目标位置
+      const infoToDbLeft =
+        dbCenterX - infoRect.left - installInfoContainer.clientWidth / 2 - 20
+      const infoToDbTop =
+        dbCenterY - infoRect.top - installInfoContainer.clientHeight / 2 - 10
+
+      const watermarkToDbLeft =
+        dbCenterX -
+        watermarkRect.left -
+        installWatermarkContainer.clientWidth / 2 +
+        20
+      const watermarkToDbTop =
+        dbCenterY -
+        watermarkRect.top -
+        installWatermarkContainer.clientHeight / 2 -
+        10
+
+      const photoToDbLeft =
+        dbCenterX - photoRect.left - installPhotoContainer.clientWidth / 2
+      const photoToDbTop =
+        dbCenterY - photoRect.top - installPhotoContainer.clientHeight / 2 + 20
+
+      // 同时移动所有元素到数据库
+      gsap.to(qrClone, {
+        x: qrToDbLeft,
+        y: qrToDbTop,
+        scale: 0.4,
+        duration: 1.2,
+        ease: 'power2.inOut',
+        onComplete: () => qrClone.remove(),
+      })
+
+      gsap.to(installInfoContainer, {
+        x: infoToDbLeft,
+        y: infoToDbTop,
+        scale: 0.4,
+        duration: 1.2,
+        delay: 0.1,
+        ease: 'power2.inOut',
+      })
+
+      gsap.to(installWatermarkContainer, {
+        x: watermarkToDbLeft,
+        y: watermarkToDbTop,
+        scale: 0.4,
+        duration: 1.2,
+        delay: 0.2,
+        ease: 'power2.inOut',
+      })
+
+      gsap.to(installPhotoContainer, {
+        x: photoToDbLeft,
+        y: photoToDbTop,
+        scale: 0.4,
+        duration: 1.2,
+        delay: 0.3,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          // 显示数据库标签
+          gsap.to(dbLabel, {
+            opacity: 1,
+            duration: 0.5,
+            ease: 'power1.out',
+          })
+
+          // 步骤4: 创建-1动画和印戳
+          this.createMinusOneAnimation(dbContainer)
+          this.createInstallStamp(pipeContainer)
+        },
+      })
+    })
+  }
+
+  createMinusOneAnimation(dbContainer) {
+    // 创建-1文本元素
+    const minusOneElement = document.createElement('div')
+    minusOneElement.textContent = '-1'
+    Object.assign(minusOneElement.style, {
+      position: 'absolute',
+      left: '50%',
+      top: '0px',
+      transform: 'translateX(-50%)',
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
+      color: '#dc2626',
+      opacity: '0',
+      zIndex: '70',
+      pointerEvents: 'none',
+    })
+    dbContainer.appendChild(minusOneElement)
+
+    // 动画序列：淡入 -> 向上浮动 -> 停留 -> 淡出
+    const timeline = gsap.timeline()
+
+    timeline
+      .to(minusOneElement, {
+        opacity: 1,
+        duration: 0.3,
+        ease: 'power2.out',
+      })
+      .to(
+        minusOneElement,
+        {
+          y: -30,
+          duration: 0.4,
+          ease: 'power1.out',
+        },
+        '<'
+      )
+      .to(minusOneElement, {
+        duration: 1,
+      })
+      .to(minusOneElement, {
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power1.in',
+        onComplete: () => minusOneElement.remove(),
+      })
+  }
+
+  createInstallStamp(pipeContainer) {
+    gsap.delayedCall(0.5, () => {
+      // 创建印戳元素
+      const stampElement = document.createElement('div')
+      stampElement.innerHTML = `
+        <div style="
+          position: absolute;
+          right: -10px;
+          top: -10px;
+          width: 60px;
+          height: 60px;
+          background: #dc2626;
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.75rem;
+          font-weight: bold;
+          transform: rotate(-15deg);
+          box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+          z-index: 60;
+          opacity: 0;
+        ">
+          核销<br>安装
+        </div>
+      `
+      pipeContainer.appendChild(stampElement)
+
+      // 印戳动画
+      const stamp = stampElement.firstElementChild
+      gsap.fromTo(
+        stamp,
+        {
+          opacity: 0,
+          scale: 0.5,
+          rotation: -45,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          rotation: -15,
+          duration: 0.6,
+          ease: 'back.out(2)',
+        }
+      )
+    })
+  }
+
+  handleTraceQueryClick(e) {
+    const btn = e.target
+    btn.disabled = true
+
+    const container = this.shadowRoot.querySelector('#trace-qr-container')
+    const dbContainer = this.shadowRoot.querySelector('#trace-db-container')
+    const dbLabel = this.shadowRoot.querySelector('#trace-db-label')
+    const traceQueryRow = this.shadowRoot.querySelector('#trace-query-row')
+    const dbLoading = this.shadowRoot.querySelector('#trace-db-loading')
+
+    // 创建扫码闪光效果
+    const scanFlash = document.createElement('div')
+    scanFlash.className =
+      'absolute inset-0 bg-blue-300 rounded opacity-20 animate-ping'
+    container.appendChild(scanFlash)
+
+    gsap.to(scanFlash, {
+      opacity: 0,
+      duration: 0.6,
+      onComplete: () => scanFlash.remove(),
+    })
+
+    // 启动扫码追溯动画序列
+    this.startTraceQueryAnimation(
+      container,
+      dbContainer,
+      dbLabel,
+      traceQueryRow,
+      dbLoading
+    )
+  }
+
+  startTraceQueryAnimation(
+    container,
+    dbContainer,
+    dbLabel,
+    traceQueryRow,
+    dbLoading
+  ) {
+    gsap.delayedCall(0.8, () => {
+      // 步骤1: 创建二维码副本并飞入数据库
+      const qrClone = container.cloneNode(true)
+      Object.assign(qrClone.style, {
+        position: 'absolute',
+        left: '0',
+        top: '0',
+        zIndex: '50',
+      })
+
+      // 恢复二维码图像
+      const cloneCanvas = qrClone.querySelector('canvas')
+      if (cloneCanvas && this.traceQrImageData) {
+        const cloneCtx = cloneCanvas.getContext('2d')
+        cloneCtx.putImageData(this.traceQrImageData, 0, 0)
+      }
+      traceQueryRow.appendChild(qrClone)
+
+      // 计算飞行目标位置
+      const dbRect = dbContainer.getBoundingClientRect()
+      const containerRect = container.getBoundingClientRect()
+      const dbCenterX = dbRect.left + dbRect.width / 2
+      const dbCenterY = dbRect.top + dbRect.height / 2
+
+      const qrToDbLeft =
+        dbCenterX - containerRect.left - qrClone.clientWidth / 2
+      const qrToDbTop = dbCenterY - containerRect.top - qrClone.clientHeight / 2
+
+      // 二维码飞入数据库动画
+      gsap.to(qrClone, {
+        x: qrToDbLeft,
+        y: qrToDbTop,
+        scale: 0.4,
+        duration: 1.2,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          qrClone.remove()
+          // 步骤2: 显示loading动画
+          this.showDatabaseLoading(dbLoading, dbContainer, dbLabel)
+        },
+      })
+    })
+  }
+
+  showDatabaseLoading(dbLoading, dbContainer, dbLabel) {
+    // 显示loading图标
+    gsap.to(dbLoading, {
+      opacity: 1,
+      duration: 0.3,
+      ease: 'power2.out',
+    })
+
+    // 0.6秒后隐藏loading并开始信息元素飞出动画
+    gsap.delayedCall(1.2, () => {
+      gsap.to(dbLoading, {
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => {
+          // 步骤3: 开始信息元素飞出动画
+          this.startInfoElementsFlyout(dbContainer, dbLabel)
+        },
+      })
+    })
+  }
+
+  startInfoElementsFlyout(dbContainer, dbLabel) {
+    const traceQueryRow = this.shadowRoot.querySelector('#trace-query-row')
+    const infoContainer = this.shadowRoot.querySelector('#trace-info-container')
+
+    // 定义要飞出的信息元素
+    const infoElements = [
+      {
+        label: '厂家信息',
+        icon: 'mdi:factory',
+        color: '#3b82f6',
+        bg: '#dbeafe',
+        border: '#2563eb',
+      },
+      {
+        label: '出厂信息',
+        icon: 'mdi:package-variant',
+        color: '#22c55e',
+        bg: '#bbf7d0',
+        border: '#16a34a',
+      },
+      {
+        label: '质检报告',
+        icon: 'mdi:clipboard-check',
+        color: '#f59e0b',
+        bg: '#fef3c7',
+        border: '#d97706',
+      },
+      {
+        label: '流转记录',
+        icon: 'mdi:swap-horizontal',
+        color: '#8b5cf6',
+        bg: '#e9d5ff',
+        border: '#7c3aed',
+      },
+      {
+        label: '照片',
+        icon: 'mdi:image',
+        color: '#ec4899',
+        bg: '#fbcfe8',
+        border: '#db2777',
+      },
+      {
+        label: '其他信息',
+        icon: 'mdi:information',
+        color: '#6b7280',
+        bg: '#f3f4f6',
+        border: '#4b5563',
+      },
+    ]
+
+    // 获取数据库中心点作为起始位置
+    const dbRect = dbContainer.getBoundingClientRect()
+    const rowRect = traceQueryRow.getBoundingClientRect()
+    const infoContainerRect = infoContainer.getBoundingClientRect()
+    const dbCenterX = dbRect.left + dbRect.width / 2 - rowRect.left
+    const dbCenterY = dbRect.top + dbRect.height / 2 - rowRect.top
+
+    // 逐个创建并飞出信息元素
+    infoElements.forEach((info, index) => {
+      gsap.delayedCall(index * 0.2, () => {
+        // 创建信息元素
+        const infoElement = document.createElement('div')
+        infoElement.className =
+          'flex items-center px-2 py-1 space-x-1 rounded-lg shadow-md'
+        infoElement.style.cssText = `
+          position: absolute;
+          left: ${dbCenterX - 60}px;
+          top: ${dbCenterY - 15}px;
+          background: ${info.bg};
+          border: 2px solid ${info.border};
+          color: ${info.color};
+          font-weight: bold;
+          font-size: 0.75rem;
+          z-index: ${60 + index};
+          opacity: 0;
+          transform: scale(0.5);
+          width: 110px;
+          height: 32px;
+        `
+
+        infoElement.innerHTML = `
+          <iconify-icon icon="${info.icon}" style="font-size: 1rem;"></iconify-icon>
+          <span>${info.label}</span>
+        `
+
+        traceQueryRow.appendChild(infoElement)
+
+        // 显示元素
+        gsap.to(infoElement, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.4,
+          ease: 'back.out(1.7)',
+          onComplete: () => {
+            // 计算grid中的位置 (2列3行)
+            const row = Math.floor(index / 2)
+            const col = index % 2
+
+            // 计算目标位置，基于infoContainer的位置
+            const containerLeft = infoContainerRect.left - rowRect.left
+            const containerTop = infoContainerRect.top - rowRect.top
+
+            const targetX = containerLeft + col * (110 + 12) // 列位置，考虑gap
+            const targetY = containerTop + row * (32 + 12) // 行位置，考虑gap
+
+            gsap.to(infoElement, {
+              x: targetX - (dbCenterX - 60),
+              y: targetY - (dbCenterY - 15),
+              duration: 0.8,
+              ease: 'power2.inOut',
+              onComplete: () => {
+                // 动画完成后，将元素移入容器并移除绝对定位
+                infoElement.style.position = 'static'
+                infoElement.style.left = 'auto'
+                infoElement.style.top = 'auto'
+                infoElement.style.transform = 'none'
+                infoContainer.appendChild(infoElement)
+
+                // 如果是最后一个元素，完成整个动画序列
+                if (index === infoElements.length - 1) {
+                  this.completeTraceQueryAnimation(dbContainer, dbLabel)
+                }
+              },
+            })
+          },
+        })
+      })
+    })
+  }
+
+  completeTraceQueryAnimation(dbContainer, dbLabel) {
+    // 显示数据库标签
+    gsap.to(dbLabel, {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power1.out',
+    })
+
+    // 显示绿色对勾
+    const checkIcon = document.createElement('span')
+    checkIcon.innerHTML =
+      '<iconify-icon icon="mdi:check-circle" style="color:#22c55e;font-size:2.5rem;"></iconify-icon>'
+    Object.assign(checkIcon.style, {
+      position: 'absolute',
+      right: '-18px',
+      bottom: '8px',
+      zIndex: '60',
+      opacity: '0',
+    })
+    dbContainer.appendChild(checkIcon)
+
+    gsap.to(checkIcon, {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'back.out(1.7)',
+    })
+  }
+
   replayStep() {
     this.currentStepIndex = this.currentStepIndex
     this.requestUpdate()
@@ -1274,7 +2289,9 @@ export class ProcessFlowComponent extends BaseComponent {
   showSplitAnimation() {
     // 获取原扫码出入库节点的位置
     const originalNode = this.shadowRoot.querySelector('[data-step-index="2"]')
-    const stepsContainer = this.shadowRoot.querySelector('#flow-steps-container')
+    const stepsContainer = this.shadowRoot.querySelector(
+      '#flow-steps-container'
+    )
 
     if (!originalNode || !stepsContainer) return
 
@@ -1318,8 +2335,12 @@ export class ProcessFlowComponent extends BaseComponent {
   animateSplitNodes() {
     // 获取原始出入库节点和分裂节点
     const originalNode = this.shadowRoot.querySelector('[data-step-index="2"]')
-    const inboundNode = this.shadowRoot.querySelector('[data-split-id="inbound"]')
-    const outboundNode = this.shadowRoot.querySelector('[data-split-id="outbound"]')
+    const inboundNode = this.shadowRoot.querySelector(
+      '[data-split-id="inbound"]'
+    )
+    const outboundNode = this.shadowRoot.querySelector(
+      '[data-split-id="outbound"]'
+    )
 
     // 隐藏原节点
     gsap.to(originalNode, {
@@ -1345,9 +2366,15 @@ export class ProcessFlowComponent extends BaseComponent {
     // 获取目标位置
     const scanNode = this.shadowRoot.querySelector('[data-step-index="1"]')
     const installNode = this.shadowRoot.querySelector('[data-step-index="3"]')
-    const inboundNode = this.shadowRoot.querySelector('[data-split-id="inbound"]')
-    const outboundNode = this.shadowRoot.querySelector('[data-split-id="outbound"]')
-    const stepsContainer = this.shadowRoot.querySelector('#flow-steps-container')
+    const inboundNode = this.shadowRoot.querySelector(
+      '[data-split-id="inbound"]'
+    )
+    const outboundNode = this.shadowRoot.querySelector(
+      '[data-split-id="outbound"]'
+    )
+    const stepsContainer = this.shadowRoot.querySelector(
+      '#flow-steps-container'
+    )
 
     const scanRect = scanNode.getBoundingClientRect()
     const installRect = installNode.getBoundingClientRect()
@@ -1385,7 +2412,9 @@ export class ProcessFlowComponent extends BaseComponent {
 
   completeMergeToScan() {
     const scanNode = this.shadowRoot.querySelector('[data-step-index="1"]')
-    const inboundNode = this.shadowRoot.querySelector('[data-split-id="inbound"]')
+    const inboundNode = this.shadowRoot.querySelector(
+      '[data-split-id="inbound"]'
+    )
 
     // 入库节点淡出
     gsap.to(inboundNode, {
@@ -1408,7 +2437,9 @@ export class ProcessFlowComponent extends BaseComponent {
 
   completeMergeToInstall() {
     const installNode = this.shadowRoot.querySelector('[data-step-index="3"]')
-    const outboundNode = this.shadowRoot.querySelector('[data-split-id="outbound"]')
+    const outboundNode = this.shadowRoot.querySelector(
+      '[data-split-id="outbound"]'
+    )
 
     // 出库节点淡出
     gsap.to(outboundNode, {

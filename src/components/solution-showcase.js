@@ -8,7 +8,7 @@ export class SolutionShowcaseComponent extends BaseComponent {
   }
 
   static styles = css`
-    @unocss-placeholder
+    @unocss-placeholder;
   `
 
   constructor() {
@@ -91,7 +91,7 @@ export class SolutionShowcaseComponent extends BaseComponent {
 
     return html`
       <div
-        class="bg-white rounded-3xl shadow-2xl p-12 max-w-7xl w-full flex flex-col items-center animate-fadeIn"
+        class="bg-white rounded-3xl shadow-2xl p-6 max-w-7xl w-full flex flex-col items-center animate-fadeIn"
       >
         <div class="mb-12 text-center">
           <h3 class="text-3xl font-bold text-blue-600 mb-4">
@@ -202,13 +202,11 @@ export class SolutionShowcaseComponent extends BaseComponent {
               (step, idx) => html`
                 <div
                   class="concept-card group flex flex-col items-center p-6 bg-gradient-to-br ${step.bgGradient} rounded-2xl border-2 ${step.borderColor} shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 cursor-pointer ${step.isHighlight
-                    ? 'ring-4 ring-cyan-200 scale-110 shadow-2xl'
+                    ? 'ring-4 ring-cyan-200 scale-105 shadow-2xl'
                     : ''}"
                   style="width: ${step.isHighlight
-                    ? '280px'
-                    : '240px'}; min-height: ${step.isHighlight
-                    ? '320px'
-                    : '280px'};"
+                    ? '260px'
+                    : '240px'}; min-height: 280px;"
                   @mouseenter=${() => this.handleCardHover(idx)}
                 >
                   <!-- 图标区域 -->
@@ -381,10 +379,10 @@ export class SolutionShowcaseComponent extends BaseComponent {
           </div>
         </div>
         <div
-          class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 z-20"
+          class="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-4 z-20"
         >
           <button
-            class="px-6 py-3 rounded-full font-semibold transition backdrop-blur-md shadow ${this
+            class="px-6 py-3 rounded-full cursor-pointer font-semibold transition backdrop-blur-md shadow ${this
               .currentView === 'concept'
               ? 'bg-blue-500 text-white shadow-blue-200'
               : 'bg-white/80 text-slate-700'}"
@@ -393,7 +391,7 @@ export class SolutionShowcaseComponent extends BaseComponent {
             核心理念
           </button>
           <button
-            class="px-6 py-3 rounded-full font-semibold transition backdrop-blur-md shadow ${this
+            class="px-6 py-3 rounded-full cursor-pointer font-semibold transition backdrop-blur-md shadow ${this
               .currentView === 'architecture'
               ? 'bg-blue-500 text-white shadow-blue-200'
               : 'bg-white/80 text-slate-700'}"

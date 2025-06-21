@@ -39,7 +39,7 @@ export class CloudArchitectureComponent extends BaseComponent {
       width: 100%;
       height: 100%;
     }
-    @unocss-placeholder
+    @unocss-placeholder;
   `
 
   firstUpdated() {
@@ -107,7 +107,9 @@ export class CloudArchitectureComponent extends BaseComponent {
     })
 
     // 激活特定连接线
-    const activeLine = this.shadowRoot.querySelector(`.connection-${clientType}`)
+    const activeLine = this.shadowRoot.querySelector(
+      `.connection-${clientType}`
+    )
     if (activeLine) {
       activeLine.style.strokeWidth = '3'
       activeLine.style.opacity = '1'
@@ -224,7 +226,7 @@ export class CloudArchitectureComponent extends BaseComponent {
               class="absolute -top-4 -right-8 w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-full opacity-70"
             ></div>
             <div
-              class="absolute -bottom-3 left-8 w-10 h-10 bg-gradient-to-br from-blue-300 to-blue-500 rounded-full opacity-60"
+              class="absolute bottom-3 left-8 w-10 h-10 bg-gradient-to-br from-blue-300 to-blue-500 rounded-full opacity-60"
             ></div>
 
             <div class="relative z-10 text-center text-white p-8">
@@ -373,7 +375,7 @@ export class CloudArchitectureComponent extends BaseComponent {
 
             <!-- 到网页端的连接线 (从网页端到云服务器) -->
             <path
-              d="M 90 220 L 90 260 L 380 260"
+              d="M 120 260 L 120 320 L 420 320"
               class="connection-path connection-web fill-none stroke-2 opacity-60"
               style="stroke: url(#lineGradient); stroke-dasharray: 8,4; stroke-linecap: round; stroke-linejoin: round;"
               marker-end="url(#arrowhead)"
@@ -391,7 +393,7 @@ export class CloudArchitectureComponent extends BaseComponent {
 
             <!-- 到微信端的连接线 (从微信端到云服务器) -->
             <path
-              d="M 90 380 L 90 340 L 380 340"
+              d="M 120 410 L 120 360 L 420 360"
               class="connection-path connection-wechat fill-none stroke-2 opacity-60"
               style="stroke: url(#lineGradient); stroke-dasharray: 8,4; stroke-linecap: round; stroke-linejoin: round;"
               marker-end="url(#arrowhead)"
