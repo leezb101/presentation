@@ -8,6 +8,16 @@ export class ProcessFlowComponent extends BaseComponent {
     currentStepIndex: { type: Number },
   }
 
+  static styles = css`
+    :host {
+      width: 1280px !important;
+    }
+  `
+
+  createRenderRoot() {
+    return this.shadowRoot
+  }
+
   constructor() {
     super()
     this.currentStepIndex = 0
@@ -47,7 +57,7 @@ export class ProcessFlowComponent extends BaseComponent {
           '<strong>管理/监理：</strong>出现质量问题或日常巡检时，扫描问题材料的二维码，即可追溯其全部信息。',
       },
     ]
-    
+
     // 合并后的数据结构
     this.mergedProcessData = [
       {
@@ -76,7 +86,7 @@ export class ProcessFlowComponent extends BaseComponent {
           '<strong>管理/监理：</strong>出现质量问题或日常巡检时，扫描问题材料的二维码，即可追溯其全部信息。',
       },
     ]
-    
+
     this.isMerged = false
   }
 
@@ -92,9 +102,12 @@ export class ProcessFlowComponent extends BaseComponent {
           </p>
         </div>
 
-        <div class="relative w-full overflow-x-auto pb-4">
+        <div
+          class="relative w-full overflow-x-auto pb-4"
+          style="height: 120px;"
+        >
           <div
-            class="relative min-w-[700px] md:min-w-0 flex justify-between items-center"
+            class="relative min-w-[700px] md:min-w-0 flex justify-between items-center h-full"
           >
             <div
               id="progress-bar-container"
@@ -104,13 +117,16 @@ export class ProcessFlowComponent extends BaseComponent {
                 id="progress-bar-fill"
                 class="h-full bg-blue-600 transition-all duration-500"
                 style="width: ${(this.currentStepIndex /
-                  ((this.isMerged ? this.mergedProcessData.length : this.processData.length) - 1)) *
+                  ((this.isMerged
+                    ? this.mergedProcessData.length
+                    : this.processData.length) -
+                    1)) *
                 100}%"
               ></div>
             </div>
             <div
               id="flow-steps-container"
-              class="relative flex justify-between w-full"
+              class="relative flex justify-between w-full h-full items-center"
             >
               ${this.renderFlowSteps()}
             </div>
@@ -119,7 +135,8 @@ export class ProcessFlowComponent extends BaseComponent {
 
         <div
           id="process-details"
-          class="mt-8 bg-white p-8 rounded-xl shadow-lg transition-all duration-500 min-h-[250px] flex items-center justify-center"
+          class="mt-8 bg-white p-8 rounded-xl shadow-lg transition-all duration-500 flex items-center justify-center"
+          style="height: 400px; min-height: 400px; max-height: 400px;"
         >
           ${this.renderProcessDetails()}
         </div>
@@ -136,7 +153,11 @@ export class ProcessFlowComponent extends BaseComponent {
           <button
             id="next-step-btn"
             class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-            ?disabled=${this.currentStepIndex === (this.isMerged ? this.mergedProcessData.length : this.processData.length) - 1}
+            ?disabled=${this.currentStepIndex ===
+            (this.isMerged
+              ? this.mergedProcessData.length
+              : this.processData.length) -
+              1}
             @click=${this.nextStep}
           >
             下一步
@@ -169,28 +190,33 @@ export class ProcessFlowComponent extends BaseComponent {
         </div>
       `
     )
-    
+
     // 如果显示分裂节点，添加分裂节点
     if (this.showSplitNodes) {
-      const splitNodes = this.splitNodesData.map(nodeData => html`
-        <div
-          class="flex absolute z-20 flex-col items-center p-2 flow-step"
-          data-split-id="${nodeData.id}"
-          style="left: ${nodeData.left}px; top: ${nodeData.top}px; opacity: ${nodeData.opacity}; transform: scale(${nodeData.scale});"
-        >
+      const splitNodes = this.splitNodesData.map(
+        (nodeData) => html`
           <div
-            class="flex justify-center items-center w-16 h-16 text-3xl bg-white rounded-full border-4 border-gray-300 shadow-md transition-all duration-300 flow-step-icon"
+            class="flex absolute z-20 flex-col items-center p-2 flow-step"
+            data-split-id="${nodeData.id}"
+            style="left: ${nodeData.left}px; top: ${nodeData.top}px; opacity: ${nodeData.opacity}; transform: scale(${nodeData.scale});"
           >
-            <iconify-icon icon="${nodeData.icon}" class="text-4xl"></iconify-icon>
+            <div
+              class="flex justify-center items-center w-16 h-16 text-3xl bg-white rounded-full border-4 border-gray-300 shadow-md transition-all duration-300 flow-step-icon"
+            >
+              <iconify-icon
+                icon="${nodeData.icon}"
+                class="text-4xl"
+              ></iconify-icon>
+            </div>
+            <span class="mt-2 text-sm font-semibold text-center"
+              >${nodeData.title}</span
+            >
           </div>
-          <span class="mt-2 text-sm font-semibold text-center"
-            >${nodeData.title}</span
-          >
-        </div>
-      `)
+        `
+      )
       return [...steps, ...splitNodes]
     }
-    
+
     return steps
   }
 
@@ -202,8 +228,8 @@ export class ProcessFlowComponent extends BaseComponent {
     if (stepData.type === 'scan') {
       return html`
         <div
-          class="flex flex-col space-y-6 w-full"
-          style="position: relative; min-height: 220px;"
+          class="flex flex-col space-y-6 w-full h-full"
+          style="position: relative;"
         >
           <button
             title="重播本步骤"
@@ -217,17 +243,25 @@ export class ProcessFlowComponent extends BaseComponent {
             ></iconify-icon>
           </button>
 
-          <div class="flex flex-row justify-start items-center text-gray-700">
-            <div class="text-6xl text-blue-500">
+          <div
+            class="flex flex-row justify-start items-center text-gray-700"
+            style="height: 80px; flex-shrink: 0;"
+          >
+            <div
+              class="text-6xl text-blue-500"
+              style="width: 80px; flex-shrink: 0;"
+            >
               <iconify-icon icon="${stepData.icon}"></iconify-icon>
             </div>
-            <div class="text-gray-700">${unsafeHTML(stepData.details)}</div>
+            <div class="text-gray-700 ml-4">
+              ${unsafeHTML(stepData.details)}
+            </div>
           </div>
 
           <div
             id="scan-acceptance-row"
-            class="flex relative gap-6 justify-between items-start w-full"
-            style="min-height: 180px;"
+            class="flex relative gap-6 justify-between items-start w-full flex-1"
+            style="min-height: 240px;"
           >
             ${this.renderScanAcceptanceSection()}
           </div>
@@ -236,8 +270,8 @@ export class ProcessFlowComponent extends BaseComponent {
     } else if (stepData.title === '源头赋码') {
       return html`
         <div
-          class="flex flex-col space-y-6 w-full"
-          style="position: relative; min-height: 220px;"
+          class="flex flex-col space-y-6 w-full h-full"
+          style="position: relative;"
         >
           <button
             title="重播本步骤"
@@ -251,17 +285,25 @@ export class ProcessFlowComponent extends BaseComponent {
             ></iconify-icon>
           </button>
 
-          <div class="flex flex-row justify-start items-center text-gray-700">
-            <div class="text-6xl text-blue-500">
+          <div
+            class="flex flex-row justify-start items-center text-gray-700"
+            style="height: 80px; flex-shrink: 0;"
+          >
+            <div
+              class="text-6xl text-blue-500"
+              style="width: 80px; flex-shrink: 0;"
+            >
               <iconify-icon icon="${stepData.icon}"></iconify-icon>
             </div>
-            <div class="text-gray-700">${unsafeHTML(stepData.details)}</div>
+            <div class="text-gray-700 ml-4">
+              ${unsafeHTML(stepData.details)}
+            </div>
           </div>
 
           <div
             id="qr-db-row"
-            class="flex relative gap-6 justify-between items-start w-full"
-            style="min-height: 180px;"
+            class="flex relative gap-6 justify-between items-start w-full flex-1"
+            style="min-height: 240px;"
           >
             ${this.renderSourceCodingSection()}
           </div>
@@ -270,8 +312,8 @@ export class ProcessFlowComponent extends BaseComponent {
     } else {
       return html`
         <div
-          class="flex items-start space-x-6 w-full"
-          style="position: relative; min-height: 220px;"
+          class="flex flex-col justify-center items-start w-full h-full"
+          style="position: relative;"
         >
           <button
             title="重播本步骤"
@@ -285,10 +327,17 @@ export class ProcessFlowComponent extends BaseComponent {
             ></iconify-icon>
           </button>
 
-          <div class="text-6xl text-blue-500">
-            <iconify-icon icon="${stepData.icon}"></iconify-icon>
+          <div class="flex flex-row items-center text-gray-700">
+            <div
+              class="text-6xl text-blue-500"
+              style="width: 80px; flex-shrink: 0;"
+            >
+              <iconify-icon icon="${stepData.icon}"></iconify-icon>
+            </div>
+            <div class="text-gray-700 ml-4 text-lg leading-relaxed">
+              ${unsafeHTML(stepData.details)}
+            </div>
           </div>
-          <div class="text-gray-700">${unsafeHTML(stepData.details)}</div>
         </div>
       `
     }
@@ -324,7 +373,10 @@ export class ProcessFlowComponent extends BaseComponent {
         </button>
       </div>
 
-      <div class="flex flex-col items-center space-y-6" style="flex: 2; min-width: 256px;">
+      <div
+        class="flex flex-col items-center space-y-6"
+        style="flex: 2; min-width: 256px;"
+      >
         <div class="flex justify-center space-x-4">
           <div class="flex flex-col items-center space-y-2">
             <div
@@ -332,7 +384,9 @@ export class ProcessFlowComponent extends BaseComponent {
               class="flex relative flex-shrink-0 justify-center items-center shadow-lg"
               style="width: 96px; height: 96px; border-radius: 0.75rem; background: #f9fafb; border: 2.5px solid #9ca3af; opacity: 0; transform: scale(0.7); transition: all 0.7s cubic-bezier(0.4,0,0.2,1);"
             >
-              <div class="flex flex-col justify-center items-center w-full h-full">
+              <div
+                class="flex flex-col justify-center items-center w-full h-full"
+              >
                 <iconify-icon
                   icon="mdi:camera"
                   class="text-gray-400"
@@ -349,14 +403,16 @@ export class ProcessFlowComponent extends BaseComponent {
               验收照片
             </div>
           </div>
-          
+
           <div class="flex flex-col items-center space-y-2">
             <div
               id="gps-container"
               class="flex relative flex-shrink-0 justify-center items-center shadow-lg"
               style="width: 96px; height: 96px; border-radius: 0.75rem; background: #f0f9ff; border: 2.5px solid #3b82f6; opacity: 0; transform: scale(0.7); transition: all 0.7s cubic-bezier(0.4,0,0.2,1);"
             >
-              <div class="flex flex-col justify-center items-center w-full h-full">
+              <div
+                class="flex flex-col justify-center items-center w-full h-full"
+              >
                 <iconify-icon
                   icon="mdi:map-marker"
                   class="text-blue-500"
@@ -374,7 +430,7 @@ export class ProcessFlowComponent extends BaseComponent {
             </div>
           </div>
         </div>
-        
+
         <div class="flex justify-center">
           <div class="flex flex-col items-center space-y-2">
             <div
@@ -382,7 +438,9 @@ export class ProcessFlowComponent extends BaseComponent {
               class="flex relative flex-shrink-0 justify-center items-center shadow-lg"
               style="width: 96px; height: 96px; border-radius: 0.75rem; background: #fefce8; border: 2.5px solid #eab308; opacity: 0; transform: scale(0.7); transition: all 0.7s cubic-bezier(0.4,0,0.2,1);"
             >
-              <div class="flex flex-col justify-center items-center w-full h-full">
+              <div
+                class="flex flex-col justify-center items-center w-full h-full"
+              >
                 <iconify-icon
                   icon="mdi:watermark"
                   class="text-yellow-600"
@@ -687,7 +745,12 @@ export class ProcessFlowComponent extends BaseComponent {
                   })
 
                   // 显示GPS和水印元素
-                  this.showGpsAndWatermarkElements(container, photoContainer, scanDbLabel, scanAcceptanceRow)
+                  this.showGpsAndWatermarkElements(
+                    container,
+                    photoContainer,
+                    scanDbLabel,
+                    scanAcceptanceRow
+                  )
                 },
               })
             },
@@ -697,7 +760,12 @@ export class ProcessFlowComponent extends BaseComponent {
     })
   }
 
-  showGpsAndWatermarkElements(container, photoContainer, scanDbLabel, scanAcceptanceRow) {
+  showGpsAndWatermarkElements(
+    container,
+    photoContainer,
+    scanDbLabel,
+    scanAcceptanceRow
+  ) {
     const gpsContainer = this.querySelector('#gps-container')
     const gpsLabel = this.querySelector('#gps-label')
     const watermarkContainer = this.querySelector('#watermark-container')
@@ -716,7 +784,7 @@ export class ProcessFlowComponent extends BaseComponent {
             duration: 0.5,
             ease: 'power1.out',
           })
-        }
+        },
       })
     })
 
@@ -743,7 +811,7 @@ export class ProcessFlowComponent extends BaseComponent {
             scanDbLabel,
             scanAcceptanceRow
           )
-        }
+        },
       })
     })
   }
@@ -778,26 +846,33 @@ export class ProcessFlowComponent extends BaseComponent {
       const photoRect = photoContainer.getBoundingClientRect()
       const gpsRect = gpsContainer.getBoundingClientRect()
       const watermarkRect = watermarkContainer.getBoundingClientRect()
-      
+
       // 计算所有元素到数据库的目标位置
       const dbCenterX = dbRect.left + dbRect.width / 2
       const dbCenterY = dbRect.top + dbRect.height / 2
-      
+
       // 二维码目标位置
-      const qrToDbLeft = dbCenterX - containerRect.left - qrClone.clientWidth / 2
-      const qrToDbTop = dbCenterY - containerRect.top - qrClone.clientHeight / 2 - 25
-      
+      const qrToDbLeft =
+        dbCenterX - containerRect.left - qrClone.clientWidth / 2
+      const qrToDbTop =
+        dbCenterY - containerRect.top - qrClone.clientHeight / 2 - 25
+
       // 照片目标位置
-      const photoToDbLeft = dbCenterX - photoRect.left - photoContainer.clientWidth / 2 - 25
-      const photoToDbTop = dbCenterY - photoRect.top - photoContainer.clientHeight / 2
-      
+      const photoToDbLeft =
+        dbCenterX - photoRect.left - photoContainer.clientWidth / 2 - 25
+      const photoToDbTop =
+        dbCenterY - photoRect.top - photoContainer.clientHeight / 2
+
       // GPS目标位置
-      const gpsToDbLeft = dbCenterX - gpsRect.left - gpsContainer.clientWidth / 2 + 25
+      const gpsToDbLeft =
+        dbCenterX - gpsRect.left - gpsContainer.clientWidth / 2 + 25
       const gpsToDbTop = dbCenterY - gpsRect.top - gpsContainer.clientHeight / 2
-      
+
       // 水印目标位置
-      const watermarkToDbLeft = dbCenterX - watermarkRect.left - watermarkContainer.clientWidth / 2
-      const watermarkToDbTop = dbCenterY - watermarkRect.top - watermarkContainer.clientHeight / 2 + 25
+      const watermarkToDbLeft =
+        dbCenterX - watermarkRect.left - watermarkContainer.clientWidth / 2
+      const watermarkToDbTop =
+        dbCenterY - watermarkRect.top - watermarkContainer.clientHeight / 2 + 25
 
       // 同时移动所有元素到数据库
       gsap.to(qrClone, {
@@ -877,33 +952,37 @@ export class ProcessFlowComponent extends BaseComponent {
       color: '#22c55e',
       opacity: '0',
       zIndex: '70',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
     })
     dbContainer.appendChild(plusOneElement)
 
     // 动画序列：淡入 -> 向上浮动 -> 停留 -> 淡出
     const timeline = gsap.timeline()
-    
+
     timeline
       .to(plusOneElement, {
         opacity: 1,
         duration: 0.3,
-        ease: 'power2.out'
+        ease: 'power2.out',
       })
-      .to(plusOneElement, {
-        y: -20,
-        duration: 0.4,
-        ease: 'power1.out'
-      }, '<')
+      .to(
+        plusOneElement,
+        {
+          y: -20,
+          duration: 0.4,
+          ease: 'power1.out',
+        },
+        '<'
+      )
       .to(plusOneElement, {
         // 停留0.6秒
-        duration: 0.6
+        duration: 0.6,
       })
       .to(plusOneElement, {
         opacity: 0,
         duration: 0.4,
         ease: 'power1.in',
-        onComplete: () => plusOneElement.remove()
+        onComplete: () => plusOneElement.remove(),
       })
   }
 
@@ -1173,76 +1252,78 @@ export class ProcessFlowComponent extends BaseComponent {
 
   nextStep() {
     if (this.isTimelineAnimating) return
-    
+
     // 特殊处理：从扫码验收(索引1)到扫码出入库(索引2)时触发分裂合并动画
     if (this.currentStepIndex === 1 && !this.isMerged) {
       this.performTimelineMergeAnimation()
       return
     }
-    
-    const maxIndex = this.isMerged ? this.mergedProcessData.length - 1 : this.processData.length - 1
+
+    const maxIndex = this.isMerged
+      ? this.mergedProcessData.length - 1
+      : this.processData.length - 1
     if (this.currentStepIndex < maxIndex) {
       this.currentStepIndex++
     }
   }
-  
+
   performTimelineMergeAnimation() {
     this.isTimelineAnimating = true
-    
+
     // 第一步：显示分裂节点
     this.showSplitAnimation()
   }
-  
+
   showSplitAnimation() {
     // 获取原扫码出入库节点的位置
     const originalNode = this.querySelector('[data-step-index="2"]')
     const stepsContainer = this.querySelector('#flow-steps-container')
-    
+
     if (!originalNode || !stepsContainer) return
-    
+
     const originalRect = originalNode.getBoundingClientRect()
     const containerRect = stepsContainer.getBoundingClientRect()
-    
+
     // 计算相对位置
     const relativeLeft = originalRect.left - containerRect.left
     const relativeTop = originalRect.top - containerRect.top
-    
+
     // 设置分裂节点数据，初始位置与原节点相同
     this.splitNodesData = [
-      { 
-        id: 'inbound', 
-        title: '入库', 
-        icon: 'mdi:database-import', 
-        left: relativeLeft, 
-        top: relativeTop, 
-        opacity: 0, 
-        scale: 0.8 
+      {
+        id: 'inbound',
+        title: '入库',
+        icon: 'mdi:database-import',
+        left: relativeLeft,
+        top: relativeTop,
+        opacity: 0,
+        scale: 0.8,
       },
-      { 
-        id: 'outbound', 
-        title: '出库', 
-        icon: 'mdi:database-export', 
-        left: relativeLeft, 
-        top: relativeTop, 
-        opacity: 0, 
-        scale: 0.8 
-      }
+      {
+        id: 'outbound',
+        title: '出库',
+        icon: 'mdi:database-export',
+        left: relativeLeft,
+        top: relativeTop,
+        opacity: 0,
+        scale: 0.8,
+      },
     ]
     this.showSplitNodes = true
     this.requestUpdate()
-    
+
     // 等待DOM更新后执行动画
     this.updateComplete.then(() => {
       this.animateSplitNodes()
     })
   }
-  
+
   animateSplitNodes() {
     // 获取原始出入库节点和分裂节点
     const originalNode = this.querySelector('[data-step-index="2"]')
     const inboundNode = this.querySelector('[data-split-id="inbound"]')
     const outboundNode = this.querySelector('[data-split-id="outbound"]')
-    
+
     // 隐藏原节点
     gsap.to(originalNode, {
       opacity: 0,
@@ -1257,12 +1338,12 @@ export class ProcessFlowComponent extends BaseComponent {
           ease: 'back.out(1.7)',
           onComplete: () => {
             this.startMergeAnimation()
-          }
+          },
         })
-      }
+      },
     })
   }
-  
+
   startMergeAnimation() {
     // 获取目标位置
     const scanNode = this.querySelector('[data-step-index="1"]')
@@ -1270,17 +1351,17 @@ export class ProcessFlowComponent extends BaseComponent {
     const inboundNode = this.querySelector('[data-split-id="inbound"]')
     const outboundNode = this.querySelector('[data-split-id="outbound"]')
     const stepsContainer = this.querySelector('#flow-steps-container')
-    
+
     const scanRect = scanNode.getBoundingClientRect()
     const installRect = installNode.getBoundingClientRect()
     const containerRect = stepsContainer.getBoundingClientRect()
-    
+
     // 计算目标相对位置
     const scanTargetLeft = scanRect.left - containerRect.left
     const scanTargetTop = scanRect.top - containerRect.top
     const installTargetLeft = installRect.left - containerRect.left
     const installTargetTop = installRect.top - containerRect.top
-    
+
     // 移动入库节点到验收节点位置
     gsap.to(inboundNode, {
       left: scanTargetLeft,
@@ -1289,9 +1370,9 @@ export class ProcessFlowComponent extends BaseComponent {
       ease: 'power2.inOut',
       onComplete: () => {
         this.completeMergeToScan()
-      }
+      },
     })
-    
+
     // 移动出库节点到安装节点位置
     gsap.to(outboundNode, {
       left: installTargetLeft,
@@ -1301,20 +1382,20 @@ export class ProcessFlowComponent extends BaseComponent {
       ease: 'power2.inOut',
       onComplete: () => {
         this.completeMergeToInstall()
-      }
+      },
     })
   }
-  
+
   completeMergeToScan() {
     const scanNode = this.querySelector('[data-step-index="1"]')
     const inboundNode = this.querySelector('[data-split-id="inbound"]')
-    
+
     // 入库节点淡出
     gsap.to(inboundNode, {
       opacity: 0,
-      duration: 0.3
+      duration: 0.3,
     })
-    
+
     // 验收节点更新为合并节点
     gsap.to(scanNode, {
       opacity: 0,
@@ -1322,22 +1403,22 @@ export class ProcessFlowComponent extends BaseComponent {
       onComplete: () => {
         gsap.to(scanNode, {
           opacity: 1,
-          duration: 0.3
+          duration: 0.3,
         })
-      }
+      },
     })
   }
-  
+
   completeMergeToInstall() {
     const installNode = this.querySelector('[data-step-index="3"]')
     const outboundNode = this.querySelector('[data-split-id="outbound"]')
-    
+
     // 出库节点淡出
     gsap.to(outboundNode, {
       opacity: 0,
-      duration: 0.3
+      duration: 0.3,
     })
-    
+
     // 安装节点更新为合并节点
     gsap.to(installNode, {
       opacity: 0,
@@ -1349,12 +1430,12 @@ export class ProcessFlowComponent extends BaseComponent {
           onComplete: () => {
             // 完成所有动画，更新状态
             this.finishMergeAnimation()
-          }
+          },
         })
-      }
+      },
     })
   }
-  
+
   finishMergeAnimation() {
     this.isMerged = true
     this.showSplitNodes = false
@@ -1362,7 +1443,6 @@ export class ProcessFlowComponent extends BaseComponent {
     this.isTimelineAnimating = false
     this.requestUpdate()
   }
-  
 }
 
 customElements.define('process-flow-component', ProcessFlowComponent)
