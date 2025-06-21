@@ -11,6 +11,9 @@ export class ProcessFlowComponent extends BaseComponent {
   constructor() {
     super()
     this.currentStepIndex = 0
+    this.isTimelineAnimating = false
+    this.showSplitNodes = false
+    this.splitNodesData = []
     this.processData = [
       {
         title: '源头赋码',
@@ -44,6 +47,37 @@ export class ProcessFlowComponent extends BaseComponent {
           '<strong>管理/监理：</strong>出现质量问题或日常巡检时，扫描问题材料的二维码，即可追溯其全部信息。',
       },
     ]
+    
+    // 合并后的数据结构
+    this.mergedProcessData = [
+      {
+        title: '源头赋码',
+        icon: 'mdi:cube-outline',
+        details:
+          '<strong>供应商：</strong>在材料出厂前，按集团标准生成并粘贴唯一的二维码，同时将材料的质检报告等电子文件上传至系统，与二维码进行绑定。',
+      },
+      {
+        title: '扫码验收+入库',
+        icon: 'mdi:qrcode-scan',
+        type: 'scan',
+        details:
+          '<strong>验收小组+库管员：</strong>材料到场后，通过App扫描二维码核对信息，拍摄验收照片，完成验收后直接办理入库手续。',
+      },
+      {
+        title: '扫码出库+安装',
+        icon: 'mdi:tools',
+        details:
+          '<strong>库管员+施工班组：</strong>通过扫码办理材料领用出库，并在安装到位后扫码记录安装信息。',
+      },
+      {
+        title: '扫码追溯',
+        icon: 'mdi:history',
+        details:
+          '<strong>管理/监理：</strong>出现质量问题或日常巡检时，扫描问题材料的二维码，即可追溯其全部信息。',
+      },
+    ]
+    
+    this.isMerged = false
   }
 
   render() {
@@ -70,7 +104,7 @@ export class ProcessFlowComponent extends BaseComponent {
                 id="progress-bar-fill"
                 class="h-full bg-blue-600 transition-all duration-500"
                 style="width: ${(this.currentStepIndex /
-                  (this.processData.length - 1)) *
+                  ((this.isMerged ? this.mergedProcessData.length : this.processData.length) - 1)) *
                 100}%"
               ></div>
             </div>
@@ -102,7 +136,7 @@ export class ProcessFlowComponent extends BaseComponent {
           <button
             id="next-step-btn"
             class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-            ?disabled=${this.currentStepIndex === this.processData.length - 1}
+            ?disabled=${this.currentStepIndex === (this.isMerged ? this.mergedProcessData.length : this.processData.length) - 1}
             @click=${this.nextStep}
           >
             下一步
@@ -113,13 +147,16 @@ export class ProcessFlowComponent extends BaseComponent {
   }
 
   renderFlowSteps() {
-    return this.processData.map(
+    const dataToUse = this.isMerged ? this.mergedProcessData : this.processData
+    const steps = dataToUse.map(
       (step, index) => html`
         <div
           class="flex relative z-10 flex-col items-center p-2 flow-step ${index <
           this.currentStepIndex
             ? 'visited'
             : ''} ${index === this.currentStepIndex ? 'active' : ''}"
+          data-step-index="${index}"
+          style="${index === 2 && this.showSplitNodes ? 'opacity: 0;' : ''}"
         >
           <div
             class="flex justify-center items-center w-16 h-16 text-3xl bg-white rounded-full border-4 border-gray-300 shadow-md transition-all duration-300 flow-step-icon"
@@ -132,10 +169,34 @@ export class ProcessFlowComponent extends BaseComponent {
         </div>
       `
     )
+    
+    // 如果显示分裂节点，添加分裂节点
+    if (this.showSplitNodes) {
+      const splitNodes = this.splitNodesData.map(nodeData => html`
+        <div
+          class="flex absolute z-20 flex-col items-center p-2 flow-step"
+          data-split-id="${nodeData.id}"
+          style="left: ${nodeData.left}px; top: ${nodeData.top}px; opacity: ${nodeData.opacity}; transform: scale(${nodeData.scale});"
+        >
+          <div
+            class="flex justify-center items-center w-16 h-16 text-3xl bg-white rounded-full border-4 border-gray-300 shadow-md transition-all duration-300 flow-step-icon"
+          >
+            <iconify-icon icon="${nodeData.icon}" class="text-4xl"></iconify-icon>
+          </div>
+          <span class="mt-2 text-sm font-semibold text-center"
+            >${nodeData.title}</span
+          >
+        </div>
+      `)
+      return [...steps, ...splitNodes]
+    }
+    
+    return steps
   }
 
   renderProcessDetails() {
-    const stepData = this.processData[this.currentStepIndex]
+    const dataToUse = this.isMerged ? this.mergedProcessData : this.processData
+    const stepData = dataToUse[this.currentStepIndex]
     if (!stepData) return html``
 
     if (stepData.type === 'scan') {
@@ -1111,10 +1172,197 @@ export class ProcessFlowComponent extends BaseComponent {
   }
 
   nextStep() {
-    if (this.currentStepIndex < this.processData.length - 1) {
+    if (this.isTimelineAnimating) return
+    
+    // 特殊处理：从扫码验收(索引1)到扫码出入库(索引2)时触发分裂合并动画
+    if (this.currentStepIndex === 1 && !this.isMerged) {
+      this.performTimelineMergeAnimation()
+      return
+    }
+    
+    const maxIndex = this.isMerged ? this.mergedProcessData.length - 1 : this.processData.length - 1
+    if (this.currentStepIndex < maxIndex) {
       this.currentStepIndex++
     }
   }
+  
+  performTimelineMergeAnimation() {
+    this.isTimelineAnimating = true
+    
+    // 第一步：显示分裂节点
+    this.showSplitAnimation()
+  }
+  
+  showSplitAnimation() {
+    // 获取原扫码出入库节点的位置
+    const originalNode = this.querySelector('[data-step-index="2"]')
+    const stepsContainer = this.querySelector('#flow-steps-container')
+    
+    if (!originalNode || !stepsContainer) return
+    
+    const originalRect = originalNode.getBoundingClientRect()
+    const containerRect = stepsContainer.getBoundingClientRect()
+    
+    // 计算相对位置
+    const relativeLeft = originalRect.left - containerRect.left
+    const relativeTop = originalRect.top - containerRect.top
+    
+    // 设置分裂节点数据，初始位置与原节点相同
+    this.splitNodesData = [
+      { 
+        id: 'inbound', 
+        title: '入库', 
+        icon: 'mdi:database-import', 
+        left: relativeLeft, 
+        top: relativeTop, 
+        opacity: 0, 
+        scale: 0.8 
+      },
+      { 
+        id: 'outbound', 
+        title: '出库', 
+        icon: 'mdi:database-export', 
+        left: relativeLeft, 
+        top: relativeTop, 
+        opacity: 0, 
+        scale: 0.8 
+      }
+    ]
+    this.showSplitNodes = true
+    this.requestUpdate()
+    
+    // 等待DOM更新后执行动画
+    this.updateComplete.then(() => {
+      this.animateSplitNodes()
+    })
+  }
+  
+  animateSplitNodes() {
+    // 获取原始出入库节点和分裂节点
+    const originalNode = this.querySelector('[data-step-index="2"]')
+    const inboundNode = this.querySelector('[data-split-id="inbound"]')
+    const outboundNode = this.querySelector('[data-split-id="outbound"]')
+    
+    // 隐藏原节点
+    gsap.to(originalNode, {
+      opacity: 0,
+      duration: 0.3,
+      onComplete: () => {
+        // 显示分裂节点
+        gsap.to([inboundNode, outboundNode], {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          stagger: 0.1,
+          ease: 'back.out(1.7)',
+          onComplete: () => {
+            this.startMergeAnimation()
+          }
+        })
+      }
+    })
+  }
+  
+  startMergeAnimation() {
+    // 获取目标位置
+    const scanNode = this.querySelector('[data-step-index="1"]')
+    const installNode = this.querySelector('[data-step-index="3"]')
+    const inboundNode = this.querySelector('[data-split-id="inbound"]')
+    const outboundNode = this.querySelector('[data-split-id="outbound"]')
+    const stepsContainer = this.querySelector('#flow-steps-container')
+    
+    const scanRect = scanNode.getBoundingClientRect()
+    const installRect = installNode.getBoundingClientRect()
+    const containerRect = stepsContainer.getBoundingClientRect()
+    
+    // 计算目标相对位置
+    const scanTargetLeft = scanRect.left - containerRect.left
+    const scanTargetTop = scanRect.top - containerRect.top
+    const installTargetLeft = installRect.left - containerRect.left
+    const installTargetTop = installRect.top - containerRect.top
+    
+    // 移动入库节点到验收节点位置
+    gsap.to(inboundNode, {
+      left: scanTargetLeft,
+      top: scanTargetTop,
+      duration: 1.0,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        this.completeMergeToScan()
+      }
+    })
+    
+    // 移动出库节点到安装节点位置
+    gsap.to(outboundNode, {
+      left: installTargetLeft,
+      top: installTargetTop,
+      duration: 1.0,
+      delay: 0.2,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        this.completeMergeToInstall()
+      }
+    })
+  }
+  
+  completeMergeToScan() {
+    const scanNode = this.querySelector('[data-step-index="1"]')
+    const inboundNode = this.querySelector('[data-split-id="inbound"]')
+    
+    // 入库节点淡出
+    gsap.to(inboundNode, {
+      opacity: 0,
+      duration: 0.3
+    })
+    
+    // 验收节点更新为合并节点
+    gsap.to(scanNode, {
+      opacity: 0,
+      duration: 0.3,
+      onComplete: () => {
+        gsap.to(scanNode, {
+          opacity: 1,
+          duration: 0.3
+        })
+      }
+    })
+  }
+  
+  completeMergeToInstall() {
+    const installNode = this.querySelector('[data-step-index="3"]')
+    const outboundNode = this.querySelector('[data-split-id="outbound"]')
+    
+    // 出库节点淡出
+    gsap.to(outboundNode, {
+      opacity: 0,
+      duration: 0.3
+    })
+    
+    // 安装节点更新为合并节点
+    gsap.to(installNode, {
+      opacity: 0,
+      duration: 0.3,
+      onComplete: () => {
+        gsap.to(installNode, {
+          opacity: 1,
+          duration: 0.3,
+          onComplete: () => {
+            // 完成所有动画，更新状态
+            this.finishMergeAnimation()
+          }
+        })
+      }
+    })
+  }
+  
+  finishMergeAnimation() {
+    this.isMerged = true
+    this.showSplitNodes = false
+    this.currentStepIndex = 1 // 设置到合并后的验收+入库节点
+    this.isTimelineAnimating = false
+    this.requestUpdate()
+  }
+  
 }
 
 customElements.define('process-flow-component', ProcessFlowComponent)
