@@ -62,75 +62,8 @@ export class AppMain extends BaseComponent {
             ? 'active'
             : ''}"
         >
-          <div class="container px-6 mx-auto text-center">
-            <div class="mb-12">
-              <h2 class="text-3xl font-bold text-gray-900">
-                前期工作：深入一线，夯实基础
-              </h2>
-              <p class="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-                为确保平台方案精准、可行，我们开展了全面深入的调研与沟通。
-              </p>
-            </div>
-            <div
-              class="grid gap-8 mx-auto max-w-5xl md:grid-cols-2 lg:grid-cols-4"
-            >
-              <div class="p-6 bg-white rounded-lg">
-                <div
-                  class="flex justify-center items-center mb-4 h-10 text-blue-600"
-                >
-                  <iconify-icon
-                    icon="mdi:hard-hat"
-                    class="text-4xl"
-                  ></iconify-icon>
-                </div>
-                <h3 class="mb-2 text-lg font-semibold">施工现场调研</h3>
-                <p class="text-sm text-gray-600">
-                  深入多个项目一线，实地考察材料管理现状，梳理操作流程中的关键节点与痛点。
-                </p>
-              </div>
-              <div class="p-6 bg-white rounded-lg">
-                <div
-                  class="flex justify-center items-center mb-4 h-10 text-blue-600"
-                >
-                  <iconify-icon
-                    icon="mdi:factory"
-                    class="text-4xl"
-                  ></iconify-icon>
-                </div>
-                <h3 class="mb-2 text-lg font-semibold">供应厂家调研</h3>
-                <p class="text-sm text-gray-600">
-                  走访主要材料供应商，明确其出库、物流、质检报告等流程，探讨赋码可行性。
-                </p>
-              </div>
-              <div class="p-6 bg-white rounded-lg">
-                <div
-                  class="flex justify-center items-center mb-4 h-10 text-blue-600"
-                >
-                  <iconify-icon
-                    icon="mdi:cube-outline"
-                    class="text-4xl"
-                  ></iconify-icon>
-                </div>
-                <h3 class="mb-2 text-lg font-semibold">材料入库跟踪</h3>
-                <p class="text-sm text-gray-600">
-                  全程跟踪材料从卸货到入库的全过程，记录各环节单据交接与信息核验的实际情况。
-                </p>
-              </div>
-              <div class="p-6 bg-white rounded-lg">
-                <div
-                  class="flex justify-center items-center mb-4 h-10 text-blue-600"
-                >
-                  <iconify-icon
-                    icon="mdi:account-group-outline"
-                    class="text-4xl"
-                  ></iconify-icon>
-                </div>
-                <h3 class="mb-2 text-lg font-semibold">多方需求会谈</h3>
-                <p class="text-sm text-gray-600">
-                  与建设、监理、施工及建管单位多次会谈，充分听取各方诉求，凝聚管理共识。
-                </p>
-              </div>
-            </div>
+          <div class="w-full px-4">
+            <preliminary-work></preliminary-work>
           </div>
         </content-section>
 

@@ -20,6 +20,7 @@ import './components/process-flow-component.js'
 import './components/value-chart-component.js'
 import './components/roadmap-component.js'
 import './components/problem-analysis.js'
+import './components/preliminary-work.js'
 
 class PresentationApp {
   constructor() {
