@@ -190,7 +190,7 @@ export class AppMain extends BaseComponent {
       -webkit-text-fill-color: transparent;
       color: transparent;
       animation: titleAppear 1s ease-out,
-        shimmerText 15s ease-in-out 3s infinite;
+        shimmerText 12s ease-in-out 3s infinite;
     }
 
     .sub-title {
@@ -198,21 +198,8 @@ export class AppMain extends BaseComponent {
       font-weight: 500;
       margin-bottom: 2rem;
       position: relative;
-      background: linear-gradient(
-        105deg,
-        #0f766e 0%,
-        #0f766e 30%,
-        #ffffff 50%,
-        #0f766e 70%,
-        #0f766e 100%
-      );
-      background-size: 300% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      animation: titleAppear 1s ease-out 0.3s both,
-        shimmerText 15s ease-in-out 8s infinite;
+      color: #0f766e;
+      animation: titleAppear 1s ease-out 0.3s both;
     }
 
     .description {
@@ -221,21 +208,8 @@ export class AppMain extends BaseComponent {
       max-width: 700px;
       margin: 0 auto;
       position: relative;
-      background: linear-gradient(
-        105deg,
-        #475569 0%,
-        #475569 30%,
-        #f8fafc 50%,
-        #475569 70%,
-        #475569 100%
-      );
-      background-size: 300% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      animation: titleAppear 1s ease-out 0.6s both,
-        shimmerText 15s ease-in-out 13s infinite;
+      color: #475569;
+      animation: titleAppear 1s ease-out 0.6s both;
     }
 
     @keyframes wave1 {
@@ -295,14 +269,18 @@ export class AppMain extends BaseComponent {
     }
 
     @keyframes shimmerText {
-      /* The shimmer sweep happens in the first 15% of the animation's duration (2.25s) */
+      /* 前20%时间静止 */
       0% {
         background-position: 300% 0;
       }
-      15% {
+      20% {
+        background-position: 300% 0;
+      }
+      /* 20%-50%时间流光扫过（30%的时间，即3.6秒） */
+      50% {
         background-position: -300% 0;
       }
-      /* For the remaining 85% of the duration, the background is static, creating a pause. */
+      /* 后50%时间静止等待 */
       100% {
         background-position: -300% 0;
       }
