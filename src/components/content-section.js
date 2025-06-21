@@ -3,7 +3,7 @@ import { BaseComponent } from './base-component.js'
 
 export class ContentSection extends BaseComponent {
   static properties = {
-    sectionId: { type: String, attribute: 'id' }
+    sectionId: { type: String, attribute: 'id' },
   }
 
   static styles = css`

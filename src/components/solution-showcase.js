@@ -354,14 +354,14 @@ export class SolutionShowcaseComponent extends BaseComponent {
       <div
         class="w-full h-screen flex flex-col justify-center items-center p-8 relative overflow-hidden"
       >
-        <div class="text-center mb-12 z-10 relative">
+        <div class="text-center mb-4 z-10 relative">
           <h2 class="text-4xl font-bold text-gray-800 mb-4">我们的解决方案</h2>
           <p class="text-lg text-gray-400 max-w-xl mx-auto">
             构建一体化数字平台，以"一物一码"为核心，打造"云+三端"协同体系
           </p>
         </div>
         <div
-          class="flex-1 w-full max-w-7xl flex items-center justify-center relative"
+          class="flex-1 w-full max-w-7xl flex items-start justify-center relative"
         >
           <div
             class="flex flex-col items-center text-center animate-fadeIn w-full justify-center"

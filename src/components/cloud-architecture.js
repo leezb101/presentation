@@ -10,6 +10,27 @@ export class CloudArchitectureComponent extends BaseComponent {
   constructor() {
     super()
     this.activeClient = null
+    this.clientFeatures = {
+      web: [
+        { name: '立项', icon: 'mdi:file-document-plus' },
+        { name: '组织管理', icon: 'mdi:account-group' },
+        { name: '二维码打印', icon: 'mdi:qrcode' },
+        { name: '实时信息查询', icon: 'mdi:magnify' },
+        { name: '归档信息回溯', icon: 'mdi:archive-search' },
+      ],
+      wechat: [
+        { name: '临时授权', icon: 'mdi:shield-check' },
+        { name: '单项录入', icon: 'mdi:pencil-plus' },
+        { name: '公共查询', icon: 'mdi:magnify' },
+      ],
+      mobile: [
+        { name: '临时授权', icon: 'mdi:shield-check' },
+        { name: '批量录入', icon: 'mdi:file-multiple' },
+        { name: '单项录入', icon: 'mdi:pencil-plus' },
+        { name: '全流程节点', icon: 'mdi:timeline' },
+        { name: '公共查询', icon: 'mdi:magnify' },
+      ],
+    }
   }
 
   static styles = `
@@ -22,7 +43,6 @@ export class CloudArchitectureComponent extends BaseComponent {
 
   firstUpdated() {
     this.initAnimations()
-    this.startAutoRotation()
   }
 
   initAnimations() {
@@ -86,9 +106,7 @@ export class CloudArchitectureComponent extends BaseComponent {
     })
 
     // 激活特定连接线
-    const activeLine = this.querySelector(
-      `.connection-${clientType}`
-    )
+    const activeLine = this.querySelector(`.connection-${clientType}`)
     if (activeLine) {
       activeLine.style.strokeWidth = '3'
       activeLine.style.opacity = '1'
@@ -118,35 +136,54 @@ export class CloudArchitectureComponent extends BaseComponent {
     })
   }
 
-  startAutoRotation() {
-    const clients = ['web', 'mobile', 'wechat']
-    let currentIndex = 0
+  handleClientClick(clientType) {
+    const wasActive = this.activeClient === clientType
+    this.activeClient = wasActive ? null : clientType
 
-    setInterval(() => {
-      this.activeClient =
-        this.activeClient === clients[currentIndex]
-          ? null
-          : clients[currentIndex]
-      currentIndex = (currentIndex + 1) % clients.length
-      this.requestUpdate()
-    }, 2000)
-  }
-
-  handleClientHover(clientType) {
-    this.activeClient = clientType
-    this.animateActiveConnection(clientType)
+    if (this.activeClient) {
+      this.animateActiveConnection(clientType)
+      this.showPopover(clientType)
+    } else {
+      this.animateConnectionLines()
+      const particles = this.querySelectorAll('.data-particle')
+      particles.forEach((particle) => {
+        gsap.to(particle, { opacity: 0, duration: 0.3 })
+      })
+      this.hidePopover()
+    }
     this.requestUpdate()
   }
 
-  handleClientLeave() {
+  showPopover(clientType) {
+    this.hidePopover()
+
+    setTimeout(() => {
+      const popover = this.querySelector(`#popover-${clientType}`)
+      if (popover) {
+        gsap.fromTo(
+          popover,
+          { opacity: 0, x: clientType === 'mobile' ? 50 : -50, scale: 0.8 },
+          { opacity: 1, x: 0, scale: 1, duration: 0.4, ease: 'back.out(1.7)' }
+        )
+      }
+    }, 50)
+  }
+
+  hidePopover() {
+    const popovers = this.querySelectorAll('.feature-popover')
+    popovers.forEach((popover) => {
+      gsap.to(popover, { opacity: 0, scale: 0.8, duration: 0.3 })
+    })
+  }
+
+  handleClosePopover() {
     this.activeClient = null
-    // 重置所有连接线动画
     this.animateConnectionLines()
-    // 隐藏数据粒子
     const particles = this.querySelectorAll('.data-particle')
     particles.forEach((particle) => {
       gsap.to(particle, { opacity: 0, duration: 0.3 })
     })
+    this.hidePopover()
     this.requestUpdate()
   }
 
@@ -392,9 +429,7 @@ export class CloudArchitectureComponent extends BaseComponent {
               .activeClient === 'web'
               ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white'
               : ''}"
-            @mouseenter=${() => this.handleClientHover('web')}
-            @mouseleave=${() => this.handleClientLeave()}
-            @click=${() => this.handleClientHover('web')}
+            @click=${() => this.handleClientClick('web')}
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -431,9 +466,7 @@ export class CloudArchitectureComponent extends BaseComponent {
               .activeClient === 'mobile'
               ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white'
               : ''}"
-            @mouseenter=${() => this.handleClientHover('mobile')}
-            @mouseleave=${() => this.handleClientLeave()}
-            @click=${() => this.handleClientHover('mobile')}
+            @click=${() => this.handleClientClick('mobile')}
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-orange-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -470,9 +503,7 @@ export class CloudArchitectureComponent extends BaseComponent {
               .activeClient === 'wechat'
               ? 'bg-gradient-to-br from-green-600 to-green-700 text-white'
               : ''}"
-            @mouseenter=${() => this.handleClientHover('wechat')}
-            @mouseleave=${() => this.handleClientLeave()}
-            @click=${() => this.handleClientHover('wechat')}
+            @click=${() => this.handleClientClick('wechat')}
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-green-600/10 to-green-700/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -522,6 +553,99 @@ export class CloudArchitectureComponent extends BaseComponent {
               </div>
             `
           : ''}
+
+        <!-- 功能弹出框 -->
+        ${this.renderPopovers()}
+      </div>
+    `
+  }
+
+  renderPopovers() {
+    if (!this.activeClient) return ''
+
+    const features = this.clientFeatures[this.activeClient]
+    const isRightSide =
+      this.activeClient === 'web' || this.activeClient === 'wechat'
+    const isMobile = this.activeClient === 'mobile'
+
+    let positionClass = ''
+    if (this.activeClient === 'web') {
+      positionClass = 'top-16 left-20'
+    } else if (this.activeClient === 'mobile') {
+      positionClass = 'bottom-8 right-20'
+    } else if (this.activeClient === 'wechat') {
+      positionClass = 'bottom-16 left-20'
+    }
+
+    return html`
+      <div
+        id="popover-${this.activeClient}"
+        class="feature-popover absolute ${positionClass} bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/50 p-6 min-w-[280px] opacity-0"
+        style="z-index: 50;"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <iconify-icon
+              icon="${this.activeClient === 'web'
+                ? 'mdi:monitor-dashboard'
+                : this.activeClient === 'mobile'
+                ? 'mdi:cellphone-cog'
+                : 'mdi:wechat'}"
+              class="text-2xl mr-3 ${this.activeClient === 'web'
+                ? 'text-blue-500'
+                : this.activeClient === 'mobile'
+                ? 'text-orange-500'
+                : 'text-green-600'}"
+            ></iconify-icon>
+            <h3 class="text-lg font-bold text-slate-800">
+              ${this.activeClient === 'web'
+                ? '网页端功能'
+                : this.activeClient === 'mobile'
+                ? '移动端功能'
+                : '微信端功能'}
+            </h3>
+          </div>
+          <button
+            class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100/50 hover:bg-slate-200/80 transition-all duration-200 cursor-pointer group"
+            @click=${() => this.handleClosePopover()}
+          >
+            <iconify-icon
+              icon="mdi:close"
+              class="text-lg text-slate-500 group-hover:text-slate-700 group-hover:scale-110 transition-all"
+            ></iconify-icon>
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          ${features.map(
+            (feature) => html`
+              <div
+                class="group flex items-center p-3 rounded-xl bg-slate-50/50 hover:bg-slate-100/70 transition-all duration-300 cursor-pointer hover:scale-105"
+              >
+                <iconify-icon
+                  icon="${feature.icon}"
+                  class="text-xl mr-3 ${this.activeClient === 'web'
+                    ? 'text-blue-500'
+                    : this.activeClient === 'mobile'
+                    ? 'text-orange-500'
+                    : 'text-green-600'} 
+                       group-hover:scale-110 transition-transform"
+                ></iconify-icon>
+                <span
+                  class="text-sm font-medium text-slate-700 group-hover:text-slate-900"
+                >
+                  ${feature.name}
+                </span>
+              </div>
+            `
+          )}
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-slate-200/50">
+          <p class="text-xs text-slate-500 text-center">
+            点击功能项可执行相应操作
+          </p>
+        </div>
       </div>
     `
   }
