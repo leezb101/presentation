@@ -18,13 +18,22 @@ export class SolutionShowcaseComponent extends BaseComponent {
 
   updated(changedProperties) {
     super.updated(changedProperties)
-    if (
-      changedProperties.has('currentView') &&
-      this.currentView === 'concept'
-    ) {
+    if (changedProperties.has('currentView')) {
       this.safeRequestAnimationFrame(() => {
-        this.initializeConceptAnimations()
+        if (this.currentView === 'concept') {
+          this.initializeConceptAnimations()
+        }
+        // 通知父容器重新检测高度
+        this.notifyContentHeightChange()
       })
+    }
+  }
+
+  notifyContentHeightChange() {
+    // 找到父级的 content-section 并触发高度检测
+    const contentSection = this.closest('content-section')
+    if (contentSection && contentSection.checkContentHeight) {
+      setTimeout(() => contentSection.checkContentHeight(), 100)
     }
   }
 
@@ -349,18 +358,15 @@ export class SolutionShowcaseComponent extends BaseComponent {
 
   render() {
     return html`
-      <div
-        class="w-full h-screen flex flex-col justify-center items-center p-8 relative overflow-hidden"
-      >
-        <div class="text-center mb-4 z-10 relative">
+      <div class="w-full flex flex-col items-center relative">
+        <div class="text-center mb-8 z-10 relative">
           <h2 class="text-4xl font-bold text-gray-800 mb-4">我们的解决方案</h2>
           <p class="text-lg text-gray-400 max-w-xl mx-auto">
             构建一体化数字平台，以"一物一码"为核心，打造"云+三端"协同体系
           </p>
         </div>
-        <div
-          class="flex-1 w-full max-w-7xl flex items-start justify-center relative"
-        >
+        
+        <div class="w-full max-w-7xl flex items-start justify-center relative">
           <div
             class="flex flex-col items-center text-center animate-fadeIn w-full justify-center"
             style="display: ${this.currentView === 'concept'
@@ -370,7 +376,7 @@ export class SolutionShowcaseComponent extends BaseComponent {
             ${this.renderConceptFlow()}
           </div>
           <div
-            class="w-full h-full animate-fadeIn"
+            class="w-full animate-fadeIn"
             style="display: ${this.currentView === 'architecture'
               ? 'block'
               : 'none'}"
@@ -378,9 +384,9 @@ export class SolutionShowcaseComponent extends BaseComponent {
             <cloud-architecture></cloud-architecture>
           </div>
         </div>
-        <div
-          class="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-4 z-20"
-        >
+
+        <!-- 切换按钮 -->
+        <div class="flex gap-4 justify-center mt-8 z-20">
           <button
             class="px-6 py-3 rounded-full cursor-pointer font-semibold transition backdrop-blur-md shadow ${this
               .currentView === 'concept'

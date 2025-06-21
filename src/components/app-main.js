@@ -18,7 +18,7 @@ export class AppMain extends BaseComponent {
     :host {
       display: block;
     }
-    @unocss-placeholder
+    @unocss-placeholder;
   `
 
   firstUpdated() {
@@ -51,59 +51,8 @@ export class AppMain extends BaseComponent {
             ? 'active'
             : ''}"
         >
-          <div class="container px-6 mx-auto text-center">
-            <div class="mb-12">
-              <h2 class="text-3xl font-bold text-gray-900">
-                现状与痛点：传统管理的瓶颈
-              </h2>
-              <p class="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-                我们正面临三大核心挑战，制约着工程质量与管理效率的提升。
-              </p>
-            </div>
-            <div class="grid gap-8 mx-auto max-w-5xl md:grid-cols-3">
-              <div class="p-8 bg-white rounded-xl shadow-md">
-                <div
-                  class="flex justify-center items-center mb-6 w-16 h-16 text-red-600 bg-red-100 rounded-full"
-                >
-                  <iconify-icon
-                    icon="mdi:magnify-scan"
-                    class="text-4xl"
-                  ></iconify-icon>
-                </div>
-                <h3 class="mb-3 text-xl font-bold">质量追溯难</h3>
-                <p class="text-gray-600">
-                  出现质量事故，责任追溯耗时耗力，难以快速定位问题批次、供应商及安装环节。
-                </p>
-              </div>
-              <div class="p-8 bg-white rounded-xl shadow-md">
-                <div
-                  class="flex justify-center items-center mb-6 w-16 h-16 text-yellow-600 bg-yellow-100 rounded-full"
-                >
-                  <iconify-icon
-                    icon="mdi:package-variant"
-                    class="text-4xl"
-                  ></iconify-icon>
-                </div>
-                <h3 class="mb-3 text-xl font-bold">物料损耗大</h3>
-                <p class="text-gray-600">
-                  现场管理粗放，物料浪费、积压、丢失现象频发，直接增加项目成本。
-                </p>
-              </div>
-              <div class="p-8 bg-white rounded-xl shadow-md">
-                <div
-                  class="flex justify-center items-center mb-6 w-16 h-16 text-blue-600 bg-blue-100 rounded-full"
-                >
-                  <iconify-icon
-                    icon="mdi:account-group-outline"
-                    class="text-4xl"
-                  ></iconify-icon>
-                </div>
-                <h3 class="mb-3 text-xl font-bold">协同效率低</h3>
-                <p class="text-gray-600">
-                  建设、施工、监理、供应四方信息孤立，沟通成本高，影响工程进度。
-                </p>
-              </div>
-            </div>
+          <div class="w-full px-4">
+            <problem-analysis></problem-analysis>
           </div>
         </content-section>
 
@@ -265,6 +214,11 @@ export class AppMain extends BaseComponent {
 
     this.safeSetTimeout(() => {
       this.isAnimating = false
+      // 通知当前活动的 content-section 检测高度
+      const activeSection = this.shadowRoot.querySelector('.report-section.active')
+      if (activeSection && activeSection.checkContentHeight) {
+        activeSection.checkContentHeight()
+      }
     }, 500)
   }
 
