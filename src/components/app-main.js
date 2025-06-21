@@ -189,8 +189,7 @@ export class AppMain extends BaseComponent {
       background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
-      animation: titleAppear 1s ease-out,
-        shimmerText 12s ease-in-out 3s infinite;
+      animation: titleAppear 1s ease-out, shimmerText 6s ease-in-out infinite;
     }
 
     .sub-title {
@@ -271,18 +270,11 @@ export class AppMain extends BaseComponent {
     @keyframes shimmerText {
       /* 前20%时间静止 */
       0% {
-        background-position: 300% 0;
-      }
-      20% {
-        background-position: 300% 0;
-      }
-      /* 20%-50%时间流光扫过（30%的时间，即3.6秒） */
-      50% {
-        background-position: -300% 0;
+        background-position: 100% 0;
       }
       /* 后50%时间静止等待 */
       100% {
-        background-position: -300% 0;
+        background-position: 0 0;
       }
     }
 
