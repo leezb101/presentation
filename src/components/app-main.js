@@ -18,6 +18,357 @@ export class AppMain extends BaseComponent {
     :host {
       display: block;
     }
+
+    .hero-background {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      background: linear-gradient(
+        135deg,
+        #f8fafc 0%,
+        #e2e8f0 30%,
+        #cbd5e1 60%,
+        #e2e8f0 100%
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-background::before {
+      z-index: 0;
+      content: '';
+      position: absolute;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      border-radius: 45%;
+      animation: wave1 20s ease-in-out infinite;
+      bottom: -100%;
+      transform-origin: center center;
+      background: linear-gradient(
+        45deg,
+        rgba(135, 206, 250, 0) 20%,
+        rgba(135, 206, 250, 0.12) 35%,
+        rgba(135, 206, 250, 0.18) 50%,
+        rgba(135, 206, 250, 0.12) 65%,
+        rgba(135, 206, 250, 0) 80%
+      );
+    }
+
+    .hero-background::after {
+      z-index: 0;
+      content: '';
+      position: absolute;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      border-radius: 45%;
+      animation: wave2 25s ease-in-out infinite;
+      animation-delay: -8s;
+      bottom: -120%;
+      transform-origin: center center;
+      background: linear-gradient(
+        45deg,
+        rgba(0, 191, 255, 0) 20%,
+        rgba(0, 191, 255, 0.1) 35%,
+        rgba(0, 191, 255, 0.15) 50%,
+        rgba(0, 191, 255, 0.1) 65%,
+        rgba(0, 191, 255, 0) 80%
+      );
+    }
+
+    .wave-animation {
+      z-index: 0;
+      position: absolute;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      border-radius: 45%;
+      animation: wave3 30s ease-in-out infinite;
+      animation-delay: -15s;
+      bottom: -140%;
+      transform-origin: center center;
+      background: linear-gradient(
+        45deg,
+        rgba(64, 224, 208, 0) 25%,
+        rgba(64, 224, 208, 0.06) 40%,
+        rgba(64, 224, 208, 0.12) 50%,
+        rgba(64, 224, 208, 0.06) 60%,
+        rgba(64, 224, 208, 0) 75%
+      );
+    }
+
+    .hero-decoration {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .decorative-elements {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .floating-icon {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      background: rgba(74, 144, 226, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(74, 144, 226, 0.2);
+      box-shadow: 0 12px 40px rgba(74, 144, 226, 0.15);
+    }
+
+    .floating-icon .icon {
+      font-size: 36px;
+      color: rgba(74, 144, 226, 0.8);
+    }
+
+    .qr-icon {
+      top: 18%;
+      right: 12%;
+      animation: floatEnhanced 4s ease-in-out infinite;
+      animation-delay: 0s;
+    }
+
+    .cloud-icon {
+      top: 40%;
+      left: 8%;
+      animation: floatEnhanced 5s ease-in-out infinite;
+      animation-delay: 1s;
+    }
+
+    .pipe-icon {
+      bottom: 25%;
+      right: 25%;
+      animation: floatEnhanced 4.5s ease-in-out infinite;
+      animation-delay: 2s;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1200px;
+      padding: 0 40px;
+    }
+
+    .content-wrapper {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .main-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: 0.02em;
+      position: relative;
+      background: linear-gradient(
+        105deg,
+        #1e40af 0%,
+        #1e40af 30%,
+        #ffffff 50%,
+        #1e40af 70%,
+        #1e40af 100%
+      );
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: titleAppear 1s ease-out,
+        shimmerText 15s ease-in-out 3s infinite;
+    }
+
+    .sub-title {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 500;
+      margin-bottom: 2rem;
+      position: relative;
+      background: linear-gradient(
+        105deg,
+        #0f766e 0%,
+        #0f766e 30%,
+        #ffffff 50%,
+        #0f766e 70%,
+        #0f766e 100%
+      );
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: titleAppear 1s ease-out 0.3s both,
+        shimmerText 15s ease-in-out 8s infinite;
+    }
+
+    .description {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      line-height: 1.8;
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+      background: linear-gradient(
+        105deg,
+        #475569 0%,
+        #475569 30%,
+        #f8fafc 50%,
+        #475569 70%,
+        #475569 100%
+      );
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: titleAppear 1s ease-out 0.6s both,
+        shimmerText 15s ease-in-out 13s infinite;
+    }
+
+    @keyframes wave1 {
+      from {
+        transform: rotate(0deg) translateY(0) scale(1, 0.8);
+      }
+      50% {
+        transform: rotate(180deg) translateY(-3%) scale(1.1, 1);
+      }
+      to {
+        transform: rotate(360deg) translateY(0) scale(1, 0.8);
+      }
+    }
+
+    @keyframes wave2 {
+      from {
+        transform: rotate(0deg) translateY(0) scale(1, 0.9);
+      }
+      50% {
+        transform: rotate(180deg) translateY(-2%) scale(1, 1.1);
+      }
+      to {
+        transform: rotate(360deg) translateY(0) scale(1, 0.9);
+      }
+    }
+
+    @keyframes wave3 {
+      from {
+        transform: rotate(0deg) translateY(0) scale(1.1, 0.7);
+      }
+      50% {
+        transform: rotate(180deg) translateY(-1%) scale(0.9, 1.2);
+      }
+      to {
+        transform: rotate(360deg) translateY(0) scale(1.1, 0.7);
+      }
+    }
+
+    @keyframes floatEnhanced {
+      0%,
+      100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.7;
+      }
+      25% {
+        transform: translateY(-20px) translateX(5px) scale(1.05);
+        opacity: 0.9;
+      }
+      50% {
+        transform: translateY(-10px) translateX(-5px) scale(1.1);
+        opacity: 1;
+      }
+      75% {
+        transform: translateY(-25px) translateX(3px) scale(1.05);
+        opacity: 0.9;
+      }
+    }
+
+    @keyframes shimmerText {
+      /* The shimmer sweep happens in the first 15% of the animation's duration (2.25s) */
+      0% {
+        background-position: 300% 0;
+      }
+      15% {
+        background-position: -300% 0;
+      }
+      /* For the remaining 85% of the duration, the background is static, creating a pause. */
+      100% {
+        background-position: -300% 0;
+      }
+    }
+
+    @keyframes titleAppear {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-content {
+        padding: 0 20px;
+      }
+
+      .floating-icon {
+        width: 65px;
+        height: 65px;
+      }
+
+      .floating-icon .icon {
+        font-size: 28px;
+      }
+
+      .qr-icon {
+        top: 15%;
+        right: 5%;
+      }
+
+      .cloud-icon {
+        top: 35%;
+        left: 5%;
+      }
+
+      .pipe-icon {
+        bottom: 20%;
+        right: 15%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-content {
+        padding: 0 15px;
+      }
+
+      .floating-icon {
+        width: 55px;
+        height: 55px;
+      }
+
+      .floating-icon .icon {
+        font-size: 24px;
+      }
+
+      .description {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+    }
+
     @unocss-placeholder;
   `
 
@@ -35,13 +386,33 @@ export class AppMain extends BaseComponent {
             ? 'active'
             : ''}"
         >
-          <div class="text-center">
-            <h1 class="mb-4 text-4xl font-bold text-blue-800 md:text-6xl">
-              工程物料全生命周期数字化管理平台
-            </h1>
-            <p class="mx-auto max-w-3xl text-lg text-gray-600 md:text-xl">
-              用数字孪生理念，为每一件物料赋予智慧生命。实现从源头到末端的全过程精准管控，奠定集团智慧水务的坚实基础。
-            </p>
+          <div class="hero-background">
+            <div class="wave-animation"></div>
+            <div class="hero-decoration">
+              <div class="decorative-elements">
+                <div class="floating-icon qr-icon">
+                  <iconify-icon icon="mdi:qrcode" class="icon"></iconify-icon>
+                </div>
+                <div class="floating-icon cloud-icon">
+                  <iconify-icon
+                    icon="mdi:cloud-outline"
+                    class="icon"
+                  ></iconify-icon>
+                </div>
+                <div class="floating-icon pipe-icon">
+                  <iconify-icon icon="mdi:pipe" class="icon"></iconify-icon>
+                </div>
+              </div>
+            </div>
+            <div class="hero-content">
+              <div class="content-wrapper">
+                <h1 class="main-title">郑水小码</h1>
+                <h2 class="sub-title">工程物料全生命周期数字化管理平台</h2>
+                <p class="description">
+                  用数字孪生理念，为每一件物料赋予智慧生命。实现从源头到末端的全过程精准管控，奠定集团智慧水务的坚实基础。
+                </p>
+              </div>
+            </div>
           </div>
         </content-section>
 
@@ -148,7 +519,9 @@ export class AppMain extends BaseComponent {
     this.safeSetTimeout(() => {
       this.isAnimating = false
       // 通知当前活动的 content-section 检测高度
-      const activeSection = this.shadowRoot.querySelector('.report-section.active')
+      const activeSection = this.shadowRoot.querySelector(
+        '.report-section.active'
+      )
       if (activeSection && activeSection.checkContentHeight) {
         activeSection.checkContentHeight()
       }
