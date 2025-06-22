@@ -1,6 +1,11 @@
 import { html, css } from 'lit'
 import { BaseComponent } from './base-component.js'
 import { gsap } from 'gsap'
+import xianchang_01 from '../images/xianchang_01.jpg'
+import xianchang_02 from '../images/xianchang_02.jpg'
+import xianchangguanjian_01 from '../images/xianchangguanjian_01.jpg'
+import guanjianxinxi_01 from '../images/guanjianxinxi_01.png'
+import xianshang_01 from '../images/xianshang_01.png'
 
 export class PreliminaryWorkComponent extends BaseComponent {
   static properties = {
@@ -120,46 +125,39 @@ export class PreliminaryWorkComponent extends BaseComponent {
   getPhotoGallery() {
     return [
       {
-        title: '老旧管网现场挖掘',
+        title: '管网改造现场01',
         category: '现场调研',
-        description: '市政道路下老旧铸铁管道，腐蚀严重需要更换',
-        placeholder: 'https://picsum.photos/800/600?random=11',
-        tags: ['管网改造', '现场挖掘'],
+        description: '首次管网改造项目现场调研，多方结合现场情况讨论',
+        placeholder: xianchang_01,
+        tags: ['管网改造', '现场'],
+      },
+      {
+        title: '管网改造现场02',
+        category: '现场调研',
+        description: '首次管网改造项目现场调研，多方结合现场情况讨论',
+        placeholder: xianchang_02,
+        tags: ['管网改造', '现场'],
       },
       {
         title: '管材堆放现场',
-        category: '材料管理',
-        description: '新采购PE管材现场堆放，缺乏统一编码标识',
-        placeholder: 'https://picsum.photos/800/600?random=12',
-        tags: ['PE管材', '现场堆放'],
-      },
-      {
-        title: '质量证书查验',
         category: '质量管控',
-        description: '监理工程师现场核验管材质量证书，纸质文档管理',
-        placeholder: 'https://picsum.photos/800/600?random=13',
-        tags: ['质量证书', '现场验收'],
+        description: '新采购球磨铸铁管材现场堆放情况实拍',
+        placeholder: xianchangguanjian_01,
+        tags: ['管材', '现场'],
       },
       {
-        title: '管道连接施工',
-        category: '施工过程',
-        description: 'PE管热熔连接作业，需要记录连接参数和质量',
-        placeholder: 'https://picsum.photos/800/600?random=14',
-        tags: ['管道连接', '施工记录'],
+        title: '管材信息标准',
+        category: '质量管控',
+        description: '结合业务与系统需要，标明管材信息的显示标准要求',
+        placeholder: guanjianxinxi_01,
+        tags: ['管材信息', '标准'],
       },
       {
-        title: '四方现场会议',
+        title: '线上会议记录',
         category: '协调沟通',
-        description: '建设方、建管部、监理、施工方现场协调会议',
-        placeholder: 'https://picsum.photos/800/600?random=15',
-        tags: ['现场会议', '四方协调'],
-      },
-      {
-        title: '竣工验收检查',
-        category: '验收管理',
-        description: '管网改造完成后的验收检查，记录竣工资料',
-        placeholder: 'https://picsum.photos/800/600?random=16',
-        tags: ['竣工验收', '资料归档'],
+        description: '建管部与技术侧持续确认技术细节与需求实际',
+        placeholder: xianshang_01,
+        tags: ['线上会议', '记录'],
       },
     ]
   }
@@ -786,12 +784,12 @@ export class PreliminaryWorkComponent extends BaseComponent {
           ${[
             {
               category: '现场调研',
-              count: 3,
+              count: 2,
               icon: 'mdi:hard-hat',
               color: 'blue',
             },
             {
-              category: '材料管理',
+              category: '质量管控',
               count: 2,
               icon: 'mdi:package-variant',
               color: 'green',
@@ -845,28 +843,28 @@ export class PreliminaryWorkComponent extends BaseComponent {
             ${[
               {
                 label: '调研周期',
-                value: '2',
+                value: '3',
                 unit: '周',
                 icon: 'mdi:calendar',
                 color: 'blue',
               },
               {
                 label: '参与人员',
-                value: '4',
+                value: '9',
                 unit: '人',
                 icon: 'mdi:account-group',
                 color: 'green',
               },
               {
                 label: '会议次数',
-                value: '3',
+                value: '5',
                 unit: '次',
                 icon: 'mdi:calendar-text',
                 color: 'orange',
               },
               {
                 label: '照片记录',
-                value: '6',
+                value: '5',
                 unit: '张',
                 icon: 'mdi:camera',
                 color: 'purple',
@@ -998,7 +996,7 @@ export class PreliminaryWorkComponent extends BaseComponent {
                     <div
                       class="w-16 h-16 bg-${phase.color}-500 rounded-full flex items-center justify-center mb-3 ${phase.status ===
                       'current'
-                        ? 'ring-4 ring-blue-200 animate-pulse'
+                        ? 'ring-8 ring-blue-300 animate-pulse'
                         : ''}"
                     >
                       <iconify-icon
