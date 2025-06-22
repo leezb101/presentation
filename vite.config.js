@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import UnoCSS from 'unocss/vite'
 
 export default defineConfig({
-  base: './',
+  base: '/presentation/',
   plugins: [
     UnoCSS({
       mode: 'shadow-dom'
