@@ -994,10 +994,7 @@ export class PreliminaryWorkComponent extends BaseComponent {
                 (phase, index) => html`
                   <div class="flex flex-col items-center relative z-10">
                     <div
-                      class="w-16 h-16 bg-${phase.color}-500 rounded-full flex items-center justify-center mb-3 ${phase.status ===
-                      'current'
-                        ? 'ring-8 ring-blue-300 animate-pulse'
-                        : ''}"
+                      class="w-16 h-16 ${phase.color === 'green' ? 'bg-green-500' : phase.color === 'blue' ? 'bg-blue-500' : 'bg-gray-500'} rounded-full flex items-center justify-center mb-3 ${phase.status === 'current' ? 'ring-8 ring-blue-300 animate-pulse' : ''}"
                     >
                       <iconify-icon
                         icon="${phase.icon}"
@@ -1018,9 +1015,7 @@ export class PreliminaryWorkComponent extends BaseComponent {
                   ${index < 4
                     ? html`
                         <div
-                          class="flex-1 h-1 bg-${phase.status === 'completed'
-                            ? 'green'
-                            : 'gray'}-300 mx-4 relative top-8"
+                          class="flex-1 h-1 ${phase.status === 'completed' ? 'bg-green-300' : 'bg-gray-300'} mx-4 relative top-8"
                         ></div>
                       `
                     : ''}
