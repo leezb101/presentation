@@ -38,6 +38,37 @@ export class ValueChartComponent extends BaseComponent {
       font-size: calc(0.75rem * var(--font-scale, 1)) !important;
     }
 
+    /* AI声明样式 */
+    .ai-disclaimer-kpi {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: #f0f9ff; /* Blue-50 */
+      border: 1px solid #bae6fd; /* Blue-200 */
+      border-radius: 0.5rem;
+      font-size: calc(0.875rem * var(--font-scale, 1)) !important;
+      color: #0369a1; /* Blue-700 */
+      margin: -1rem auto 2.5rem auto;
+      max-width: 90%;
+    }
+
+    /* KPI卡片内大数据参考样式 */
+    .big-data-summary {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: #fafafa; /* Gray-50 */
+      border-left: 3px solid #a78bfa; /* Purple-400 */
+      text-align: left;
+      font-size: calc(0.8rem * var(--font-scale, 1)) !important;
+      line-height: 1.5;
+      color: #581c87; /* Purple-900 */
+    }
+    .big-data-summary strong {
+      font-weight: 600;
+    }
+
     /* 趋势可视化条形图样式 */
     .trend-bar-container {
       position: relative;
@@ -77,7 +108,7 @@ export class ValueChartComponent extends BaseComponent {
     this.currentTab = 'overview' // 'overview', 'material', 'supervision', 'traceability'
   }
 
-  // 获取项目价值数据（概念化版本）
+  // 获取项目价值数据（概念化版本 + 大数据参考）
   getValueData() {
     return {
       kpiComparison: {
@@ -88,6 +119,8 @@ export class ValueChartComponent extends BaseComponent {
             description: '精准追踪，大幅减少现场浪费与非必要损耗。',
             before_w: '80%',
             after_w: '30%',
+            big_data_summary:
+              '行业统计，传统工程项目物料损耗率常在 <strong>5%-15%</strong> 区间。',
           },
           {
             name: '库存准确性',
@@ -95,6 +128,8 @@ export class ValueChartComponent extends BaseComponent {
             description: '实时同步库存数据，告别手工账，库存状况一目了然。',
             before_w: '75%',
             after_w: '95%',
+            big_data_summary:
+              '数字化工具可将库存准确率从普遍的 <strong>70%-85%</strong> 提升至 <strong>95%</strong> 以上。',
           },
           {
             name: '质量验证效率',
@@ -102,6 +137,8 @@ export class ValueChartComponent extends BaseComponent {
             description: '扫码即览全部信息，验收流程从半小时缩短至数分钟。',
             before_w: '20%',
             after_w: '90%',
+            big_data_summary:
+              '移动化、可视化的信息核对，可将相关文书工作效率提升约 <strong>60%</strong>。',
           },
         ],
         supervision: [
@@ -111,6 +148,8 @@ export class ValueChartComponent extends BaseComponent {
             description: '移动端高效记录与上报，减少文书工作，聚焦核心问题。',
             before_w: '85%',
             after_w: '40%',
+            big_data_summary:
+              '数字化工具可帮助现场管理人员减少约 <strong>75%</strong> 的重复性文书工作量。',
           },
           {
             name: '问题响应周期',
@@ -119,6 +158,8 @@ export class ValueChartComponent extends BaseComponent {
               '问题发现即上报，相关方即时接收，响应周期从天级缩短至小时级。',
             before_w: '90%',
             after_w: '15%',
+            big_data_summary:
+              '信息直达使问题从发现到处理的周期平均缩短 <strong>75%</strong> 以上，有效避免工期延误。',
           },
           {
             name: '流程合规性',
@@ -127,6 +168,8 @@ export class ValueChartComponent extends BaseComponent {
               '关键节点强制留痕，确保管理动作有据可循，提升整体合规水平。',
             before_w: '80%',
             after_w: '95%',
+            big_data_summary:
+              '强制留痕的数字化流程可将关键节点的执行合规率提升 <strong>10-15</strong> 个百分点。',
           },
         ],
         traceability: [
@@ -137,6 +180,8 @@ export class ValueChartComponent extends BaseComponent {
               '从翻箱倒柜找资料，到关键词全局搜索，信息获取效率呈指数级提升。',
             before_w: '95%',
             after_w: '10%',
+            big_data_summary:
+              '全生命周期追溯可将物料信息的查找时间缩短 <strong>90%</strong> 以上。',
           },
           {
             name: '追溯链完整度',
@@ -145,6 +190,8 @@ export class ValueChartComponent extends BaseComponent {
               '一物一码贯穿始终，打通信息孤岛，形成完整、可靠的追溯链条。',
             before_w: '40%',
             after_w: '98%',
+            big_data_summary:
+              '“一物一码”技术确保了数据在各环节的无损流转，数据完整性可达 <strong>99%</strong> 以上。',
           },
           {
             name: '数据可信度',
@@ -153,6 +200,8 @@ export class ValueChartComponent extends BaseComponent {
               '数据由流程自动产生，不可篡改，为决策与审计提供高可信度依据。',
             before_w: '60%',
             after_w: '95%',
+            big_data_summary:
+              '基于不可篡改的记录，数字化凭证在责任界定与争议解决中的采信度显著提升。',
           },
         ],
       },
@@ -189,12 +238,12 @@ export class ValueChartComponent extends BaseComponent {
           icon: 'mdi:alert-octagon',
         },
         {
-          scenario: '迎接项目审计核查',
+          scenario: '支撑内部成本与责任审核',
           before:
-            '需要临时收集整理大量纸质资料，容易出现遗漏和错误，给审计工作带来挑战。',
+            '成本核算依赖零散的纸质单据，责任界定困难，导致部门间数据不一致，管理决策缺乏可靠依据。',
           after:
-            '所有信息自动归档，一键生成追溯报告，数据完整、不可篡改，让审计过程更轻松、更可信。',
-          icon: 'mdi:file-check',
+            '系统提供统一、不可篡改的数字档案，精准追溯物料的成本与使用责任人，为集团精细化管理和内部审核提供坚实的数据支撑。',
+          icon: 'mdi:file-chart-check-outline',
         },
       ],
     }
@@ -341,10 +390,17 @@ export class ValueChartComponent extends BaseComponent {
         <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">
           ${title}
         </h3>
+
+        <div class="ai-disclaimer-kpi">
+          <span
+            >以下效益数据由AI基于近年行业报告与大数据分析提炼，仅供参考</span
+          >
+        </div>
+
         <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-10">
           ${kpis.map(
             (kpi) => html`
-              <div class="text-center">
+              <div class="text-center flex flex-col">
                 <h4
                   class="text-xl font-semibold text-gray-800 mb-3 flex items-center justify-center gap-2"
                 >
@@ -365,7 +421,8 @@ export class ValueChartComponent extends BaseComponent {
                 <div class="space-y-3">
                   <div>
                     <div
-                      class="flex justify-between items-center text-xs text-gray-500 mb-1"
+                      class="flex justify-between items-center mb-1"
+                      style="font-size: calc(0.75rem * var(--font-scale, 1)); color: #6b7280;"
                     >
                       <span>传统模式</span>
                       <span class="font-mono"
@@ -381,7 +438,8 @@ export class ValueChartComponent extends BaseComponent {
                   </div>
                   <div>
                     <div
-                      class="flex justify-between items-center text-xs text-gray-500 mb-1"
+                      class="flex justify-between items-center mb-1"
+                      style="font-size: calc(0.75rem * var(--font-scale, 1)); color: #6b7280;"
                     >
                       <span>数字化平台</span>
                       <span class="font-mono font-semibold text-${color}-600"
@@ -395,6 +453,10 @@ export class ValueChartComponent extends BaseComponent {
                       ></div>
                     </div>
                   </div>
+                </div>
+
+                <div class="big-data-summary">
+                  <p .innerHTML="${kpi.big_data_summary}"></p>
                 </div>
               </div>
             `
