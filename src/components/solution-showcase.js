@@ -130,7 +130,7 @@ export class SolutionShowcaseComponent extends BaseComponent {
 
     return html`
       <div
-        class="bg-white rounded-3xl shadow-2xl p-4 max-w-5xl w-full flex flex-col items-center animate-fadeIn"
+        class="bg-white rounded-3xl shadow-2xl p-4 pb-12 max-w-5xl w-full flex flex-col items-center animate-fadeIn"
       >
         <div class="mb-12 text-center">
           <h3 class="text-3xl font-bold text-blue-600 mb-4">
@@ -391,7 +391,9 @@ export class SolutionShowcaseComponent extends BaseComponent {
           </p>
         </div>
 
-        <div class="w-full max-w-6xl flex items-start justify-center relative px-2">
+        <div
+          class="w-full max-w-6xl flex items-start justify-center relative px-2"
+        >
           <div
             class="flex flex-col items-center text-center animate-fadeIn w-full justify-center"
             style="display: ${this.currentView === 'concept'

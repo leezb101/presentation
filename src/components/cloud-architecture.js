@@ -39,17 +39,33 @@ export class CloudArchitectureComponent extends BaseComponent {
       width: 100%;
       height: 100%;
     }
-    
+
     /* 字体缩放样式 */
-    .text-4xl { font-size: calc(2.25rem * var(--font-scale, 1)) !important; }
-    .text-3xl { font-size: calc(1.875rem * var(--font-scale, 1)) !important; }
-    .text-2xl { font-size: calc(1.5rem * var(--font-scale, 1)) !important; }
-    .text-xl { font-size: calc(1.25rem * var(--font-scale, 1)) !important; }
-    .text-lg { font-size: calc(1.125rem * var(--font-scale, 1)) !important; }
-    .text-base { font-size: calc(1rem * var(--font-scale, 1)) !important; }
-    .text-sm { font-size: calc(0.875rem * var(--font-scale, 1)) !important; }
-    .text-xs { font-size: calc(0.75rem * var(--font-scale, 1)) !important; }
-    
+    .text-4xl {
+      font-size: calc(2.25rem * var(--font-scale, 1)) !important;
+    }
+    .text-3xl {
+      font-size: calc(1.875rem * var(--font-scale, 1)) !important;
+    }
+    .text-2xl {
+      font-size: calc(1.5rem * var(--font-scale, 1)) !important;
+    }
+    .text-xl {
+      font-size: calc(1.25rem * var(--font-scale, 1)) !important;
+    }
+    .text-lg {
+      font-size: calc(1.125rem * var(--font-scale, 1)) !important;
+    }
+    .text-base {
+      font-size: calc(1rem * var(--font-scale, 1)) !important;
+    }
+    .text-sm {
+      font-size: calc(0.875rem * var(--font-scale, 1)) !important;
+    }
+    .text-xs {
+      font-size: calc(0.75rem * var(--font-scale, 1)) !important;
+    }
+
     @unocss-placeholder;
   `
 
@@ -204,7 +220,7 @@ export class CloudArchitectureComponent extends BaseComponent {
   render() {
     return html`
       <div
-        class="relative w-[1280px] h-[600px] bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-3xl p-8 overflow-hidden"
+        class="relative w-[1280px] h-[600px] mx-auto bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-3xl p-8 overflow-hidden"
       >
         <!-- 背景装饰 -->
         <div
