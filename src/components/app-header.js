@@ -70,6 +70,7 @@ export class AppHeader extends BaseComponent {
       { href: '#process', text: '系统如何运作' },
       { href: '#value', text: '项目价值' },
       { href: '#roadmap', text: '实施路线图' },
+      { href: '#value-new', text: '项目价值新' },
     ]
 
     return navItems.map(

@@ -105,6 +105,10 @@ export class RoadmapComponent extends BaseComponent {
     }
   `
 
+  static properties = {
+    expandedIndex: { type: Number }
+  }
+
   constructor() {
     super()
     this.visibleItems = new Set()
@@ -409,7 +413,7 @@ export class RoadmapComponent extends BaseComponent {
             <span
               class="text-blue-500 text-sm font-medium hover:text-blue-700 transition-colors flex items-center gap-1"
             >
-              ${this.expandedIndex === index ? '收起详情' : '展开详情'}
+${this.expandedIndex === index ? '折叠详情' : '展开详情'}
               <svg
                 class="w-4 h-4 transition-transform duration-200 ${this
                   .expandedIndex === index
