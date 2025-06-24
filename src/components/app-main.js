@@ -446,14 +446,6 @@ export class AppMain extends BaseComponent {
           <roadmap-component></roadmap-component>
         </content-section>
 
-        <content-section
-          id="value-new"
-          class="report-section ${this.currentSectionIndex === 7
-            ? 'active'
-            : ''}"
-        >
-          <value-chart-new-component></value-chart-new-component>
-        </content-section>
       </main>
 
       <div id="page-nav" class="flex fixed right-6 bottom-6 z-50 space-x-3">
@@ -478,7 +470,7 @@ export class AppMain extends BaseComponent {
   }
 
   showSection(newIndex) {
-    if (this.isAnimating || newIndex < 0 || newIndex >= 8) return
+    if (this.isAnimating || newIndex < 0 || newIndex >= 7) return
     if (newIndex === this.currentSectionIndex) return
 
     this.isAnimating = true
@@ -516,7 +508,6 @@ export class AppMain extends BaseComponent {
       'process',
       'value',
       'roadmap',
-      'value-new',
     ]
     return sectionIds[index] || 'hero'
   }
@@ -530,7 +521,6 @@ export class AppMain extends BaseComponent {
       'process',
       'value',
       'roadmap',
-      'value-new',
     ]
     return sectionIds.indexOf(sectionId)
   }
