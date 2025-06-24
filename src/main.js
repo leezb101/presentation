@@ -21,6 +21,7 @@ import './components/value-chart-component.js'
 import './components/roadmap-component.js'
 import './components/problem-analysis.js'
 import './components/preliminary-work.js'
+import './components/font-scale-controller.js'
 
 class PresentationApp {
   constructor() {

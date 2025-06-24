@@ -1,8 +1,13 @@
 
 /* Custom styles from the original project */
+:root {
+  --font-scale: 1;
+}
+
 body {
   font-family: 'Noto Sans SC', sans-serif;
   overflow: hidden;
+  font-size: calc(1rem * var(--font-scale));
 }
 main {
   position: relative;
