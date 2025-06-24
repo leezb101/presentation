@@ -131,7 +131,7 @@ export class AppMain extends BaseComponent {
     }
 
     .floating-icon .icon {
-      font-size: 36px;
+      font-size: calc(36px * var(--font-scale, 1));
       color: rgba(74, 144, 226, 0.8);
     }
 
@@ -171,7 +171,7 @@ export class AppMain extends BaseComponent {
     }
 
     .main-title {
-      font-size: clamp(3rem, 8vw, 6rem);
+      font-size: calc(clamp(3rem, 8vw, 6rem) * var(--font-scale, 1));
       font-weight: 700;
       margin-bottom: 1rem;
       letter-spacing: 0.02em;
@@ -193,7 +193,7 @@ export class AppMain extends BaseComponent {
     }
 
     .sub-title {
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-size: calc(clamp(1.5rem, 4vw, 2.5rem) * var(--font-scale, 1));
       font-weight: 500;
       margin-bottom: 2rem;
       position: relative;
@@ -202,7 +202,7 @@ export class AppMain extends BaseComponent {
     }
 
     .description {
-      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-size: calc(clamp(1rem, 2.5vw, 1.4rem) * var(--font-scale, 1));
       line-height: 1.8;
       max-width: 700px;
       margin: 0 auto;
@@ -300,7 +300,7 @@ export class AppMain extends BaseComponent {
       }
 
       .floating-icon .icon {
-        font-size: 28px;
+        font-size: calc(28px * var(--font-scale, 1));
       }
 
       .qr-icon {
@@ -330,11 +330,11 @@ export class AppMain extends BaseComponent {
       }
 
       .floating-icon .icon {
-        font-size: 24px;
+        font-size: calc(24px * var(--font-scale, 1));
       }
 
       .description {
-        font-size: 1rem;
+        font-size: calc(1rem * var(--font-scale, 1));
         line-height: 1.6;
       }
     }

@@ -12,17 +12,6 @@ export class ProcessFlowComponent extends BaseComponent {
     :host {
       width: 1280px !important;
     }
-    
-    /* 字体缩放样式 */
-    .text-4xl { font-size: calc(2.25rem * var(--font-scale, 1)) !important; }
-    .text-3xl { font-size: calc(1.875rem * var(--font-scale, 1)) !important; }
-    .text-2xl { font-size: calc(1.5rem * var(--font-scale, 1)) !important; }
-    .text-xl { font-size: calc(1.25rem * var(--font-scale, 1)) !important; }
-    .text-lg { font-size: calc(1.125rem * var(--font-scale, 1)) !important; }
-    .text-base { font-size: calc(1rem * var(--font-scale, 1)) !important; }
-    .text-sm { font-size: calc(0.875rem * var(--font-scale, 1)) !important; }
-    .text-xs { font-size: calc(0.75rem * var(--font-scale, 1)) !important; }
-    
     @unocss-placeholder;
   `
 
@@ -180,9 +169,9 @@ export class ProcessFlowComponent extends BaseComponent {
     const steps = dataToUse.map(
       (step, index) => html`
         <div
-          class="flex relative z-10 flex-col items-center flow-step"
+          class="flex relative z-10 flex-col items-center p-2 flow-step"
           data-step-index="${index}"
-          style="padding: calc(0.5rem * var(--font-scale, 1)); ${index === 2 && this.showSplitNodes ? 'opacity: 0;' : ''}"
+          style="${index === 2 && this.showSplitNodes ? 'opacity: 0;' : ''}"
         >
           <div
             class="flex justify-center items-center w-16 h-16 text-3xl rounded-full border-4 shadow-md transition-all duration-300 ${index <
@@ -192,10 +181,9 @@ export class ProcessFlowComponent extends BaseComponent {
               ? 'bg-blue-600 border-blue-600 text-white transform -translate-y-1 scale-110 shadow-blue-500/30 shadow-xl'
               : 'bg-white border-gray-300 text-gray-600'}"
           >
-            <iconify-icon icon="${step.icon}" class="text-4xl" style="font-size: calc(2.25rem * var(--font-scale, 1))"></iconify-icon>
+            <iconify-icon icon="${step.icon}" class="text-4xl"></iconify-icon>
           </div>
-          <span class="text-sm font-semibold text-center"
-            style="margin-top: calc(0.5rem * var(--font-scale, 1))"
+          <span class="mt-2 text-sm font-semibold text-center"
             >${step.title}</span
           >
         </div>
@@ -207,9 +195,9 @@ export class ProcessFlowComponent extends BaseComponent {
       const splitNodes = this.splitNodesData.map(
         (nodeData) => html`
           <div
-            class="flex absolute z-20 flex-col items-center flow-step"
+            class="flex absolute z-20 flex-col items-center p-2 flow-step"
             data-split-id="${nodeData.id}"
-            style="left: ${nodeData.left}px; top: ${nodeData.top}px; opacity: ${nodeData.opacity}; transform: scale(${nodeData.scale}); padding: calc(0.5rem * var(--font-scale, 1));"
+            style="left: ${nodeData.left}px; top: ${nodeData.top}px; opacity: ${nodeData.opacity}; transform: scale(${nodeData.scale});"
           >
             <div
               class="flex justify-center items-center w-16 h-16 text-3xl bg-white rounded-full border-4 border-gray-300 shadow-md transition-all duration-300 flow-step-icon"
@@ -217,11 +205,9 @@ export class ProcessFlowComponent extends BaseComponent {
               <iconify-icon
                 icon="${nodeData.icon}"
                 class="text-4xl"
-                style="font-size: calc(2.25rem * var(--font-scale, 1))"
               ></iconify-icon>
             </div>
-            <span class="text-sm font-semibold text-center"
-              style="margin-top: calc(0.5rem * var(--font-scale, 1))"
+            <span class="mt-2 text-sm font-semibold text-center"
               >${nodeData.title}</span
             >
           </div>
@@ -252,7 +238,7 @@ export class ProcessFlowComponent extends BaseComponent {
           >
             <iconify-icon
               icon="mdi:refresh"
-              style="font-size:calc(1.5rem * var(--font-scale, 1));"
+              style="font-size:1.5rem;"
             ></iconify-icon>
           </button>
 
@@ -294,7 +280,7 @@ export class ProcessFlowComponent extends BaseComponent {
           >
             <iconify-icon
               icon="mdi:refresh"
-              style="font-size:calc(1.5rem * var(--font-scale, 1));"
+              style="font-size:1.5rem;"
             ></iconify-icon>
           </button>
 
@@ -336,7 +322,7 @@ export class ProcessFlowComponent extends BaseComponent {
           >
             <iconify-icon
               icon="mdi:refresh"
-              style="font-size:calc(1.5rem * var(--font-scale, 1));"
+              style="font-size:1.5rem;"
             ></iconify-icon>
           </button>
 
@@ -378,7 +364,7 @@ export class ProcessFlowComponent extends BaseComponent {
           >
             <iconify-icon
               icon="mdi:refresh"
-              style="font-size:calc(1.5rem * var(--font-scale, 1));"
+              style="font-size:1.5rem;"
             ></iconify-icon>
           </button>
 
@@ -420,7 +406,7 @@ export class ProcessFlowComponent extends BaseComponent {
           >
             <iconify-icon
               icon="mdi:refresh"
-              style="font-size:calc(1.5rem * var(--font-scale, 1));"
+              style="font-size:1.5rem;"
             ></iconify-icon>
           </button>
 
@@ -487,7 +473,7 @@ export class ProcessFlowComponent extends BaseComponent {
                 <iconify-icon
                   icon="mdi:camera"
                   class="text-gray-400"
-                  style="font-size:calc(64px * var(--font-scale, 1));"
+                  style="font-size:64px;"
                 ></iconify-icon>
                 <div class="mt-1 text-sm font-bold text-gray-500">拍照</div>
               </div>
@@ -513,7 +499,7 @@ export class ProcessFlowComponent extends BaseComponent {
                 <iconify-icon
                   icon="mdi:map-marker"
                   class="text-blue-500"
-                  style="font-size:calc(64px * var(--font-scale, 1));"
+                  style="font-size:64px;"
                 ></iconify-icon>
                 <div class="mt-1 text-sm font-bold text-blue-700">GPS</div>
               </div>
@@ -541,7 +527,7 @@ export class ProcessFlowComponent extends BaseComponent {
                 <iconify-icon
                   icon="mdi:watermark"
                   class="text-yellow-600"
-                  style="font-size:calc(64px * var(--font-scale, 1));"
+                  style="font-size:64px;"
                 ></iconify-icon>
                 <div class="mt-1 text-sm font-bold text-yellow-700">水印</div>
               </div>
@@ -567,7 +553,7 @@ export class ProcessFlowComponent extends BaseComponent {
             <iconify-icon
               icon="mdi:database"
               class="text-green-500"
-              style="font-size:calc(96px * var(--font-scale, 1));"
+              style="font-size:96px;"
             ></iconify-icon>
             <div class="mt-2 text-lg font-bold text-green-700">数据库</div>
           </div>
@@ -623,7 +609,7 @@ export class ProcessFlowComponent extends BaseComponent {
             <iconify-icon
               icon="mdi:pipe"
               class="text-sky-500"
-              style="font-size:calc(96px * var(--font-scale, 1));"
+              style="font-size:96px;"
             ></iconify-icon>
             <div class="mt-2 text-lg font-bold text-sky-700">管件</div>
           </div>
@@ -647,7 +633,7 @@ export class ProcessFlowComponent extends BaseComponent {
             <iconify-icon
               icon="mdi:database"
               class="text-green-500"
-              style="font-size:calc(96px * var(--font-scale, 1));"
+              style="font-size:96px;"
             ></iconify-icon>
             <div class="mt-2 text-lg font-bold text-green-700">数据库</div>
           </div>
@@ -705,7 +691,7 @@ export class ProcessFlowComponent extends BaseComponent {
             <iconify-icon
               icon="mdi:database"
               class="text-green-500"
-              style="font-size:calc(96px * var(--font-scale, 1));"
+              style="font-size:96px;"
             ></iconify-icon>
             <div class="mt-2 text-lg font-bold text-green-700">数据库</div>
           </div>
@@ -730,7 +716,7 @@ export class ProcessFlowComponent extends BaseComponent {
             <iconify-icon
               icon="mdi:pipe"
               class="text-sky-500"
-              style="font-size:calc(96px * var(--font-scale, 1));"
+              style="font-size:96px;"
             ></iconify-icon>
             <div class="mt-2 text-lg font-bold text-sky-700">管件</div>
           </div>
@@ -766,7 +752,7 @@ export class ProcessFlowComponent extends BaseComponent {
               <iconify-icon
                 icon="mdi:information"
                 class="text-amber-500"
-                style="font-size:calc(48px * var(--font-scale, 1));"
+                style="font-size:48px;"
               ></iconify-icon>
             </div>
           </div>
@@ -793,7 +779,7 @@ export class ProcessFlowComponent extends BaseComponent {
               <iconify-icon
                 icon="mdi:watermark"
                 class="text-yellow-600"
-                style="font-size:calc(48px * var(--font-scale, 1));"
+                style="font-size:48px;"
               ></iconify-icon>
             </div>
           </div>
@@ -820,7 +806,7 @@ export class ProcessFlowComponent extends BaseComponent {
               <iconify-icon
                 icon="mdi:camera"
                 class="text-orange-600"
-                style="font-size:calc(48px * var(--font-scale, 1));"
+                style="font-size:48px;"
               ></iconify-icon>
             </div>
           </div>
@@ -876,7 +862,7 @@ export class ProcessFlowComponent extends BaseComponent {
             <iconify-icon
               icon="mdi:database"
               class="text-green-500"
-              style="font-size:calc(96px * var(--font-scale, 1));"
+              style="font-size:96px;"
             ></iconify-icon>
             <div class="mt-2 text-lg font-bold text-green-700">数据库</div>
           </div>
@@ -889,7 +875,7 @@ export class ProcessFlowComponent extends BaseComponent {
             <iconify-icon
               icon="mdi:loading"
               class="text-blue-500 animate-spin"
-              style="font-size:calc(48px * var(--font-scale, 1))"
+              style="font-size:48px"
             ></iconify-icon>
           </div>
         </div>
@@ -1349,7 +1335,7 @@ export class ProcessFlowComponent extends BaseComponent {
           // 所有元素都移动完成后，显示成功标记
           const checkIcon = document.createElement('span')
           checkIcon.innerHTML =
-            '<iconify-icon icon="mdi:check-circle" style="color:#22c55e;font-size:calc(2.5rem * var(--font-scale, 1));"></iconify-icon>'
+            '<iconify-icon icon="mdi:check-circle" style="color:#22c55e;font-size:2.5rem;"></iconify-icon>'
           Object.assign(checkIcon.style, {
             position: 'absolute',
             right: '-18px',
@@ -1588,8 +1574,8 @@ export class ProcessFlowComponent extends BaseComponent {
         border: '2.5px solid #2563eb',
       })
       docCloneDb.innerHTML = `
-        <iconify-icon icon="mdi:file-document-outline" style="font-size:calc(3.5rem * var(--font-scale, 1));color:#2563eb;"></iconify-icon>
-        <div style="margin-top:8px;font-weight:bold;font-size:calc(1.1rem * var(--font-scale, 1));color:#2563eb;">资料</div>
+        <iconify-icon icon="mdi:file-document-outline" style="font-size:3.5rem;color:#2563eb;"></iconify-icon>
+        <div style="margin-top:8px;font-weight:bold;font-size:1.1rem;color:#2563eb;">资料</div>
       `
       qrDbRow.appendChild(docCloneDb)
 
@@ -1655,7 +1641,7 @@ export class ProcessFlowComponent extends BaseComponent {
           qrClonePipe.remove()
           const checkIcon = document.createElement('span')
           checkIcon.innerHTML =
-            '<iconify-icon icon="mdi:check-circle" style="color:#22c55e;font-size:calc(2.5rem * var(--font-scale, 1));"></iconify-icon>'
+            '<iconify-icon icon="mdi:check-circle" style="color:#22c55e;font-size:2.5rem;"></iconify-icon>'
           Object.assign(checkIcon.style, {
             position: 'absolute',
             right: '-18px',
@@ -1970,7 +1956,7 @@ export class ProcessFlowComponent extends BaseComponent {
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: calc(0.75rem * var(--font-scale, 1));
+          font-size: 0.75rem;
           font-weight: bold;
           transform: rotate(-15deg);
           box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
@@ -2179,7 +2165,7 @@ export class ProcessFlowComponent extends BaseComponent {
           border: 2px solid ${info.border};
           color: ${info.color};
           font-weight: bold;
-          font-size: calc(0.75rem * var(--font-scale, 1));
+          font-size: 0.75rem;
           z-index: ${60 + index};
           opacity: 0;
           transform: scale(0.5);
@@ -2188,7 +2174,7 @@ export class ProcessFlowComponent extends BaseComponent {
         `
 
         infoElement.innerHTML = `
-          <iconify-icon icon="${info.icon}" style="font-size: calc(1rem * var(--font-scale, 1));"></iconify-icon>
+          <iconify-icon icon="${info.icon}" style="font-size: 1rem;"></iconify-icon>
           <span>${info.label}</span>
         `
 
@@ -2248,7 +2234,7 @@ export class ProcessFlowComponent extends BaseComponent {
     // 显示绿色对勾
     const checkIcon = document.createElement('span')
     checkIcon.innerHTML =
-      '<iconify-icon icon="mdi:check-circle" style="color:#22c55e;font-size:calc(2.5rem * var(--font-scale, 1));"></iconify-icon>'
+      '<iconify-icon icon="mdi:check-circle" style="color:#22c55e;font-size:2.5rem;"></iconify-icon>'
     Object.assign(checkIcon.style, {
       position: 'absolute',
       right: '-18px',

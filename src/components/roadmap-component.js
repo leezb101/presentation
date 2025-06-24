@@ -3,6 +3,16 @@ import { BaseComponent } from './base-component.js'
 
 export class RoadmapComponent extends BaseComponent {
   static styles = css`
+    /* 字体缩放样式 */
+    .text-4xl { font-size: calc(2.25rem * var(--font-scale, 1)) !important; }
+    .text-3xl { font-size: calc(1.875rem * var(--font-scale, 1)) !important; }
+    .text-2xl { font-size: calc(1.5rem * var(--font-scale, 1)) !important; }
+    .text-xl { font-size: calc(1.25rem * var(--font-scale, 1)) !important; }
+    .text-lg { font-size: calc(1.125rem * var(--font-scale, 1)) !important; }
+    .text-base { font-size: calc(1rem * var(--font-scale, 1)) !important; }
+    .text-sm { font-size: calc(0.875rem * var(--font-scale, 1)) !important; }
+    .text-xs { font-size: calc(0.75rem * var(--font-scale, 1)) !important; }
+    
     @unocss-placeholder .roadmap-item {
       opacity: 0;
       transform: translateX(-50px);
@@ -56,7 +66,7 @@ export class RoadmapComponent extends BaseComponent {
     }
 
     .details-list.expanded {
-      max-height: 200px;
+      max-height: calc(200px * var(--font-scale, 1) * 1.5);
     }
 
     .detail-item {
@@ -324,7 +334,7 @@ export class RoadmapComponent extends BaseComponent {
         )} cursor-pointer ml-8 transition-all duration-400 ease-out"
         @click="${() => this.toggleDetails(index)}"
       >
-        <div class="p-6">
+        <div class="p-6" style="padding: calc(1.5rem * var(--font-scale, 1))">
           <!-- 卡片头部 -->
           <div class="flex justify-between items-start mb-4">
             <div class="flex items-center gap-4">
@@ -361,13 +371,14 @@ export class RoadmapComponent extends BaseComponent {
           </div>
 
           <!-- 描述 -->
-          <p class="text-gray-600 mb-4 leading-relaxed">${item.description}</p>
+          <p class="text-gray-600 mb-4 leading-relaxed text-base">${item.description}</p>
 
           <!-- 详细内容 -->
           <div id="details-${index}" class="details-list">
-            <div class="border-t pt-4 mt-4">
+            <div class="border-t" style="padding-top: calc(1rem * var(--font-scale, 1)); margin-top: calc(1rem * var(--font-scale, 1))">
               <h5
-                class="font-semibold text-gray-800 mb-3 text-sm flex items-center"
+                class="font-semibold text-gray-800 text-sm flex items-center"
+                style="margin-bottom: calc(0.75rem * var(--font-scale, 1))"
               >
                 <span
                   class="w-2 h-2 rounded-full ${this.getPhaseColor(
@@ -376,7 +387,7 @@ export class RoadmapComponent extends BaseComponent {
                 ></span>
                 详细内容：
               </h5>
-              <ul class="space-y-3">
+              <ul class="space-y-3" style="gap: calc(0.75rem * var(--font-scale, 1)); display: flex; flex-direction: column">
                 ${item.details.map(
                   (detail) => html`
                     <li

@@ -13,6 +13,20 @@ export class ValueChartComponent extends BaseComponent {
   }
 
   static styles = css`
+    :host {
+      display: block;
+    }
+    
+    /* 字体缩放样式 */
+    .text-4xl { font-size: calc(2.25rem * var(--font-scale, 1)) !important; }
+    .text-3xl { font-size: calc(1.875rem * var(--font-scale, 1)) !important; }
+    .text-2xl { font-size: calc(1.5rem * var(--font-scale, 1)) !important; }
+    .text-xl { font-size: calc(1.25rem * var(--font-scale, 1)) !important; }
+    .text-lg { font-size: calc(1.125rem * var(--font-scale, 1)) !important; }
+    .text-base { font-size: calc(1rem * var(--font-scale, 1)) !important; }
+    .text-sm { font-size: calc(0.875rem * var(--font-scale, 1)) !important; }
+    .text-xs { font-size: calc(0.75rem * var(--font-scale, 1)) !important; }
+    
     @unocss-placeholder;
   `
 
