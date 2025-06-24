@@ -445,7 +445,6 @@ export class AppMain extends BaseComponent {
         >
           <roadmap-component></roadmap-component>
         </content-section>
-
       </main>
 
       <div id="page-nav" class="flex fixed right-6 bottom-6 z-50 space-x-3">
@@ -526,7 +525,6 @@ export class AppMain extends BaseComponent {
   }
 
   handleSectionChange(sectionId) {
-    debugger
     const newIndex = this.getSectionIndexById(sectionId)
     if (newIndex !== -1) {
       this.showSection(newIndex)

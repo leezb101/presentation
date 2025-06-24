@@ -97,7 +97,7 @@ export class ProblemAnalysisComponent extends BaseComponent {
             行业现状：数字化管理亟待突破
           </h3>
           <p class="text-lg text-gray-600 leading-relaxed max-w-4xl mx-auto">
-            基于2023-2024年水务工程建设行业调研和权威统计数据，传统物料管理模式在数字化转型中面临的核心挑战。
+            结合近期水务工程建设行业调研和公开统计数据，梳理传统物料管理模式在数字化转型过程中的主要挑战。
           </p>
         </div>
 
@@ -261,7 +261,7 @@ export class ProblemAnalysisComponent extends BaseComponent {
             核心痛点：传统管理的三大顽疾
           </h3>
           <p class="text-lg text-gray-600 leading-relaxed max-w-4xl mx-auto">
-            深入分析传统物料管理模式的根本问题，这些痛点不仅影响工程质量，更制约着行业的数字化转型进程。
+            基于大数据分析和行业调研，梳理传统物料管理模式中的典型问题，这些痛点在一定程度上影响工程效率，并对行业数字化进程产生制约。
           </p>
         </div>
 

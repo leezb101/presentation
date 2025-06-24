@@ -6,12 +6,15 @@ import xianchang_02 from '../images/xianchang_02.jpg'
 import xianchangguanjian_01 from '../images/xianchangguanjian_01.jpg'
 import guanjianxinxi_01 from '../images/guanjianxinxi_01.png'
 import xianshang_01 from '../images/xianshang_01.png'
+import changjia_01 from '../images/changjia_01.jpg'
+import changjia_02 from '../images/changjia_02.jpg'
 
 export class PreliminaryWorkComponent extends BaseComponent {
   static properties = {
     currentTab: { type: String },
     selectedPhotoIndex: { type: Number },
     isSynthesized: { type: Boolean, state: true }, // 新增状态：是否为精炼视图
+    thumbnailScrollIndex: { type: Number, state: true }, // 缩略图滚动索引
   }
 
   static styles = css`
@@ -143,6 +146,69 @@ export class PreliminaryWorkComponent extends BaseComponent {
       #stakeholder-synthesis .lg\:flex-row {
         gap: calc(2rem * var(--font-scale, 1)); /* lg屏幕下稍微增加间距 */
       }
+    }
+
+    /* 缩略图滚动容器样式 */
+    .thumbnail-container {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .thumbnail-scroll {
+      display: flex;
+      transition: transform 0.3s ease;
+      gap: 1rem;
+    }
+
+    .thumbnail-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 5;
+      box-shadow: 
+        0 4px 12px rgba(59, 130, 246, 0.25),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .thumbnail-nav-btn:hover {
+      background: linear-gradient(135deg, #2563eb, #1e40af);
+      box-shadow: 
+        0 8px 25px rgba(59, 130, 246, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .thumbnail-nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .thumbnail-nav-btn.prev {
+      left: -20px;
+    }
+
+    .thumbnail-nav-btn.next {
+      right: -20px;
+    }
+
+    .thumbnail-item {
+      flex: 0 0 auto;
+      width: calc((100% - 5rem) / 6); /* 6个缩略图的宽度 */
+      min-width: 120px;
     }
 
     /* 手动定义渐变背景样式以确保在Shadow DOM中正常工作 */
@@ -290,6 +356,7 @@ export class PreliminaryWorkComponent extends BaseComponent {
     this.selectedPhotoIndex = 0
     this.isSynthesized = false
     this.synthesisAnimation = null // 用于存储GSAP动画实例
+    this.thumbnailScrollIndex = 0 // 缩略图滚动索引
   }
 
   // ... (其他方法如 getSurveyData, getPhotoGallery 保持不变)
@@ -380,6 +447,18 @@ export class PreliminaryWorkComponent extends BaseComponent {
           key_points: ['方案设计及难点', '明确技术路线', '商定实施计划'],
           outcome: '达成共识，确定平台建设技术路线及难点解决办法',
         },
+        {
+          date: '2025年6月23日',
+          topic: '业务流程及深度需求二次研讨会',
+          participants: [
+            '建设管理部',
+            '监理',
+            '供水工程管理部',
+            '配水管网项目部',
+          ],
+          key_points: ['方案完善', '核心痛点凝练', '业务流程完善'],
+          outcome: '业务流程及深度需求达成一致，项目进行合理调整',
+        },
       ],
     }
   }
@@ -420,6 +499,22 @@ export class PreliminaryWorkComponent extends BaseComponent {
         description: '建管部与技术侧持续确认技术细节与需求实际',
         placeholder: xianshang_01,
         tags: ['线上会议', '记录'],
+      },
+      {
+        title: '厂家调研沟通01',
+        category: '现场调研',
+        description:
+          '直达厂家现场，直面厂家领导和仓管责任人，明确需求及合作方案',
+        placeholder: changjia_01,
+        tags: ['厂家', '调研'],
+      },
+      {
+        title: '厂家调研沟通02',
+        category: '现场调研',
+        description:
+          '直达厂家现场，直面厂家领导和仓管责任人，明确需求及合作方案',
+        placeholder: changjia_02,
+        tags: ['厂家', '调研'],
       },
     ]
   }
@@ -615,7 +710,9 @@ export class PreliminaryWorkComponent extends BaseComponent {
         <!-- 调研重点与发现 -->
         <div class="grid lg:grid-cols-2 gap-8">
           <!-- 调研重点 -->
-          <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div
+            class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
+          >
             <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
               <iconify-icon
                 icon="mdi:target"
@@ -629,7 +726,9 @@ export class PreliminaryWorkComponent extends BaseComponent {
               ${data.fieldWork.focus}
             </div>
             <div class="mt-4">
-              <div class="text-sm font-medium text-gray-700 mb-2">参与人员：</div>
+              <div class="text-sm font-medium text-gray-700 mb-2">
+                参与人员：
+              </div>
               <div class="flex flex-wrap gap-2">
                 ${data.fieldWork.participants.map(
                   (participant) => html`
@@ -644,7 +743,9 @@ export class PreliminaryWorkComponent extends BaseComponent {
           </div>
 
           <!-- 关键发现 -->
-          <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div
+            class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
+          >
             <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
               <iconify-icon
                 icon="mdi:lightbulb"
@@ -1310,7 +1411,7 @@ export class PreliminaryWorkComponent extends BaseComponent {
 
               <!-- 导航按钮 -->
               <button
-                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center transition-all"
+                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center transition-all z-30"
                 @click=${() =>
                   this.selectPhoto(
                     (this.selectedPhotoIndex - 1 + photos.length) %
@@ -1323,7 +1424,7 @@ export class PreliminaryWorkComponent extends BaseComponent {
                 ></iconify-icon>
               </button>
               <button
-                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center transition-all"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center transition-all z-30"
                 @click=${() =>
                   this.selectPhoto(
                     (this.selectedPhotoIndex + 1) % photos.length
@@ -1337,36 +1438,66 @@ export class PreliminaryWorkComponent extends BaseComponent {
             </div>
           </div>
 
-          <!-- 缩略图 -->
-          <div class="grid grid-cols-6 gap-4">
-            ${photos.map(
-              (photo, index) => html`
-                <div
-                  class="relative cursor-pointer group overflow-hidden rounded-lg ${index ===
-                  this.selectedPhotoIndex
-                    ? 'ring-2 ring-blue-500'
-                    : ''}"
-                  @click=${() => this.selectPhoto(index)}
-                >
-                  <img
-                    src="${photo.placeholder}"
-                    alt="${photo.title}"
-                    class="w-full aspect-square object-cover transition-all duration-300 group-hover:scale-105"
-                    loading="lazy"
-                  />
+          <!-- 缩略图滚动容器 -->
+          <div class="thumbnail-container">
+            <!-- 左侧导航按钮 -->
+            <button
+              class="thumbnail-nav-btn prev"
+              @click=${() => this.scrollThumbnails('prev')}
+              ?disabled=${this.thumbnailScrollIndex === 0}
+            >
+              <iconify-icon
+                icon="mdi:chevron-left"
+                class="text-xl text-white"
+              ></iconify-icon>
+            </button>
+
+            <!-- 右侧导航按钮 -->
+            <button
+              class="thumbnail-nav-btn next"
+              @click=${() => this.scrollThumbnails('next')}
+              ?disabled=${this.thumbnailScrollIndex >= Math.max(0, photos.length - 6)}
+            >
+              <iconify-icon
+                icon="mdi:chevron-right"
+                class="text-xl text-white"
+              ></iconify-icon>
+            </button>
+
+            <!-- 缩略图滚动列表 -->
+            <div 
+              class="thumbnail-scroll"
+              style="transform: translateX(-${this.thumbnailScrollIndex * (100 / 6)}%)"
+            >
+              ${photos.map(
+                (photo, index) => html`
                   <div
-                    class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"
-                  ></div>
-                  <div class="absolute bottom-1 left-1 right-1">
+                    class="thumbnail-item relative cursor-pointer group overflow-hidden rounded-lg ${index ===
+                    this.selectedPhotoIndex
+                      ? 'ring-2 ring-blue-500'
+                      : ''}"
+                    @click=${() => this.selectPhoto(index)}
+                  >
+                    <img
+                      src="${photo.placeholder}"
+                      alt="${photo.title}"
+                      class="w-full aspect-square object-cover transition-all duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
                     <div
-                      class="text-xs text-white font-medium bg-black/50 px-2 py-1 rounded text-center truncate"
-                    >
-                      ${photo.title}
+                      class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"
+                    ></div>
+                    <div class="absolute bottom-1 left-1 right-1">
+                      <div
+                        class="text-xs text-white font-medium bg-black/50 px-2 py-1 rounded text-center truncate"
+                      >
+                        ${photo.title}
+                      </div>
                     </div>
                   </div>
-                </div>
-              `
-            )}
+                `
+              )}
+            </div>
           </div>
         </div>
 
@@ -1375,7 +1506,7 @@ export class PreliminaryWorkComponent extends BaseComponent {
           ${[
             {
               category: '现场调研',
-              count: 2,
+              count: 4,
               icon: 'mdi:hard-hat',
               color: 'blue',
             },
@@ -1446,14 +1577,14 @@ export class PreliminaryWorkComponent extends BaseComponent {
               },
               {
                 label: '会议次数',
-                value: '5',
+                value: '4',
                 unit: '次',
                 icon: 'mdi:calendar-text',
                 color: 'orange',
               },
               {
                 label: '照片记录',
-                value: '5',
+                value: '7',
                 unit: '张',
                 icon: 'mdi:camera',
                 color: 'purple',
@@ -1570,7 +1701,9 @@ export class PreliminaryWorkComponent extends BaseComponent {
                   icon="mdi:office-building"
                   class="text-xl mb-1"
                 ></iconify-icon>
-                <div class="text-xs font-bold">${data.stakeholders[0].name}</div>
+                <div class="text-xs font-bold">
+                  ${data.stakeholders[0].name}
+                </div>
               </div>
             </div>
 
@@ -1583,7 +1716,9 @@ export class PreliminaryWorkComponent extends BaseComponent {
                   icon="mdi:domain"
                   class="text-xl mb-1"
                 ></iconify-icon>
-                <div class="text-xs font-bold">${data.stakeholders[1].name}</div>
+                <div class="text-xs font-bold">
+                  ${data.stakeholders[1].name}
+                </div>
               </div>
             </div>
 
@@ -1596,7 +1731,9 @@ export class PreliminaryWorkComponent extends BaseComponent {
                   icon="mdi:shield-check"
                   class="text-xl mb-1"
                 ></iconify-icon>
-                <div class="text-xs font-bold">${data.stakeholders[2].name}</div>
+                <div class="text-xs font-bold">
+                  ${data.stakeholders[2].name}
+                </div>
               </div>
             </div>
 
@@ -1609,7 +1746,9 @@ export class PreliminaryWorkComponent extends BaseComponent {
                   icon="mdi:hard-hat"
                   class="text-xl mb-1"
                 ></iconify-icon>
-                <div class="text-xs font-bold">${data.stakeholders[3].name}</div>
+                <div class="text-xs font-bold">
+                  ${data.stakeholders[3].name}
+                </div>
               </div>
             </div>
 
@@ -1802,6 +1941,21 @@ export class PreliminaryWorkComponent extends BaseComponent {
     this.requestUpdate()
   }
 
+  // 缩略图滚动控制
+  scrollThumbnails(direction) {
+    const photos = this.getPhotoGallery()
+    const visibleCount = 6 // 一次显示6张缩略图
+    const maxScrollIndex = Math.max(0, photos.length - visibleCount)
+    
+    if (direction === 'prev') {
+      this.thumbnailScrollIndex = Math.max(0, this.thumbnailScrollIndex - 1)
+    } else {
+      this.thumbnailScrollIndex = Math.min(maxScrollIndex, this.thumbnailScrollIndex + 1)
+    }
+    
+    this.requestUpdate()
+  }
+
   switchTab(tab) {
     this.currentTab = tab
     this.requestUpdate()
@@ -1855,7 +2009,7 @@ export class PreliminaryWorkComponent extends BaseComponent {
 
   render() {
     return html`
-      <div class="w-full flex flex-col items-center">
+      <div class="w-full flex flex-col items-center pb-16">
         <!-- 标题区域 -->
         <div class="text-center mb-8">
           <h2 class="text-4xl font-bold text-gray-800 mb-4">

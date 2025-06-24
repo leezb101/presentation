@@ -11,17 +11,33 @@ export class SolutionShowcaseComponent extends BaseComponent {
     :host {
       display: block;
     }
-    
+
     /* 字体缩放样式 */
-    .text-4xl { font-size: calc(2.25rem * var(--font-scale, 1)) !important; }
-    .text-3xl { font-size: calc(1.875rem * var(--font-scale, 1)) !important; }
-    .text-2xl { font-size: calc(1.5rem * var(--font-scale, 1)) !important; }
-    .text-xl { font-size: calc(1.25rem * var(--font-scale, 1)) !important; }
-    .text-lg { font-size: calc(1.125rem * var(--font-scale, 1)) !important; }
-    .text-base { font-size: calc(1rem * var(--font-scale, 1)) !important; }
-    .text-sm { font-size: calc(0.875rem * var(--font-scale, 1)) !important; }
-    .text-xs { font-size: calc(0.75rem * var(--font-scale, 1)) !important; }
-    
+    .text-4xl {
+      font-size: calc(2.25rem * var(--font-scale, 1)) !important;
+    }
+    .text-3xl {
+      font-size: calc(1.875rem * var(--font-scale, 1)) !important;
+    }
+    .text-2xl {
+      font-size: calc(1.5rem * var(--font-scale, 1)) !important;
+    }
+    .text-xl {
+      font-size: calc(1.25rem * var(--font-scale, 1)) !important;
+    }
+    .text-lg {
+      font-size: calc(1.125rem * var(--font-scale, 1)) !important;
+    }
+    .text-base {
+      font-size: calc(1rem * var(--font-scale, 1)) !important;
+    }
+    .text-sm {
+      font-size: calc(0.875rem * var(--font-scale, 1)) !important;
+    }
+    .text-xs {
+      font-size: calc(0.75rem * var(--font-scale, 1)) !important;
+    }
+
     @unocss-placeholder;
   `
 
@@ -114,7 +130,7 @@ export class SolutionShowcaseComponent extends BaseComponent {
 
     return html`
       <div
-        class="bg-white rounded-3xl shadow-2xl p-6 max-w-7xl w-full flex flex-col items-center animate-fadeIn"
+        class="bg-white rounded-3xl shadow-2xl p-4 max-w-5xl w-full flex flex-col items-center animate-fadeIn"
       >
         <div class="mb-12 text-center">
           <h3 class="text-3xl font-bold text-blue-600 mb-4">
@@ -126,7 +142,7 @@ export class SolutionShowcaseComponent extends BaseComponent {
         </div>
 
         <!-- 流程卡片容器 -->
-        <div class="relative w-full max-w-6xl mb-8">
+        <div class="relative w-full max-w-5xl mb-8">
           <!-- 连接线容器 -->
           <div class="absolute top-1/2 left-0 right-0 h-1 -translate-y-1/2 z-0">
             <svg
@@ -220,7 +236,7 @@ export class SolutionShowcaseComponent extends BaseComponent {
           </div>
 
           <!-- 卡片布局 -->
-          <div class="flex items-center justify-between gap-18 relative z-10">
+          <div class="flex items-center justify-center gap-6 relative z-10">
             ${flowSteps.map(
               (step, idx) => html`
                 <div
@@ -228,8 +244,8 @@ export class SolutionShowcaseComponent extends BaseComponent {
                     ? 'ring-4 ring-cyan-200 scale-105 shadow-2xl'
                     : ''}"
                   style="width: ${step.isHighlight
-                    ? '260px'
-                    : '240px'}; min-height: 280px;"
+                    ? '240px'
+                    : '200px'}; min-height: 280px; flex-shrink: 0;"
                   @mouseenter=${() => this.handleCardHover(idx)}
                 >
                   <!-- 图标区域 -->
@@ -311,11 +327,6 @@ export class SolutionShowcaseComponent extends BaseComponent {
             )}
           </div>
         </div>
-
-        <!-- 交互说明 -->
-        <div class="text-center text-gray-500 text-sm">
-          悬停卡片体验交互效果，二维码卡片为核心理念
-        </div>
       </div>
     `
   }
@@ -379,8 +390,8 @@ export class SolutionShowcaseComponent extends BaseComponent {
             构建一体化数字平台，以"一物一码"为核心，打造"云+三端"协同体系
           </p>
         </div>
-        
-        <div class="w-full max-w-7xl flex items-start justify-center relative">
+
+        <div class="w-full max-w-6xl flex items-start justify-center relative px-2">
           <div
             class="flex flex-col items-center text-center animate-fadeIn w-full justify-center"
             style="display: ${this.currentView === 'concept'
