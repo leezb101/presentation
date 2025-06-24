@@ -533,6 +533,141 @@ export class PreliminaryWorkComponent extends BaseComponent {
 
     return html`
       <div class="space-y-8">
+        <!-- 项目基本信息 -->
+        <div
+          class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-8 border border-blue-200"
+        >
+          <div class="text-center mb-6">
+            <h3
+              class="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-center"
+            >
+              <iconify-icon
+                icon="mdi:construction"
+                class="text-blue-500 mr-3"
+              ></iconify-icon>
+              ${data.fieldWork.project}调研
+            </h3>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+              以老旧管网改造项目为背景，深入一线了解管材管理现状，与各方充分沟通需求
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-4 gap-6">
+            <div class="text-center">
+              <div
+                class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3"
+              >
+                <iconify-icon
+                  icon="mdi:map-marker"
+                  class="text-2xl text-white"
+                ></iconify-icon>
+              </div>
+              <div class="text-sm text-gray-600 mb-1">调研地点</div>
+              <div class="font-semibold text-gray-800">
+                ${data.fieldWork.location}
+              </div>
+            </div>
+            <div class="text-center">
+              <div
+                class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3"
+              >
+                <iconify-icon
+                  icon="mdi:clock-outline"
+                  class="text-2xl text-white"
+                ></iconify-icon>
+              </div>
+              <div class="text-sm text-gray-600 mb-1">调研周期</div>
+              <div class="font-semibold text-gray-800">
+                ${data.fieldWork.duration}
+              </div>
+            </div>
+            <div class="text-center">
+              <div
+                class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-3"
+              >
+                <iconify-icon
+                  icon="mdi:account-group"
+                  class="text-2xl text-white"
+                ></iconify-icon>
+              </div>
+              <div class="text-sm text-gray-600 mb-1">参与人员</div>
+              <div class="font-semibold text-gray-800">
+                ${data.fieldWork.personNum}人
+              </div>
+            </div>
+            <div class="text-center">
+              <div
+                class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3"
+              >
+                <iconify-icon
+                  icon="mdi:clipboard-list"
+                  class="text-2xl text-white"
+                ></iconify-icon>
+              </div>
+              <div class="text-sm text-gray-600 mb-1">关键发现</div>
+              <div class="font-semibold text-gray-800">
+                ${data.fieldWork.findings.length}项
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 调研重点与发现 -->
+        <div class="grid lg:grid-cols-2 gap-8">
+          <!-- 调研重点 -->
+          <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+              <iconify-icon
+                icon="mdi:target"
+                class="text-blue-500 mr-2"
+              ></iconify-icon>
+              调研重点
+            </h4>
+            <div
+              class="text-sm text-gray-700 bg-blue-50 rounded-lg p-4 border border-blue-200"
+            >
+              ${data.fieldWork.focus}
+            </div>
+            <div class="mt-4">
+              <div class="text-sm font-medium text-gray-700 mb-2">参与人员：</div>
+              <div class="flex flex-wrap gap-2">
+                ${data.fieldWork.participants.map(
+                  (participant) => html`
+                    <span
+                      class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded border"
+                      >${participant}</span
+                    >
+                  `
+                )}
+              </div>
+            </div>
+          </div>
+
+          <!-- 关键发现 -->
+          <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+              <iconify-icon
+                icon="mdi:lightbulb"
+                class="text-orange-500 mr-2"
+              ></iconify-icon>
+              关键发现
+            </h4>
+            <div class="space-y-3">
+              ${data.fieldWork.findings.map(
+                (finding, index) => html`
+                  <div class="flex items-start">
+                    <div
+                      class="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 mt-0.5 text-xs font-bold"
+                    >
+                      ${index + 1}
+                    </div>
+                    <div class="text-sm text-gray-700">${finding}</div>
+                  </div>
+                `
+              )}
+            </div>
+          </div>
+        </div>
         <!-- 四方角色详情 -->
         <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
           <div class="flex justify-between items-center mb-6">
@@ -1407,7 +1542,124 @@ export class PreliminaryWorkComponent extends BaseComponent {
           </div>
         </div>
 
-        <!-- 解决方案路径 -->
+        <!-- 四方协作关系图 -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+          <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">
+            四方协作关系图
+          </h3>
+          <div class="relative w-full" style="height: 400px;">
+            <!-- 中心：项目 -->
+            <div
+              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white z-10"
+            >
+              <div class="text-center">
+                <iconify-icon
+                  icon="mdi:construction"
+                  class="text-3xl mb-1"
+                ></iconify-icon>
+                <div class="text-sm font-bold">老旧管网改造</div>
+              </div>
+            </div>
+
+            <!-- 建设方 - 上方 -->
+            <div
+              class="absolute top-8 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-purple-500 rounded-full flex items-center justify-center text-white z-20"
+            >
+              <div class="text-center">
+                <iconify-icon
+                  icon="mdi:office-building"
+                  class="text-xl mb-1"
+                ></iconify-icon>
+                <div class="text-xs font-bold">${data.stakeholders[0].name}</div>
+              </div>
+            </div>
+
+            <!-- 建管部 - 左侧 -->
+            <div
+              class="absolute top-1/2 left-8 transform -translate-y-1/2 w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-white z-20"
+            >
+              <div class="text-center">
+                <iconify-icon
+                  icon="mdi:domain"
+                  class="text-xl mb-1"
+                ></iconify-icon>
+                <div class="text-xs font-bold">${data.stakeholders[1].name}</div>
+              </div>
+            </div>
+
+            <!-- 监理公司 - 右侧 -->
+            <div
+              class="absolute top-1/2 right-8 transform -translate-y-1/2 w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white z-20"
+            >
+              <div class="text-center">
+                <iconify-icon
+                  icon="mdi:shield-check"
+                  class="text-xl mb-1"
+                ></iconify-icon>
+                <div class="text-xs font-bold">${data.stakeholders[2].name}</div>
+              </div>
+            </div>
+
+            <!-- 施工方 - 下方 -->
+            <div
+              class="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center text-white z-20"
+            >
+              <div class="text-center">
+                <iconify-icon
+                  icon="mdi:hard-hat"
+                  class="text-xl mb-1"
+                ></iconify-icon>
+                <div class="text-xs font-bold">${data.stakeholders[3].name}</div>
+              </div>
+            </div>
+
+            <!-- 连接线 -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none z-0">
+              <!-- 上方到中心 -->
+              <line
+                x1="50%"
+                y1="18%"
+                x2="50%"
+                y2="35%"
+                stroke="#cbd5e1"
+                stroke-width="2"
+                stroke-dasharray="5,5"
+              />
+              <!-- 左侧到中心 -->
+              <line
+                x1="18%"
+                y1="50%"
+                x2="35%"
+                y2="50%"
+                stroke="#cbd5e1"
+                stroke-width="2"
+                stroke-dasharray="5,5"
+              />
+              <!-- 右侧到中心 -->
+              <line
+                x1="82%"
+                y1="50%"
+                x2="65%"
+                y2="50%"
+                stroke="#cbd5e1"
+                stroke-width="2"
+                stroke-dasharray="5,5"
+              />
+              <!-- 下方到中心 -->
+              <line
+                x1="50%"
+                y1="82%"
+                x2="50%"
+                y2="65%"
+                stroke="#cbd5e1"
+                stroke-width="2"
+                stroke-dasharray="5,5"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- 实施路径规划 -->
         <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
           <h3 class="text-2xl font-bold text-gray-800 mb-6">实施路径规划</h3>
           <div class="relative">
@@ -1619,7 +1871,6 @@ export class PreliminaryWorkComponent extends BaseComponent {
           class="flex flex-wrap justify-center gap-2 mb-8 bg-white rounded-xl p-2 shadow-lg border border-gray-100"
         >
           ${[
-            { id: 'overview', label: '总体概述', icon: 'mdi:view-dashboard' },
             { id: 'survey', label: '调研详情', icon: 'mdi:clipboard-search' },
             { id: 'photos', label: '现场照片', icon: 'mdi:camera' },
             { id: 'results', label: '成果总结', icon: 'mdi:chart-line' },
@@ -1641,9 +1892,7 @@ export class PreliminaryWorkComponent extends BaseComponent {
 
         <!-- 内容区域 -->
         <div class="w-full max-w-7xl px-4">
-          ${this.currentTab === 'overview'
-            ? this.renderOverviewTab()
-            : this.currentTab === 'survey'
+          ${this.currentTab === 'survey'
             ? this.renderSurveyTab()
             : this.currentTab === 'photos'
             ? this.renderPhotosTab()
