@@ -61,18 +61,21 @@ export class AppHeader extends BaseComponent {
     `
   }
 
-  renderNavLinks() {
-    const navItems = [
+  getNavItems() {
+    return [
       { href: '#hero', text: '开篇' },
       { href: '#problem', text: '现状与痛点' },
       { href: '#preliminary-work', text: '前期工作' },
       { href: '#solution', text: '解决方案' },
       { href: '#process', text: '系统如何运作' },
+      { href: '#supporting-solutions', text: '配套方案' }, // 新增
       { href: '#value', text: '项目价值' },
       { href: '#roadmap', text: '实施路线图' },
     ]
+  }
 
-    return navItems.map(
+  renderNavLinks() {
+    return this.getNavItems().map(
       (item) => html`
         <a
           href="${item.href}"
@@ -89,17 +92,7 @@ export class AppHeader extends BaseComponent {
   }
 
   renderMobileNavLinks() {
-    const navItems = [
-      { href: '#hero', text: '开篇' },
-      { href: '#problem', text: '现状与痛点' },
-      { href: '#preliminary-work', text: '前期工作' },
-      { href: '#solution', text: '解决方案' },
-      { href: '#process', text: '系统如何运作' },
-      { href: '#value', text: '项目价值' },
-      { href: '#roadmap', text: '实施路线图' },
-    ]
-
-    return navItems.map(
+    return this.getNavItems().map(
       (item) => html`
         <a
           href="${item.href}"

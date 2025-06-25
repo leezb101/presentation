@@ -12,6 +12,16 @@ export class AppMain extends BaseComponent {
     this.currentSectionIndex = 0
     this.isAnimating = false
     this.sections = []
+    this.sectionIds = [
+      'hero',
+      'problem',
+      'preliminary-work',
+      'solution',
+      'process',
+      'supporting-solutions', // 新增
+      'value',
+      'roadmap',
+    ]
   }
 
   static styles = css`
@@ -268,11 +278,9 @@ export class AppMain extends BaseComponent {
     }
 
     @keyframes shimmerText {
-      /* 前20%时间静止 */
       0% {
         background-position: 100% 0;
       }
-      /* 后50%时间静止等待 */
       100% {
         background-position: 0 0;
       }
@@ -293,26 +301,21 @@ export class AppMain extends BaseComponent {
       .hero-content {
         padding: 0 20px;
       }
-
       .floating-icon {
         width: 65px;
         height: 65px;
       }
-
       .floating-icon .icon {
         font-size: calc(28px * var(--font-scale, 1));
       }
-
       .qr-icon {
         top: 15%;
         right: 5%;
       }
-
       .cloud-icon {
         top: 35%;
         left: 5%;
       }
-
       .pipe-icon {
         bottom: 20%;
         right: 15%;
@@ -323,16 +326,13 @@ export class AppMain extends BaseComponent {
       .hero-content {
         padding: 0 15px;
       }
-
       .floating-icon {
         width: 55px;
         height: 55px;
       }
-
       .floating-icon .icon {
         font-size: calc(24px * var(--font-scale, 1));
       }
-
       .description {
         font-size: calc(1rem * var(--font-scale, 1));
         line-height: 1.6;
@@ -392,9 +392,7 @@ export class AppMain extends BaseComponent {
             ? 'active'
             : ''}"
         >
-          <div class="w-full px-4">
-            <problem-analysis></problem-analysis>
-          </div>
+          <div class="w-full px-4"><problem-analysis></problem-analysis></div>
         </content-section>
 
         <content-section
@@ -403,9 +401,7 @@ export class AppMain extends BaseComponent {
             ? 'active'
             : ''}"
         >
-          <div class="w-full px-4">
-            <preliminary-work></preliminary-work>
-          </div>
+          <div class="w-full px-4"><preliminary-work></preliminary-work></div>
         </content-section>
 
         <content-section
@@ -414,9 +410,7 @@ export class AppMain extends BaseComponent {
             ? 'active'
             : ''}"
         >
-          <div class="w-full px-4">
-            <solution-showcase></solution-showcase>
-          </div>
+          <div class="w-full px-4"><solution-showcase></solution-showcase></div>
         </content-section>
 
         <content-section
@@ -429,8 +423,17 @@ export class AppMain extends BaseComponent {
         </content-section>
 
         <content-section
-          id="value"
+          id="supporting-solutions"
           class="report-section ${this.currentSectionIndex === 5
+            ? 'active'
+            : ''}"
+        >
+          <supporting-solutions></supporting-solutions>
+        </content-section>
+
+        <content-section
+          id="value"
+          class="report-section ${this.currentSectionIndex === 6
             ? 'active'
             : ''}"
         >
@@ -439,7 +442,7 @@ export class AppMain extends BaseComponent {
 
         <content-section
           id="roadmap"
-          class="report-section ${this.currentSectionIndex === 6
+          class="report-section ${this.currentSectionIndex === 7
             ? 'active'
             : ''}"
         >
@@ -459,7 +462,7 @@ export class AppMain extends BaseComponent {
         <button
           id="next-section-btn"
           class="flex justify-center items-center w-12 h-12 rounded-full shadow-lg backdrop-blur-sm transition bg-white/70 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          ?disabled=${this.currentSectionIndex === 6}
+          ?disabled=${this.currentSectionIndex === this.sectionIds.length - 1}
           @click=${this.nextSection}
         >
           <iconify-icon icon="mdi:arrow-right" class="text-2xl"></iconify-icon>
@@ -469,7 +472,8 @@ export class AppMain extends BaseComponent {
   }
 
   showSection(newIndex) {
-    if (this.isAnimating || newIndex < 0 || newIndex >= 7) return
+    if (this.isAnimating || newIndex < 0 || newIndex >= this.sectionIds.length)
+      return
     if (newIndex === this.currentSectionIndex) return
 
     this.isAnimating = true
@@ -488,7 +492,6 @@ export class AppMain extends BaseComponent {
 
     this.safeSetTimeout(() => {
       this.isAnimating = false
-      // 通知当前活动的 content-section 检测高度
       const activeSection = this.shadowRoot.querySelector(
         '.report-section.active'
       )
@@ -499,29 +502,11 @@ export class AppMain extends BaseComponent {
   }
 
   getSectionIdByIndex(index) {
-    const sectionIds = [
-      'hero',
-      'problem',
-      'preliminary-work',
-      'solution',
-      'process',
-      'value',
-      'roadmap',
-    ]
-    return sectionIds[index] || 'hero'
+    return this.sectionIds[index] || 'hero'
   }
 
   getSectionIndexById(sectionId) {
-    const sectionIds = [
-      'hero',
-      'problem',
-      'preliminary-work',
-      'solution',
-      'process',
-      'value',
-      'roadmap',
-    ]
-    return sectionIds.indexOf(sectionId)
+    return this.sectionIds.indexOf(sectionId)
   }
 
   handleSectionChange(sectionId) {

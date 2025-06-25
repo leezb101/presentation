@@ -2,7 +2,7 @@
  * @Author: LeeZB
  * @Date: 2025-06-21 11:00:56
  * @LastEditors: Leezb101 leezb101@126.com
- * @LastEditTime: 2025-06-24 17:01:31
+ * @LastEditTime: 2025-06-25 11:39:29
  * @copyright: Copyright © 2025 高新供水.
  */
 import 'unocss'
@@ -17,6 +17,7 @@ import './components/content-section.js'
 import './components/solution-showcase.js'
 import './components/cloud-architecture.js'
 import './components/process-flow-component.js'
+import './components/supporting-solutions.js' // 导入新组件
 import './components/value-chart-component.js'
 import './components/roadmap-component.js'
 import './components/problem-analysis.js'
