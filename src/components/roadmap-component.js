@@ -4,15 +4,31 @@ import { BaseComponent } from './base-component.js'
 export class RoadmapComponent extends BaseComponent {
   static styles = css`
     /* 字体缩放样式 */
-    .text-4xl { font-size: calc(2.25rem * var(--font-scale, 1)) !important; }
-    .text-3xl { font-size: calc(1.875rem * var(--font-scale, 1)) !important; }
-    .text-2xl { font-size: calc(1.5rem * var(--font-scale, 1)) !important; }
-    .text-xl { font-size: calc(1.25rem * var(--font-scale, 1)) !important; }
-    .text-lg { font-size: calc(1.125rem * var(--font-scale, 1)) !important; }
-    .text-base { font-size: calc(1rem * var(--font-scale, 1)) !important; }
-    .text-sm { font-size: calc(0.875rem * var(--font-scale, 1)) !important; }
-    .text-xs { font-size: calc(0.75rem * var(--font-scale, 1)) !important; }
-    
+    .text-4xl {
+      font-size: calc(2.25rem * var(--font-scale, 1)) !important;
+    }
+    .text-3xl {
+      font-size: calc(1.875rem * var(--font-scale, 1)) !important;
+    }
+    .text-2xl {
+      font-size: calc(1.5rem * var(--font-scale, 1)) !important;
+    }
+    .text-xl {
+      font-size: calc(1.25rem * var(--font-scale, 1)) !important;
+    }
+    .text-lg {
+      font-size: calc(1.125rem * var(--font-scale, 1)) !important;
+    }
+    .text-base {
+      font-size: calc(1rem * var(--font-scale, 1)) !important;
+    }
+    .text-sm {
+      font-size: calc(0.875rem * var(--font-scale, 1)) !important;
+    }
+    .text-xs {
+      font-size: calc(0.75rem * var(--font-scale, 1)) !important;
+    }
+
     @unocss-placeholder .roadmap-item {
       opacity: 0;
       transform: translateX(-50px);
@@ -106,7 +122,7 @@ export class RoadmapComponent extends BaseComponent {
   `
 
   static properties = {
-    expandedIndex: { type: Number }
+    expandedIndex: { type: Number },
   }
 
   constructor() {
@@ -118,10 +134,12 @@ export class RoadmapComponent extends BaseComponent {
         phase: 1,
         duration: '1-3周',
         title: '前期准备阶段',
-        description: '需求调研与目标确认，组建项目组，完成资源与协作规划。',
+        description:
+          '完成需求调研与目标确认，组建项目团队，为项目顺利启动奠定坚实基础。',
         details: [
-          '组织核心用户召开需求研讨会，明确核心痛点',
-          '组建项目组：需求分析师、技术开发、数据工程师、现场实施团队、运维团队',
+          '组织核心用户（建管、监理、施工方）召开需求研讨会，明确核心痛点与项目目标。',
+          '完成项目立项，组建包含需求、开发、测试、实施和运维的完整项目组。',
+          '规划详细的资源与协作方案，建立高效的沟通机制。',
         ],
         icon: '🎯',
       },
@@ -129,47 +147,63 @@ export class RoadmapComponent extends BaseComponent {
         phase: 2,
         duration: '第4周',
         title: '方案设计阶段',
-        description: '技术架构设计，开发APP支持扫码巡检，管理端Web平台设计。',
+        description:
+          '完成整体技术架构设计和产品原型设计，明确系统边界和核心功能模块。',
         details: [
-          'APP开发：扫码、巡检打卡、异常上报（离线模式缓存数据）',
-          '管理端Web平台：权限管理、数据编辑功能',
-          '小程序：展示基础信息，避免敏感数据泄露',
+          '设计“云+三端”的整体技术架构，确保系统的稳定性和可扩展性。',
+          '完成App、Web管理端和小程序的核心页面与交互原型（PRD）。',
+          '设计数据库结构，明确“一物一码”全生命周期的数据模型。',
         ],
         icon: '📋',
       },
       {
         phase: 3,
-        duration: '5-10周',
-        title: '系统开发与集成阶段',
-        description: '按模块开发，系统集成与对接，测试验证。',
+        duration: '第5-6周',
+        title: '系统功能开发',
+        description:
+          '采用敏捷开发模式，集中资源在两周内完成核心功能的冲刺开发，快速产出最小可行产品（MVP）。',
         details: [
-          '按模块进行系统开发',
-          '系统集成与第三方系统对接',
-          '全面测试验证系统功能',
+          '**第一周：** 完成后端基础架构、数据库搭建及核心API开发；同步进行Web管理端的基础框架和权限管理模块开发。',
+          '**第二周：** 集中开发移动App端的核心流程，包括扫码识别、信息录入、流程节点操作等功能。',
         ],
         icon: '⚙️',
       },
       {
         phase: 4,
-        duration: '11-13周',
-        title: '试点部署与培训阶段',
-        description: '小范围试点上线，收集反馈，解决问题，用户培训。',
+        duration: '第7-10周',
+        title: '测试验证与内部优化',
+        description:
+          '进行为期一个月的全面内部测试，模拟真实使用场景，确保系统稳定可靠，并根据反馈进行优化。',
         details: [
-          '选择1-2个典型区域作为试点，部署生产环境',
-          '收集试点反馈，解决BUG问题',
-          '开展用户培训，确保顺利使用',
+          '开展功能完整性测试，确保数据在“源头-验收-出入库-安装-追溯”各环节的无缝流转。',
+          '进行性能与压力测试，模拟多用户并发操作场景。',
+          '组织内部多角色（管理、现场）的交叉体验，收集UI/UX优化建议并进行迭代。',
+        ],
+        icon: '🧪',
+      },
+      {
+        phase: 5,
+        duration: '第11-13周',
+        title: '小范围试点与培训',
+        description:
+          '选取1-2个代表性项目启动小范围试点，收集真实用户反馈，并对相关人员进行系统操作培训。',
+        details: [
+          '在选定的试点项目中部署生产环境，进行真实数据验证。',
+          '与一线操作人员、管理人员紧密沟通，收集操作反馈和改进建议。',
+          '组织针对性的用户培训会，确保核心用户能够熟练使用系统。',
         ],
         icon: '🚀',
       },
       {
-        phase: 5,
+        phase: 6,
         duration: '长期',
-        title: '全面推广与运营阶段',
-        description: '全量部署，迭代优化，根据用户需求新增功能，扩展应用场景。',
+        title: '全面推广与持续运营',
+        description:
+          '在全公司范围内进行推广应用，并建立常态化运营与技术支持机制，根据实际运营情况持续进行产品迭代与功能扩展。',
         details: [
-          '全量部署到所有区域',
-          '迭代优化：新增管道风险预测等功能',
-          '扩展场景：基于用户体验，持续扩展需求',
+          '制定详细的推广计划，分批次将系统部署到所有相关项目和部门。',
+          '建立标准化的技术支持和问题反馈渠道，保障系统稳定运行。',
+          '根据用户在实际使用中提出的新需求，规划并开发新功能模块。',
         ],
         icon: '📈',
       },
@@ -219,8 +253,7 @@ export class RoadmapComponent extends BaseComponent {
           </p>
         </div>
 
-        <!-- 垂直时间线布局 -->
-        <div class="flex flex-col">
+        <div class="flex flex-col pb-16">
           ${this.roadmapData.map((item, index) =>
             this.renderTimelineStep(item, index)
           )}
@@ -230,19 +263,16 @@ export class RoadmapComponent extends BaseComponent {
   }
 
   toggleDetails(index) {
-    // 如果点击的是当前展开的项，则收起
     if (this.expandedIndex === index) {
       this.collapseDetails(index)
       this.expandedIndex = -1
       return
     }
 
-    // 先收起之前展开的项
     if (this.expandedIndex !== -1) {
       this.collapseDetails(this.expandedIndex)
     }
 
-    // 展开新的项
     this.expandDetails(index)
     this.expandedIndex = index
   }
@@ -268,10 +298,11 @@ export class RoadmapComponent extends BaseComponent {
   getPhaseColor(phase) {
     const colors = {
       1: 'bg-blue-500',
-      2: 'bg-green-500',
-      3: 'bg-yellow-500',
-      4: 'bg-orange-500',
-      5: 'bg-purple-500',
+      2: 'bg-indigo-500',
+      3: 'bg-green-500',
+      4: 'bg-yellow-500',
+      5: 'bg-orange-500',
+      6: 'bg-purple-500',
     }
     return colors[phase] || 'bg-gray-500'
   }
@@ -282,7 +313,8 @@ export class RoadmapComponent extends BaseComponent {
 
   getTimelineColors(index) {
     const colors = [
-      { from: 'blue-400', to: 'green-400' },
+      { from: 'blue-400', to: 'indigo-400' },
+      { from: 'indigo-400', to: 'green-400' },
       { from: 'green-400', to: 'yellow-400' },
       { from: 'yellow-400', to: 'orange-400' },
       { from: 'orange-400', to: 'purple-400' },
@@ -296,9 +328,7 @@ export class RoadmapComponent extends BaseComponent {
 
     return html`
       <div class="timeline-step relative flex group">
-        <!-- 左侧时间线区域 -->
         <div class="flex-shrink-0 w-32 relative">
-          <!-- 时间线段 -->
           ${!isLast
             ? html`
                 <div
@@ -307,7 +337,6 @@ export class RoadmapComponent extends BaseComponent {
               `
             : ''}
 
-          <!-- 圆形节点 -->
           <div class="relative z-10 pt-6">
             <div
               class="phase-badge phase-badge-glow absolute left-8 w-12 h-12 ${this.getPhaseColor(
@@ -322,7 +351,6 @@ export class RoadmapComponent extends BaseComponent {
           </div>
         </div>
 
-        <!-- 右侧内容卡片 -->
         <div class="flex-1 ${!isLast ? 'pb-8' : ''}">
           ${this.renderContentCard(item, index)}
         </div>
@@ -339,7 +367,6 @@ export class RoadmapComponent extends BaseComponent {
         @click="${() => this.toggleDetails(index)}"
       >
         <div class="p-6" style="padding: calc(1.5rem * var(--font-scale, 1))">
-          <!-- 卡片头部 -->
           <div class="flex justify-between items-start mb-4">
             <div class="flex items-center gap-4">
               <span class="text-3xl">${item.icon}</span>
@@ -374,12 +401,15 @@ export class RoadmapComponent extends BaseComponent {
             </div>
           </div>
 
-          <!-- 描述 -->
-          <p class="text-gray-600 mb-4 leading-relaxed text-base">${item.description}</p>
+          <p class="text-gray-600 mb-4 leading-relaxed text-base">
+            ${item.description}
+          </p>
 
-          <!-- 详细内容 -->
           <div id="details-${index}" class="details-list">
-            <div class="border-t" style="padding-top: calc(1rem * var(--font-scale, 1)); margin-top: calc(1rem * var(--font-scale, 1))">
+            <div
+              class="border-t"
+              style="padding-top: calc(1rem * var(--font-scale, 1)); margin-top: calc(1rem * var(--font-scale, 1))"
+            >
               <h5
                 class="font-semibold text-gray-800 text-sm flex items-center"
                 style="margin-bottom: calc(0.75rem * var(--font-scale, 1))"
@@ -391,7 +421,10 @@ export class RoadmapComponent extends BaseComponent {
                 ></span>
                 详细内容：
               </h5>
-              <ul class="space-y-3" style="gap: calc(0.75rem * var(--font-scale, 1)); display: flex; flex-direction: column">
+              <ul
+                class="space-y-3"
+                style="gap: calc(0.75rem * var(--font-scale, 1)); display: flex; flex-direction: column"
+              >
                 ${item.details.map(
                   (detail) => html`
                     <li
@@ -408,12 +441,11 @@ export class RoadmapComponent extends BaseComponent {
             </div>
           </div>
 
-          <!-- 底部提示 -->
           <div class="flex justify-center mt-4 pt-3 border-t border-gray-100">
             <span
               class="text-blue-500 text-sm font-medium hover:text-blue-700 transition-colors flex items-center gap-1"
             >
-${this.expandedIndex === index ? '折叠详情' : '展开详情'}
+              ${this.expandedIndex === index ? '收起详情' : '展开详情'}
               <svg
                 class="w-4 h-4 transition-transform duration-200 ${this
                   .expandedIndex === index
