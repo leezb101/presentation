@@ -1,4 +1,5 @@
 import { html, css } from 'lit'
+import { unsafeHTML } from 'lit/directives/unsafe-html.js'
 import { BaseComponent } from './base-component.js'
 
 export class RoadmapComponent extends BaseComponent {
@@ -163,8 +164,8 @@ export class RoadmapComponent extends BaseComponent {
         description:
           '采用敏捷开发模式，集中资源在两周内完成核心功能的冲刺开发，快速产出最小可行产品（MVP）。',
         details: [
-          '**第一周：** 完成后端基础架构、数据库搭建及核心API开发；同步进行Web管理端的基础框架和权限管理模块开发。',
-          '**第二周：** 集中开发移动App端的核心流程，包括扫码识别、信息录入、流程节点操作等功能。',
+          '<strong>第一周：</strong>完成后端基础架构、数据库搭建及核心API开发；同步进行Web管理端的基础框架和权限管理模块开发。',
+          '<strong>第二周：</strong>集中开发移动App端的核心流程，包括扫码识别、信息录入、流程节点操作等功能。',
         ],
         icon: '⚙️',
       },
@@ -433,7 +434,7 @@ export class RoadmapComponent extends BaseComponent {
                       <span
                         class="w-2 h-2 rounded-full bg-blue-400 mt-1.5 mr-3 flex-shrink-0"
                       ></span>
-                      <span class="leading-relaxed">${detail}</span>
+                      <span class="leading-relaxed">${unsafeHTML(detail)}</span>
                     </li>
                   `
                 )}
