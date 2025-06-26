@@ -30,6 +30,26 @@ export class CloudArchitectureComponent extends BaseComponent {
         { name: '全流程节点', icon: 'mdi:timeline' },
         { name: '公共查询', icon: 'mdi:magnify' },
       ],
+      qrcode: [
+        { 
+          name: '厂家提供二维码', 
+          icon: 'mdi:factory',
+          description: '生产厂家为每件材料生成唯一二维码标识',
+          color: 'blue'
+        },
+        { 
+          name: '建立交付关系', 
+          icon: 'mdi:truck-delivery',
+          description: '提供交付号，建立交付号与单件材料对应关系',
+          color: 'green'
+        },
+        { 
+          name: '全流程追踪', 
+          icon: 'mdi:timeline-clock',
+          description: '材料流转各节点录入相应信息，形成完整链条',
+          color: 'purple'
+        },
+      ],
     }
   }
 
@@ -64,6 +84,24 @@ export class CloudArchitectureComponent extends BaseComponent {
     }
     .text-xs {
       font-size: calc(0.75rem * var(--font-scale, 1)) !important;
+    }
+
+    /* 扫描线动画 */
+    @keyframes scanLine {
+      0% {
+        transform: translateY(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(48px);
+        opacity: 0;
+      }
     }
 
     @unocss-placeholder;
@@ -217,6 +255,10 @@ export class CloudArchitectureComponent extends BaseComponent {
     this.requestUpdate()
   }
 
+  handleQRClick() {
+    this.handleClientClick('qrcode')
+  }
+
   render() {
     return html`
       <div
@@ -232,10 +274,49 @@ export class CloudArchitectureComponent extends BaseComponent {
 
         <!-- 提示文字 -->
         <div
-          class="absolute top-4 right-6 text-sm text-slate-600 font-medium opacity-80"
+          class="absolute top-4 right-24 text-sm text-slate-600 font-medium opacity-80"
         >
           <iconify-icon icon="mdi:cursor-pointer" class="mr-1"></iconify-icon>
           点击查看连接
+        </div>
+
+        <!-- 二维码元素 -->
+        <div class="absolute top-16 right-8">
+          <div
+            class="qr-code-card group relative flex flex-col items-center bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/50 min-w-[140px] transition-all duration-500 cursor-pointer hover:-translate-y-2 hover:scale-105 hover:shadow-2xl ${this
+              .activeClient === 'qrcode'
+              ? 'bg-gradient-to-br from-purple-500 to-purple-600 text-white'
+              : ''}"
+            @click=${() => this.handleQRClick()}
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-purple-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+            
+            <iconify-icon
+              icon="mdi:qrcode"
+              class="text-5xl mb-3 transition-all duration-300 group-hover:scale-110 ${this
+                .activeClient === 'qrcode'
+                ? 'text-white'
+                : 'text-purple-600'}"
+            ></iconify-icon>
+            
+            <h4
+              class="text-sm font-semibold text-center mb-1 ${this
+                .activeClient === 'qrcode'
+                ? 'text-white'
+                : 'text-slate-700'}"
+            >
+              二维码管理
+            </h4>
+            <p
+              class="text-xs text-center ${this.activeClient === 'qrcode'
+                ? 'text-purple-100'
+                : 'text-slate-500'}"
+            >
+              全流程追踪
+            </p>
+          </div>
         </div>
 
         <!-- 中央云服务器 -->
@@ -577,7 +658,9 @@ export class CloudArchitectureComponent extends BaseComponent {
                     ? '网页端'
                     : this.activeClient === 'mobile'
                     ? '移动端'
-                    : '微信端'}
+                    : this.activeClient === 'wechat'
+                    ? '微信端'
+                    : '二维码管理'}
                   连接中
                 </span>
               </div>
@@ -605,34 +688,42 @@ export class CloudArchitectureComponent extends BaseComponent {
       positionClass = 'bottom-8 right-20'
     } else if (this.activeClient === 'wechat') {
       positionClass = 'bottom-16 left-20'
+    } else if (this.activeClient === 'qrcode') {
+      positionClass = 'top-16 right-32'
     }
 
     return html`
       <div
         id="popover-${this.activeClient}"
-        class="feature-popover absolute ${positionClass} bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/50 p-6 min-w-[280px] opacity-0"
+        class="feature-popover absolute ${positionClass} bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/50 ${this.activeClient === 'qrcode' ? 'p-4 min-w-[300px]' : 'p-6 min-w-[280px]'} opacity-0"
         style="z-index: 50;"
       >
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between ${this.activeClient === 'qrcode' ? 'mb-3' : 'mb-4'}">
           <div class="flex items-center">
             <iconify-icon
               icon="${this.activeClient === 'web'
                 ? 'mdi:monitor-dashboard'
                 : this.activeClient === 'mobile'
                 ? 'mdi:cellphone-cog'
-                : 'mdi:wechat'}"
+                : this.activeClient === 'wechat'
+                ? 'mdi:wechat'
+                : 'mdi:qrcode'}"
               class="text-2xl mr-3 ${this.activeClient === 'web'
                 ? 'text-blue-500'
                 : this.activeClient === 'mobile'
                 ? 'text-orange-500'
-                : 'text-green-600'}"
+                : this.activeClient === 'wechat'
+                ? 'text-green-600'
+                : 'text-purple-600'}"
             ></iconify-icon>
             <h3 class="text-lg font-bold text-slate-800">
               ${this.activeClient === 'web'
                 ? '网页端功能'
                 : this.activeClient === 'mobile'
                 ? '移动端功能'
-                : '微信端功能'}
+                : this.activeClient === 'wechat'
+                ? '微信端功能'
+                : '二维码管理体系'}
             </h3>
           </div>
           <button
@@ -646,39 +737,90 @@ export class CloudArchitectureComponent extends BaseComponent {
           </button>
         </div>
 
-        <div class="space-y-3">
-          ${features.map(
-            (feature) => html`
-              <div
-                class="group flex items-center p-3 rounded-xl bg-slate-50/50 hover:bg-slate-100/70 transition-all duration-300 cursor-pointer hover:scale-105"
-              >
-                <iconify-icon
-                  icon="${feature.icon}"
-                  class="text-xl mr-3 ${this.activeClient === 'web'
-                    ? 'text-blue-500'
-                    : this.activeClient === 'mobile'
-                    ? 'text-orange-500'
-                    : 'text-green-600'} 
-                       group-hover:scale-110 transition-transform"
-                ></iconify-icon>
-                <span
-                  class="text-sm font-medium text-slate-700 group-hover:text-slate-900"
-                >
-                  ${feature.name}
-                </span>
+        ${this.activeClient === 'qrcode' 
+          ? html`
+              <!-- 二维码管理的特殊布局 -->
+              <div class="text-center mb-2">
+                <p class="text-sm font-medium text-slate-700 mb-1">
+                  一管一码全流程数字化管理
+                </p>
+                <p class="text-xs text-slate-500">
+                  从厂家到使用的完整追溯体系
+                </p>
+              </div>
+              
+              <div class="space-y-2">
+                ${features.map((feature, index) => html`
+                  <div class="group p-2 rounded-lg bg-gradient-to-r from-${feature.color}-50 to-${feature.color}-100 border border-${feature.color}-200 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-start space-x-2">
+                      <div class="flex-shrink-0">
+                        <div class="w-6 h-6 bg-${feature.color}-500 rounded-full flex items-center justify-center">
+                          <span class="text-white text-xs font-bold">${index + 1}</span>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <div class="flex items-center mb-1">
+                          <iconify-icon icon="${feature.icon}" class="text-base mr-1 text-${feature.color}-600"></iconify-icon>
+                          <h4 class="text-xs font-semibold text-slate-800">${feature.name}</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-tight">
+                          ${feature.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                `)}
+              </div>
+              
+              <!-- 流程箭头指示 -->
+              <div class="flex items-center justify-center space-x-1 py-1">
+                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <iconify-icon icon="mdi:arrow-right" class="text-xs text-blue-400"></iconify-icon>
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <iconify-icon icon="mdi:arrow-right" class="text-xs text-green-400"></iconify-icon>
+                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
               </div>
             `
-          )}
-        </div>
+          : html`
+              <!-- 其他客户端的标准布局 -->
+              <div class="space-y-3">
+                ${features.map(
+                  (feature) => html`
+                    <div
+                      class="group flex items-center p-3 rounded-xl bg-slate-50/50 hover:bg-slate-100/70 transition-all duration-300 cursor-pointer hover:scale-105"
+                    >
+                      <iconify-icon
+                        icon="${feature.icon}"
+                        class="text-xl mr-3 ${this.activeClient === 'web'
+                          ? 'text-blue-500'
+                          : this.activeClient === 'mobile'
+                          ? 'text-orange-500'
+                          : 'text-green-600'} 
+                           group-hover:scale-110 transition-transform"
+                      ></iconify-icon>
+                      <span
+                        class="text-sm font-medium text-slate-700 group-hover:text-slate-900"
+                      >
+                        ${feature.name}
+                      </span>
+                    </div>
+                  `
+                )}
+              </div>
+            `
+        }
 
-        <div class="mt-4 pt-4 border-t border-slate-200/50">
+        <div class="${this.activeClient === 'qrcode' ? 'mt-2 pt-2' : 'mt-4 pt-4'} border-t border-slate-200/50">
           <p class="text-xs text-slate-500 text-center">
-            点击功能项可执行相应操作
+            ${this.activeClient === 'qrcode' 
+              ? '实现材料全生命周期数字化管理'
+              : '点击功能项可执行相应操作'}
           </p>
         </div>
       </div>
     `
   }
+
 }
 
 customElements.define('cloud-architecture', CloudArchitectureComponent)
