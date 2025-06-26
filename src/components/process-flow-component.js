@@ -244,18 +244,6 @@ export class ProcessFlowComponent extends BaseComponent {
           class="flex flex-col space-y-6 w-full h-full"
           style="position: relative;"
         >
-          <button
-            title="重播本步骤"
-            class="flex justify-center items-center w-10 h-10 bg-white rounded-full border border-gray-200 shadow transition hover:bg-blue-50"
-            style="position: absolute; left: 10px; bottom: 10px; z-index: 100;"
-            @click=${this.replayStep}
-          >
-            <iconify-icon
-              icon="mdi:refresh"
-              style="font-size:calc(1.5rem * var(--font-scale, 1));"
-            ></iconify-icon>
-          </button>
-
           <div
             class="flex flex-row justify-start items-center text-gray-700"
             style="height: 80px; flex-shrink: 0;"
@@ -286,18 +274,6 @@ export class ProcessFlowComponent extends BaseComponent {
           class="flex flex-col space-y-6 w-full h-full"
           style="position: relative;"
         >
-          <button
-            title="重播本步骤"
-            class="flex justify-center items-center w-10 h-10 bg-white rounded-full border border-gray-200 shadow transition hover:bg-blue-50"
-            style="position: absolute; left: 10px; bottom: 10px; z-index: 100;"
-            @click=${this.replayStep}
-          >
-            <iconify-icon
-              icon="mdi:refresh"
-              style="font-size:calc(1.5rem * var(--font-scale, 1));"
-            ></iconify-icon>
-          </button>
-
           <div
             class="flex flex-row justify-start items-center text-gray-700"
             style="height: 80px; flex-shrink: 0;"
@@ -328,18 +304,6 @@ export class ProcessFlowComponent extends BaseComponent {
           class="flex flex-col space-y-6 w-full h-full"
           style="position: relative;"
         >
-          <button
-            title="重播本步骤"
-            class="flex justify-center items-center w-10 h-10 bg-white rounded-full border border-gray-200 shadow transition hover:bg-blue-50"
-            style="position: absolute; left: 10px; bottom: 10px; z-index: 100;"
-            @click=${this.replayStep}
-          >
-            <iconify-icon
-              icon="mdi:refresh"
-              style="font-size:calc(1.5rem * var(--font-scale, 1));"
-            ></iconify-icon>
-          </button>
-
           <div
             class="flex flex-row justify-start items-center text-gray-700"
             style="height: 80px; flex-shrink: 0;"
@@ -370,18 +334,6 @@ export class ProcessFlowComponent extends BaseComponent {
           class="flex flex-col space-y-6 w-full h-full"
           style="position: relative;"
         >
-          <button
-            title="重播本步骤"
-            class="flex justify-center items-center w-10 h-10 bg-white rounded-full border border-gray-200 shadow transition hover:bg-blue-50"
-            style="position: absolute; left: 10px; bottom: 10px; z-index: 100;"
-            @click=${this.replayStep}
-          >
-            <iconify-icon
-              icon="mdi:refresh"
-              style="font-size:calc(1.5rem * var(--font-scale, 1));"
-            ></iconify-icon>
-          </button>
-
           <div
             class="flex flex-row justify-start items-center text-gray-700"
             style="height: 80px; flex-shrink: 0;"
@@ -412,18 +364,6 @@ export class ProcessFlowComponent extends BaseComponent {
           class="flex flex-col justify-center items-start w-full h-full"
           style="position: relative;"
         >
-          <button
-            title="重播本步骤"
-            class="flex justify-center items-center w-10 h-10 bg-white rounded-full border border-gray-200 shadow transition hover:bg-blue-50"
-            style="position: absolute; left: 10px; bottom: 10px; z-index: 100;"
-            @click=${this.replayStep}
-          >
-            <iconify-icon
-              icon="mdi:refresh"
-              style="font-size:calc(1.5rem * var(--font-scale, 1));"
-            ></iconify-icon>
-          </button>
-
           <div class="flex flex-row items-center text-gray-700">
             <div
               class="text-6xl text-blue-500"
@@ -2265,11 +2205,6 @@ export class ProcessFlowComponent extends BaseComponent {
     })
   }
 
-  replayStep() {
-    this.currentStepIndex = this.currentStepIndex
-    this.requestUpdate()
-  }
-
   prevStep() {
     if (this.currentStepIndex > 0) {
       this.currentStepIndex--
@@ -2485,6 +2420,7 @@ export class ProcessFlowComponent extends BaseComponent {
     this.isTimelineAnimating = false
     this.requestUpdate()
   }
+
 }
 
 customElements.define('process-flow-component', ProcessFlowComponent)
