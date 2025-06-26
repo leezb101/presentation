@@ -12,17 +12,33 @@ export class ProcessFlowComponent extends BaseComponent {
     :host {
       width: 1280px !important;
     }
-    
+
     /* 字体缩放样式 */
-    .text-4xl { font-size: calc(2.25rem * var(--font-scale, 1)) !important; }
-    .text-3xl { font-size: calc(1.875rem * var(--font-scale, 1)) !important; }
-    .text-2xl { font-size: calc(1.5rem * var(--font-scale, 1)) !important; }
-    .text-xl { font-size: calc(1.25rem * var(--font-scale, 1)) !important; }
-    .text-lg { font-size: calc(1.125rem * var(--font-scale, 1)) !important; }
-    .text-base { font-size: calc(1rem * var(--font-scale, 1)) !important; }
-    .text-sm { font-size: calc(0.875rem * var(--font-scale, 1)) !important; }
-    .text-xs { font-size: calc(0.75rem * var(--font-scale, 1)) !important; }
-    
+    .text-4xl {
+      font-size: calc(2.25rem * var(--font-scale, 1)) !important;
+    }
+    .text-3xl {
+      font-size: calc(1.875rem * var(--font-scale, 1)) !important;
+    }
+    .text-2xl {
+      font-size: calc(1.5rem * var(--font-scale, 1)) !important;
+    }
+    .text-xl {
+      font-size: calc(1.25rem * var(--font-scale, 1)) !important;
+    }
+    .text-lg {
+      font-size: calc(1.125rem * var(--font-scale, 1)) !important;
+    }
+    .text-base {
+      font-size: calc(1rem * var(--font-scale, 1)) !important;
+    }
+    .text-sm {
+      font-size: calc(0.875rem * var(--font-scale, 1)) !important;
+    }
+    .text-xs {
+      font-size: calc(0.75rem * var(--font-scale, 1)) !important;
+    }
+
     @unocss-placeholder;
   `
 
@@ -37,14 +53,14 @@ export class ProcessFlowComponent extends BaseComponent {
         title: '源头赋码',
         icon: 'mdi:cube-outline',
         details:
-          '<strong>供应商：</strong>在材料出厂前，按集团标准生成并粘贴唯一的二维码，同时将材料的质检报告等电子文件上传至系统，与二维码进行绑定。',
+          '<strong>供应商：</strong>在材料出厂前，将厂家已有二维码与集团监管所需材料绑定，以备后续施工现场进场时由扫码同步集团数据库。',
       },
       {
         title: '扫码验收',
         icon: 'mdi:qrcode-scan',
         type: 'scan',
         details:
-          '<strong>验收小组：</strong>材料到场后，通过App扫描二维码核对信息，并拍摄带水印的验收照片，在线提交验收结论。',
+          '<strong>验收小组：</strong>材料到场后，通过App扫描二维码核对信息，并拍摄带水印的验收照片，在线提交验收结论。同时系统自动将厂家绑定信息同步入库。',
       },
       {
         title: '扫码出入库',
@@ -182,7 +198,10 @@ export class ProcessFlowComponent extends BaseComponent {
         <div
           class="flex relative z-10 flex-col items-center flow-step"
           data-step-index="${index}"
-          style="padding: calc(0.5rem * var(--font-scale, 1)); ${index === 2 && this.showSplitNodes ? 'opacity: 0;' : ''}"
+          style="padding: calc(0.5rem * var(--font-scale, 1)); ${index === 2 &&
+          this.showSplitNodes
+            ? 'opacity: 0;'
+            : ''}"
         >
           <div
             class="flex justify-center items-center w-16 h-16 text-3xl rounded-full border-4 shadow-md transition-all duration-300 ${index <
@@ -192,9 +211,14 @@ export class ProcessFlowComponent extends BaseComponent {
               ? 'bg-blue-600 border-blue-600 text-white transform -translate-y-1 scale-110 shadow-blue-500/30 shadow-xl'
               : 'bg-white border-gray-300 text-gray-600'}"
           >
-            <iconify-icon icon="${step.icon}" class="text-4xl" style="font-size: calc(2.25rem * var(--font-scale, 1))"></iconify-icon>
+            <iconify-icon
+              icon="${step.icon}"
+              class="text-4xl"
+              style="font-size: calc(2.25rem * var(--font-scale, 1))"
+            ></iconify-icon>
           </div>
-          <span class="text-sm font-semibold text-center"
+          <span
+            class="text-sm font-semibold text-center"
             style="margin-top: calc(0.5rem * var(--font-scale, 1))"
             >${step.title}</span
           >
@@ -220,7 +244,8 @@ export class ProcessFlowComponent extends BaseComponent {
                 style="font-size: calc(2.25rem * var(--font-scale, 1))"
               ></iconify-icon>
             </div>
-            <span class="text-sm font-semibold text-center"
+            <span
+              class="text-sm font-semibold text-center"
               style="margin-top: calc(0.5rem * var(--font-scale, 1))"
               >${nodeData.title}</span
             >
@@ -2420,7 +2445,6 @@ export class ProcessFlowComponent extends BaseComponent {
     this.isTimelineAnimating = false
     this.requestUpdate()
   }
-
 }
 
 customElements.define('process-flow-component', ProcessFlowComponent)

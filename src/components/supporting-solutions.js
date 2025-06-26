@@ -189,7 +189,7 @@ export class SupportingSolutionsComponent extends BaseComponent {
   render() {
     const data = this.getSolutionsData()
     return html`
-      <div class="container mx-auto px-4 w-full max-w-7xl">
+      <div class="container mx-auto px-4 w-full max-w-7xl pb-12">
         <div class="text-center mb-12">
           <h2 class="text-4xl font-bold text-gray-800 mb-4">
             配套方案：为复杂现场量身打造
