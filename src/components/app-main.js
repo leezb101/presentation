@@ -379,7 +379,7 @@ export class AppMain extends BaseComponent {
                 <h1 class="main-title">郑水小码</h1>
                 <h2 class="sub-title">工程物料全生命周期数字化管理平台</h2>
                 <p class="description">
-                  用数字化、信息化理念，为每一件物料赋予智慧生命。实现从源头到末端的全过程精准管控，奠定集团智慧水务的坚实基础。
+                  用数字化、信息化理念，为每一件物料赋予智慧生命。实现从源头到末端的全过程精准管控，为集团智慧水务的坚实基础添砖加瓦。
                 </p>
               </div>
             </div>
