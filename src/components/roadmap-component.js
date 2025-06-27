@@ -162,7 +162,7 @@ export class RoadmapComponent extends BaseComponent {
         duration: '第5-6周',
         title: '系统功能开发',
         description:
-          '采用敏捷开发模式，集中资源在两周内完成核心功能的冲刺开发，快速产出最小可行产品（MVP）。',
+          '采用敏捷开发模式，集中资源在两周内完成核心功能的冲刺开发，快速产出最小可行产品，覆盖市政管网改造业务场景（MVP）。',
         details: [
           '<strong>第一周：</strong>完成后端基础架构、数据库搭建及核心API开发；同步进行Web管理端的基础框架和权限管理模块开发。',
           '<strong>第二周：</strong>集中开发移动App端的核心流程，包括扫码识别、信息录入、流程节点操作等功能。',
@@ -171,10 +171,10 @@ export class RoadmapComponent extends BaseComponent {
       },
       {
         phase: 4,
-        duration: '第7-10周',
-        title: '测试验证与内部优化',
+        duration: '第7-12周',
+        title: '测试验证与流程优化',
         description:
-          '进行为期一个月的全面内部测试，模拟真实使用场景，确保系统稳定可靠，并根据反馈进行优化。',
+          '进行为期一个半月的全面测试，模拟真实使用场景+实际场景试用，保系统稳定可靠，并根据反馈进行优化。',
         details: [
           '开展功能完整性测试，确保数据在“源头-验收-出入库-安装-追溯”各环节的无缝流转。',
           '进行性能与压力测试，模拟多用户并发操作场景。',
@@ -184,7 +184,7 @@ export class RoadmapComponent extends BaseComponent {
       },
       {
         phase: 5,
-        duration: '第11-13周',
+        duration: '第13-15周',
         title: '小范围试点与培训',
         description:
           '选取1个代表性项目+新兴铸管一个代表厂家，启动小范围试点，收集真实用户反馈，并对相关人员进行系统操作培训。',
